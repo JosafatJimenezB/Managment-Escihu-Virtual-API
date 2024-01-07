@@ -1,4 +1,4 @@
-package com.escihu.apiescihuvirtual.persistence.entity;
+package com.escihu.apiescihuvirtual.persistence.entity.degree;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
