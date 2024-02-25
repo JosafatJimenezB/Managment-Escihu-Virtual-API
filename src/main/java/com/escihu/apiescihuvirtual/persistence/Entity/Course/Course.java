@@ -7,6 +7,7 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Subject.Subject;
 import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -22,6 +23,10 @@ public class Course implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Size(max = 50)
+    @NotNull
+    private String name;
 
     @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -56,8 +61,9 @@ public class Course implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "student_id")})
     private List<Student> students = new ArrayList<>();
 
-    public Course(Long id, Date createdAt, Date updatedAt, Teacher manager, Cycle cycle, Classroom classroom, List<Subject> subjects, List<Student> students) {
+    public Course(Long id, String name , Date createdAt, Date updatedAt, Teacher manager, Cycle cycle, Classroom classroom, List<Subject> subjects, List<Student> students) {
         this.id = id;
+        this.name = name;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.manager = manager;
@@ -77,6 +83,14 @@ public class Course implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getCreatedAt() {

@@ -1,9 +1,13 @@
 package com.escihu.apiescihuvirtual.persistence.Entity.Student;
 
 import com.escihu.apiescihuvirtual.persistence.Entity.Address.Address;
+import com.escihu.apiescihuvirtual.persistence.Entity.Course.Course;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 @Entity
 @Table(name = "students")
@@ -57,7 +61,11 @@ public class Student {
     @JoinColumn(name = "direccion_id")
     private Address direccion;
 
-    public Student(Long id, String matricula, StatusStudent statusAlumno, String nombre, String apellidoPaterno, String apellidoMaterno, String nombreCarrera, String curp, String nacionalidad, String sexo, String tipoSangre, String estadoCivil, String telefono, String celular, String ingresoMensual, String institucionProcedencia, String institucionProcedenciaEstado, String institucionProcedenciaMunicipio, String correoPersonal, String correoEscolar, Address direccion) {
+    @JsonIgnore
+    @ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
+    private List<Course> courses;
+
+    public Student(Long id, String matricula, StatusStudent statusAlumno, String nombre, String apellidoPaterno, String apellidoMaterno, String nombreCarrera, String curp, String nacionalidad, String sexo, String tipoSangre, String estadoCivil, String telefono, String celular, String ingresoMensual, String institucionProcedencia, String institucionProcedenciaEstado, String institucionProcedenciaMunicipio, String correoPersonal, String correoEscolar, Address direccion, List<Course> courses) {
         this.id = id;
         this.matricula = matricula;
         this.statusAlumno = statusAlumno;
@@ -79,6 +87,7 @@ public class Student {
         this.correoPersonal = correoPersonal;
         this.correoEscolar = correoEscolar;
         this.direccion = direccion;
+        this.courses = courses;
     }
 
     public Student(){
@@ -251,5 +260,13 @@ public class Student {
 
     public void setDireccion(Address direccion) {
         this.direccion = direccion;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }
