@@ -6,9 +6,11 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 import java.util.List;
 
+@Builder
 @Entity
 @Table(name = "students")
 public class Student {

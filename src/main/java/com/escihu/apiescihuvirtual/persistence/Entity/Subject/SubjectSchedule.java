@@ -2,11 +2,13 @@ package com.escihu.apiescihuvirtual.persistence.Entity.Subject;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@Builder
 @Entity
 @Table(name = "subject_schedules")
 public class SubjectSchedule implements Serializable {

@@ -8,6 +8,7 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Builder
 @Entity
 @Table(name = "courses")
 public class Course implements Serializable {

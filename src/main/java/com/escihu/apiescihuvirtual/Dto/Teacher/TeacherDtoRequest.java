@@ -1,111 +1,51 @@
-package com.escihu.apiescihuvirtual.persistence.Entity.Teacher;
+package com.escihu.apiescihuvirtual.Dto.Teacher;
 
 import com.escihu.apiescihuvirtual.persistence.Entity.Address.Address;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.EstadoCivilEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.SexoEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusTeacherEnum;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.util.Date;
 
 @Builder
-@Entity
-@Table(name = "teachers")
-public class Teacher {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class TeacherDtoRequest {
 
     private String nombre;
 
-    @JoinColumn(name = "apellido_paterno")
     private String apellidoPaterno;
 
-    @JoinColumn(name = "apellido_materno")
     private String apellidoMaterno;
 
-    @Column(unique = true)
     private String RFC;
 
-    @Size(max = 18)
-    @Column(unique = true)
     private String CURP;
 
-    @Column(name = "cedula_profesional")
     private String cedulaProfesional;
 
-    @Enumerated(EnumType.STRING)
     private StatusTeacherEnum statusDocente;
 
-    @Column(name = "grado_estudios")
     private String gradoEstudios;
 
-    @Column(name = "area_conocimientos")
     private String areaConocimientos;
 
-    @Column(name = "fecha_nacimiento")
     private Date fechaNacimiento;
 
     private String nacionalidad;
 
-    @Column(name = "fecha_baja")
     private Date fechaBaja = null;
 
-    @Enumerated(EnumType.STRING)
     private SexoEnum sexo;
 
-    @Enumerated(EnumType.STRING)
     private EstadoCivilEnum estadoCivil;
 
-    @Column(name = "tipo_sangre")
     private String tipoSangre;
 
-    @Column(name = "correo_personal")
     private String correoPersonal;
 
-    @Column(name = "correo_escolar")
     private String correoEscolar;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "direccion_id")
     private Address direccion;
-
-    public Teacher(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String RFC, String CURP, String cedulaProfesional, StatusTeacherEnum statusDocente, String gradoEstudios, String areaConocimientos, Date fechaNacimiento, String nacionalidad, Date fechaBaja, SexoEnum sexo, EstadoCivilEnum estadoCivil, String tipoSangre, String correoPersonal, String correoEscolar, Address direccion) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellidoPaterno = apellidoPaterno;
-        this.apellidoMaterno = apellidoMaterno;
-        this.RFC = RFC;
-        this.CURP = CURP;
-        this.cedulaProfesional = cedulaProfesional;
-        this.statusDocente = statusDocente;
-        this.gradoEstudios = gradoEstudios;
-        this.areaConocimientos = areaConocimientos;
-        this.fechaNacimiento = fechaNacimiento;
-        this.nacionalidad = nacionalidad;
-        this.fechaBaja = fechaBaja;
-        this.sexo = sexo;
-        this.estadoCivil = estadoCivil;
-        this.tipoSangre = tipoSangre;
-        this.correoPersonal = correoPersonal;
-        this.correoEscolar = correoEscolar;
-        this.direccion = direccion;
-    }
-
-    public Teacher() {
-
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNombre() {
         return nombre;

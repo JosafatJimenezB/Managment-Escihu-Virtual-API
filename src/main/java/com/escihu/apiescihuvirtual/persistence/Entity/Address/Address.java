@@ -1,7 +1,9 @@
 package com.escihu.apiescihuvirtual.persistence.Entity.Address;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name =  "address")
 public class Address {

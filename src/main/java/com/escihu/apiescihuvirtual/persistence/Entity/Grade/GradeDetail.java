@@ -3,12 +3,14 @@ package com.escihu.apiescihuvirtual.persistence.Entity.Grade;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@Builder
 @Entity
 @Table(name = "grade_details")
 public class GradeDetail implements Serializable {

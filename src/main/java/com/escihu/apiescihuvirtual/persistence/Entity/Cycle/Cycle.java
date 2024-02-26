@@ -3,12 +3,14 @@ package com.escihu.apiescihuvirtual.persistence.Entity.Cycle;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@Builder
 @Entity
 @Table(name = "cycles")
 public class Cycle implements Serializable {
