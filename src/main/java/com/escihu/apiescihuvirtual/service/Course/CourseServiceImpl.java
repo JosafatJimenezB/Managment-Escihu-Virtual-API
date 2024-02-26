@@ -1,5 +1,6 @@
 package com.escihu.apiescihuvirtual.service.Course;
 
+import com.escihu.apiescihuvirtual.Dto.CourseDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Course.Course;
 import com.escihu.apiescihuvirtual.persistence.Entity.Cycle.Cycle;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
@@ -8,6 +9,7 @@ import com.escihu.apiescihuvirtual.persistence.Repository.CycleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseService{
@@ -26,12 +28,22 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public void updateCourse(Course courseForm) {
-        Course course = courseRepository.getOne(courseForm.getId());
-        course.setName(courseForm.getName());
-        course.setManager(courseForm.getManager());
-        course.setClassroom(courseForm.getClassroom());
-        courseRepository.save(course);
+    public Course updateCourse(Long id, CourseDtoRequest courseDtoRequest) {
+        Optional<Course> courseExists = courseRepository.findById(id);
+
+        if(!courseExists.isPresent()){
+            return null;
+        }
+
+        Course course = courseExists.get();
+
+        course = Course.builder()
+                .name(courseDtoRequest.getName())
+                .manager(courseDtoRequest.getManager())
+                .classroom(courseDtoRequest.getClassroom())
+                .build();
+
+        return courseRepository.save(course);
     }
 
     @Override

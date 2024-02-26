@@ -59,7 +59,7 @@ public class TeacherServiceImpl implements TeacherService{
 
         Teacher teacher = teacherExists.get();
 
-        Teacher.builder()
+        teacher = Teacher.builder()
                 .nombre(teacherDtoRequest.getNombre())
                 .apellidoPaterno(teacherDtoRequest.getApellidoPaterno())
                 .apellidoMaterno(teacherDtoRequest.getApellidoMaterno())

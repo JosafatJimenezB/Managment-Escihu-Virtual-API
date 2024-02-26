@@ -1,5 +1,6 @@
 package com.escihu.apiescihuvirtual.service.Course;
 
+import com.escihu.apiescihuvirtual.Dto.CourseDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Course.Course;
 import com.escihu.apiescihuvirtual.persistence.Entity.Cycle.Cycle;
 
@@ -9,7 +10,7 @@ public interface CourseService {
 
     public void addCourse(Course course);
 
-    public void updateCourse(Course course);
+    public Course updateCourse(Long id, CourseDtoRequest courseDtoRequest);
 
     public List<Course> getAllCoursesByCycleId(long idCycle);
 
