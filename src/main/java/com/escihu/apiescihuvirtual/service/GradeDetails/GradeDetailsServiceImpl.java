@@ -15,12 +15,12 @@ public class GradeDetailsServiceImpl implements GradeDetailsService{
 
     @Override
     public GradeDetail getScoreById(long id) {
-        return gradeDetailRepository.getOne(id);
+        return gradeDetailRepository.findById(id).orElse(null);
     }
 
     @Override
     public GradeDetail updateScore(GradeDetail scoreForm) {
-        GradeDetail score = gradeDetailRepository.getOne(scoreForm.getId());
+        GradeDetail score = gradeDetailRepository.findById(scoreForm.getId()).orElse(null);
         score.setScore(scoreForm.getScore());
 
         gradeDetailRepository.save(score);

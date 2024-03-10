@@ -23,7 +23,14 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public void addCourse(Course course) {
+    public void addCourse(CourseDtoRequest courseDtoRequest) {
+
+        Course course = Course.builder()
+                .name(courseDtoRequest.getName())
+                .manager(courseDtoRequest.getManager())
+                .classroom(courseDtoRequest.getClassroom())
+                .build();
+
         courseRepository.save(course);
     }
 
@@ -48,9 +55,12 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public List<Course> getAllCoursesByCycleId(long idCycle) {
-        Cycle cycle = cycleRepository.getOne(idCycle);
+        Optional<Cycle> cycleOptional = cycleRepository.findById(idCycle);
+        if (!cycleOptional.isPresent()) {
+            return null;
+        }
 
-        return courseRepository.findByCycle(cycle);
+        return courseRepository.findByCycle(cycleOptional.get());
     }
 
     @Override
@@ -65,15 +75,12 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public void unsubscribeStudent(long courseId, long studentId) {
-        Course course = courseRepository.getOne(courseId);
-
-        for (Student s : course.getStudents()) {
-            if (s.getId() == studentId) {
-                s.getCourses().remove(course);
-            }
+        Optional<Course> courseOptional = courseRepository.findById(courseId);
+        if (courseOptional.isPresent()) {
+            Course course = courseOptional.get();
+            course.getStudents().removeIf(student -> student.getId() == studentId);
+            courseRepository.save(course);
         }
-
-        courseRepository.save(course);
     }
 
     @Override
@@ -84,5 +91,10 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public void deleteCourse(Course course) {
         courseRepository.delete(course);
+    }
+
+    @Override
+    public boolean existById(Long id) {
+        return courseRepository.existsById(id);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GradeServiceImpl implements GradeService{
@@ -33,7 +34,7 @@ public class GradeServiceImpl implements GradeService{
 
     @Override
     public Grade getGradeById(long id) {
-        return gradeRepository.getOne(id);
+        return gradeRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -43,16 +44,25 @@ public class GradeServiceImpl implements GradeService{
 
     @Override
     public List<Grade> getGradesBySubjectId(long subjectId) {
-        Subject subject = subjectRepository.getOne(subjectId);
-        return gradeRepository.findBySubject(subject);
+        Optional<Subject> subjectOptional = subjectRepository.findById(subjectId);
+        if (subjectOptional.isPresent()) {
+            return gradeRepository.findBySubject(subjectOptional.get());
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Grade updateGrade(Grade gradeForm) {
-        Grade grade = gradeRepository.getOne(gradeForm.getId());
-        grade.setDescription(gradeForm.getDescription());
-        gradeRepository.save(grade);
-        return grade;
+        Optional<Grade> existingGrade = gradeRepository.findById(gradeForm.getId());
+
+        if (existingGrade.isPresent()) {
+            Grade grade = existingGrade.get();
+            grade.setDescription(gradeForm.getDescription());
+            return gradeRepository.save(grade);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -68,19 +78,24 @@ public class GradeServiceImpl implements GradeService{
     @Override
     public List<GradeDetail> getGradeScorebook(long gradeId) {
         List<GradeDetail> scorebook = new ArrayList<>();
-        Grade grade = gradeRepository.getOne(gradeId);
-        List<Student> students = grade.getSubject().getCourse().getStudents();
+        Optional<Grade> gradeOptional = gradeRepository.findById(gradeId);
+        if (gradeOptional.isPresent()) {
+            Grade grade = gradeOptional.get();
+            List<Student> students = grade.getSubject().getCourse().getStudents();
 
-        for (Student student : students) {
-            GradeDetail score = gradeDetailRepository.findByGradeAndStudent(grade, student).orElse(null);
-            if (score == null) {
-                GradeDetail nscore = new GradeDetail();
-                nscore.setStudent(student);
-                nscore.setGrade(grade);
-                scorebook.add(nscore);
-                continue;
+            for (Student student : students) {
+                Optional<GradeDetail> scoreOptional = gradeDetailRepository.findByGradeAndStudent(grade, student);
+
+                GradeDetail score = scoreOptional.orElseGet(() -> {
+                    GradeDetail nscore = new GradeDetail();
+                    nscore.setStudent(student);
+                    nscore.setGrade(grade);
+                    return nscore;
+                });
+                scorebook.add(score);
             }
-            scorebook.add(score);
+        } else {
+            return null;
         }
 
         return scorebook;

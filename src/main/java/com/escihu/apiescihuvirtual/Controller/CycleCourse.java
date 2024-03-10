@@ -1,11 +1,12 @@
 package com.escihu.apiescihuvirtual.Controller;
 
 import com.escihu.apiescihuvirtual.Dto.ClassroomDto;
+import com.escihu.apiescihuvirtual.Dto.Cycle.CycleDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Message;
 import com.escihu.apiescihuvirtual.persistence.Entity.Classroom.Classroom;
-import com.escihu.apiescihuvirtual.service.Classroom.ClassroomService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.escihu.apiescihuvirtual.persistence.Entity.Cycle.Cycle;
+import com.escihu.apiescihuvirtual.service.Cycle.CycleService;
+import com.escihu.apiescihuvirtual.service.Cycle.CycleServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -16,26 +17,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
-@Tag(name = "Controlador de salones")
 @RestController
 @RequestMapping("api/v1")
-public class ClassroomController {
+public class CycleCourse {
 
-    private final ClassroomService classroomService;
+    private final CycleService cycleService;
 
-    public ClassroomController(ClassroomService classroomService) {
-        this.classroomService = classroomService;
+    public CycleCourse(CycleService cycleService) {
+        this.cycleService = cycleService;
     }
 
-    @Operation(summary = "Retorna todos los salones con paginación")
-    @GetMapping("/classrooms")
+    @GetMapping("/cycles/paginated")
     public ResponseEntity<?> pageableAll(@RequestParam(name = "page", defaultValue = "0") int page) {
 
         try{
             PageRequest pageable = PageRequest.of(page, 10);
-            Page<Classroom> classrooms = classroomService.getAllClassrooms(pageable);
-            return new ResponseEntity<>(classrooms, HttpStatus.OK);
+            Page<Cycle> cycle = cycleService.getAllCycles(pageable);
+            return new ResponseEntity<>(cycle, HttpStatus.OK);
         }catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
@@ -45,13 +43,11 @@ public class ClassroomController {
         }
     }
 
-    @Operation(summary = "Retornar todos los salones en una lista")
-    @GetMapping("/classrooms/list")
+    @GetMapping("/cycles")
     public ResponseEntity<?> listAll() {
         try{
-            List<Classroom> classrooms = classroomService.getAllClassrooms();
-
-            return new ResponseEntity<>(classrooms, HttpStatus.OK);
+            List<Cycle> cycle = cycleService.getActiveCycles();
+            return new ResponseEntity<>(cycle, HttpStatus.OK);
         }catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
@@ -61,21 +57,39 @@ public class ClassroomController {
         }
     }
 
-    @Operation(summary = "Retornar un salon por id")
-    @GetMapping("/classroom/{id}")
+    @GetMapping("/cycles/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id){
 
         try {
-            Classroom classroom = classroomService.getClassroomById(id);
+            Cycle cycle = cycleService.getcycleById(id);
 
-            if(classroom == null) {
+            if(cycle == null) {
                 return new ResponseEntity<>(Message.builder()
-                        .message("Classroom not found")
+                        .message("Clycle not found")
                         .object(null)
                         .build(), HttpStatus.NOT_FOUND);
             }
 
-            return new ResponseEntity<>(classroom, HttpStatus.OK);
+            return new ResponseEntity<>(cycle, HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(Message.builder()
+                    .message(e.getMessage())
+                    .object(null)
+                    .build(), HttpStatus.METHOD_NOT_ALLOWED
+            );
+        }
+
+    }
+
+    @PostMapping("/cycles")
+    public ResponseEntity<?> create(@RequestBody CycleDtoRequest cycleDtoRequest) {
+        try {
+            Cycle cycle = cycleService.addCycle(cycleDtoRequest);
+            return new ResponseEntity<>(Message.builder()
+                    .message("Cycle created succesfully")
+                    .object(cycle)
+                    .build(), HttpStatus.CREATED);
+
         } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
@@ -85,51 +99,26 @@ public class ClassroomController {
         }
     }
 
-    @Operation(summary = "Crea um nuevo salon")
-    @PostMapping("/classroom")
-    public ResponseEntity<?> create(@Valid @RequestBody ClassroomDto classroomDto) {
-        Classroom classroom = null;
-
-        try{
-            classroom = classroomService.addClassroom(classroomDto);
-
-            return new ResponseEntity<>(Message.builder()
-                    .message("Classroom created succesfully")
-                    .object(classroom)
-                    .build(), HttpStatus.CREATED);
-
-        }catch (DataAccessException e) {
-            return new ResponseEntity<>(Message.builder()
-                    .message(e.getMessage())
-                    .object(null)
-                    .build(), HttpStatus.METHOD_NOT_ALLOWED);
-        }
-    }
-
-    @Operation(summary = "Actualiza un salon por id")
     @PutMapping("/classroom/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable Long id , @RequestBody ClassroomDto classroomDto) {
-        Classroom classroom = null;
+    public ResponseEntity<?> update(@Valid @PathVariable Long id , @RequestBody CycleDtoRequest cycleDtoRequest) {
+        Cycle cycle = null;
 
         try{
-
-            if(!classroomService.exists(id)){
+            if(!cycleService.exists(id)){
                 return new ResponseEntity<>(Message.builder()
                         .message("Classroom not found")
                         .object(null)
                         .build(), HttpStatus.NOT_FOUND);
             }
 
-            classroom = classroomService.updateClassroom(id, classroomDto);
+            cycle = cycleService.updateCycle(cycleDtoRequest, id);
 
             return new ResponseEntity<>(Message.builder()
                     .message("Classroom updated succesfully")
-                    .object(classroom.builder()
-                            .id(classroom.getId())
-                            .name(classroom.getName())
-                            .description(classroom.getDescription())
-                            .createdAt(classroom.getCreatedAt())
-                            .updatedAt(classroom.getUpdatedAt())
+                    .object(cycle.builder()
+                            .name(cycle.getName())
+                            .createdAt(cycle.getCreatedAt())
+                            .updatedAt(cycle.getUpdatedAt())
                             .build())
                     .build(), HttpStatus.OK);
 
@@ -140,4 +129,6 @@ public class ClassroomController {
                     .build(), HttpStatus.METHOD_NOT_ALLOWED);
         }
     }
+
+
 }

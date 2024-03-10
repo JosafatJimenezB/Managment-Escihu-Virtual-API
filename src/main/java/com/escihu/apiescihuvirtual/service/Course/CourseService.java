@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CourseService {
 
-    public void addCourse(Course course);
+    public void addCourse(CourseDtoRequest courseDtoRequest);
 
     public Course updateCourse(Long id, CourseDtoRequest courseDtoRequest);
 
@@ -23,4 +23,6 @@ public interface CourseService {
     public void deleteCourseById(long courseId);
 
     public void deleteCourse(Course course);
+
+    public boolean existById(Long id);
 }
