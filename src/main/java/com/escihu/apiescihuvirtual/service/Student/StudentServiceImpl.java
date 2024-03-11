@@ -26,6 +26,7 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     public Student createStudent(StudentDtoRequest studentDtoRequest) {
+
         Student student = Student.builder()
                 .nombre(studentDtoRequest.getNombre())
                 .apellidoPaterno(studentDtoRequest.getApellidoPaterno())
@@ -33,8 +34,8 @@ public class StudentServiceImpl implements StudentService{
                 .celular(studentDtoRequest.getCelular())
                 .curp(studentDtoRequest.getCurp())
                 .correoEscolar(null)
-                .estadoCivil(studentDtoRequest.getEstadoCivil())
-                .sexo(studentDtoRequest.getSexo())
+                .estadoCivil(studentDtoRequest.getEstadoCivil().toString())
+                .sexo(studentDtoRequest.getSexo().toString())
                 .correoPersonal(studentDtoRequest.getCorreoPersonal())
                 .nacionalidad(studentDtoRequest.getNacionalidad())
                 .ingresoMensual(studentDtoRequest.getIngresoMensual())
@@ -47,6 +48,7 @@ public class StudentServiceImpl implements StudentService{
                 .telefono(studentDtoRequest.getTelefono())
                 .institucionProcedencia(studentDtoRequest.getInstitucionProcedencia())
                 .institucionProcedenciaMunicipio(studentDtoRequest.getInstitucionProcedenciaMunicipio())
+                .direccion(studentDtoRequest.getDireccion())
                 .build();
 
         return studentRepository.save(student);
@@ -69,8 +71,8 @@ public class StudentServiceImpl implements StudentService{
                 .celular(studentDtoRequest.getCelular())
                 .curp(studentDtoRequest.getCurp())
                 .correoEscolar(null)
-                .estadoCivil(studentDtoRequest.getEstadoCivil())
-                .sexo(studentDtoRequest.getSexo())
+                .estadoCivil(studentDtoRequest.getEstadoCivil().toString())
+                .sexo(studentDtoRequest.getSexo().toString())
                 .correoPersonal(studentDtoRequest.getCorreoPersonal())
                 .nacionalidad(studentDtoRequest.getNacionalidad())
                 .ingresoMensual(studentDtoRequest.getIngresoMensual())
@@ -78,7 +80,7 @@ public class StudentServiceImpl implements StudentService{
                 .matricula(null)
                 .tipoSangre(studentDtoRequest.getTipoSangre())
                 .nombreCarrera(studentDtoRequest.getNombreCarrera())
-                .statusAlumno(StatusStudent.PROCESO_INSCRIPCION)
+                .statusAlumno(StatusStudent.ACTIVO)
                 .institucionProcedenciaEstado(studentDtoRequest.getInstitucionProcedenciaEstado())
                 .telefono(studentDtoRequest.getTelefono())
                 .institucionProcedencia(studentDtoRequest.getInstitucionProcedencia())

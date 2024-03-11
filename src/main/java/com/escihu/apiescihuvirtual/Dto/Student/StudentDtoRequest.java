@@ -1,6 +1,8 @@
 package com.escihu.apiescihuvirtual.Dto.Student;
 
 import com.escihu.apiescihuvirtual.persistence.Entity.Address.Address;
+import com.escihu.apiescihuvirtual.persistence.Entity.Enums.EstadoCivilEnum;
+import com.escihu.apiescihuvirtual.persistence.Entity.Enums.SexoEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import lombok.Builder;
 
@@ -13,9 +15,9 @@ public class StudentDtoRequest {
     private String nombreCarrera;
     private String curp;
     private String nacionalidad;
-    private String sexo;
+    private SexoEnum sexo;
     private String tipoSangre;
-    private String estadoCivil;
+    private EstadoCivilEnum estadoCivil;
     private String telefono;
     private String celular;
     private String ingresoMensual;
@@ -25,33 +27,6 @@ public class StudentDtoRequest {
     private String correoPersonal;
     private String correoEscolar;
     private Address direccion;
-
-    public StudentDtoRequest(StatusStudent statusAlumno, String nombre, String apellidoPaterno, String apellidoMaterno, String nombreCarrera, String curp, String nacionalidad, String sexo, String tipoSangre, String estadoCivil, String telefono, String celular, String ingresoMensual, String institucionProcedencia, String institucionProcedenciaEstado, String institucionProcedenciaMunicipio, String correoPersonal, String correoEscolar, Address direccion) {
-        this.statusAlumno = statusAlumno;
-        this.nombre = nombre;
-        this.apellidoPaterno = apellidoPaterno;
-        this.apellidoMaterno = apellidoMaterno;
-        this.nombreCarrera = nombreCarrera;
-        this.curp = curp;
-        this.nacionalidad = nacionalidad;
-        this.sexo = sexo;
-        this.tipoSangre = tipoSangre;
-        this.estadoCivil = estadoCivil;
-        this.telefono = telefono;
-        this.celular = celular;
-        this.ingresoMensual = ingresoMensual;
-        this.institucionProcedencia = institucionProcedencia;
-        this.institucionProcedenciaEstado = institucionProcedenciaEstado;
-        this.institucionProcedenciaMunicipio = institucionProcedenciaMunicipio;
-        this.correoPersonal = correoPersonal;
-        this.correoEscolar = correoEscolar;
-        this.direccion = direccion;
-    }
-
-    public StudentDtoRequest(){
-
-    }
-
     public StatusStudent getStatusAlumno() {
         return statusAlumno;
     }
@@ -108,11 +83,11 @@ public class StudentDtoRequest {
         this.nacionalidad = nacionalidad;
     }
 
-    public String getSexo() {
+    public SexoEnum getSexo() {
         return sexo;
     }
 
-    public void setSexo(String sexo) {
+    public void setSexo(SexoEnum sexo) {
         this.sexo = sexo;
     }
 
@@ -124,11 +99,11 @@ public class StudentDtoRequest {
         this.tipoSangre = tipoSangre;
     }
 
-    public String getEstadoCivil() {
+    public EstadoCivilEnum getEstadoCivil() {
         return estadoCivil;
     }
 
-    public void setEstadoCivil(String estadoCivil) {
+    public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
         this.estadoCivil = estadoCivil;
     }
 

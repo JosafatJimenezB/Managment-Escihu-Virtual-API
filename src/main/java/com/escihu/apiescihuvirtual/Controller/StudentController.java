@@ -3,12 +3,8 @@ package com.escihu.apiescihuvirtual.Controller;
 import com.escihu.apiescihuvirtual.Dto.Message;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
-import com.escihu.apiescihuvirtual.Dto.Teacher.TeacherDtoRequest;
-import com.escihu.apiescihuvirtual.Dto.Teacher.TeacherDtoResponse;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
-import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
 import com.escihu.apiescihuvirtual.service.Student.StudentService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
@@ -75,10 +71,8 @@ public class StudentController {
 
     @PostMapping("/student")
     public ResponseEntity<?> create(@Valid @RequestBody StudentDtoRequest studentDtoRequest) {
-        Student student = null;
-
         try{
-            student = studentService.createStudent(studentDtoRequest);
+            Student student = studentService.createStudent(studentDtoRequest);
 
             return new ResponseEntity<>(Message.builder()
                     .message("Student created succesfully")
@@ -94,8 +88,6 @@ public class StudentController {
 
     @PutMapping("/student/{id}")
     public ResponseEntity<?> update(@Valid @PathVariable Long id, @RequestBody StudentDtoRequest studentDtoRequest) {
-        Student student = null;
-
         try {
             if(!studentService.exists(id)){
                 return new ResponseEntity<>(Message.builder()
@@ -104,7 +96,7 @@ public class StudentController {
                         .build(), HttpStatus.NOT_FOUND);
             }
 
-            student = studentService.updateStudent(id, studentDtoRequest);
+            Student student = studentService.updateStudent(id, studentDtoRequest);
 
             return new ResponseEntity<>(Message.builder()
                     .message("Student updated succesfully")
