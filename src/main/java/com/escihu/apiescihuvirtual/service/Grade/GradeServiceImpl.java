@@ -1,5 +1,6 @@
 package com.escihu.apiescihuvirtual.service.Grade;
 
+import com.escihu.apiescihuvirtual.Dto.Grade.GradeDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Grade.Grade;
 import com.escihu.apiescihuvirtual.persistence.Entity.Grade.GradeDetail;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
@@ -28,8 +29,14 @@ public class GradeServiceImpl implements GradeService{
     }
 
     @Override
-    public void addGrade(Grade grade) {
-        gradeRepository.save(grade);
+    public Grade addGrade(GradeDtoRequest gradeDtoRequest) {
+
+        Grade grade = Grade.builder()
+                .description(gradeDtoRequest.getDescription())
+                .subject(gradeDtoRequest.getSubject())
+                .build();
+
+        return gradeRepository.save(grade);
     }
 
     @Override
@@ -53,12 +60,12 @@ public class GradeServiceImpl implements GradeService{
     }
 
     @Override
-    public Grade updateGrade(Grade gradeForm) {
-        Optional<Grade> existingGrade = gradeRepository.findById(gradeForm.getId());
+    public Grade updateGrade(Long id, GradeDtoRequest gradeDtoRequest) {
+        Optional<Grade> existingGrade = gradeRepository.findById(id);
 
         if (existingGrade.isPresent()) {
             Grade grade = existingGrade.get();
-            grade.setDescription(gradeForm.getDescription());
+            grade.setDescription(gradeDtoRequest.getDescription());
             return gradeRepository.save(grade);
         } else {
             return null;
@@ -99,5 +106,10 @@ public class GradeServiceImpl implements GradeService{
         }
 
         return scorebook;
+    }
+
+    @Override
+    public boolean existById(Long id) {
+        return gradeRepository.existsById(id);
     }
 }

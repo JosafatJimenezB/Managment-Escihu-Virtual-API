@@ -7,4 +7,6 @@ public interface GradeDetailsService {
     public GradeDetail getScoreById(long id);
 
     public GradeDetail updateScore(GradeDetail scoreForm);
+
+    public boolean existById(Long id);
 }

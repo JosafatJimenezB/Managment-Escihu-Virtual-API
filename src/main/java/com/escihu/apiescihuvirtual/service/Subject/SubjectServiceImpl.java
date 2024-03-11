@@ -7,6 +7,7 @@ import com.escihu.apiescihuvirtual.persistence.Repository.SubjectRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubjectServiceImpl implements SubjectService{
@@ -20,19 +21,25 @@ public class SubjectServiceImpl implements SubjectService{
     }
 
     @Override
-    public void addSubject(Subject subject) {
-        subjectRepository.save(subject);
+    public Subject addSubject(Subject subject) {
+        return subjectRepository.save(subject);
     }
 
     @Override
-    public void updateSubject(Subject sform) {
-        Subject subject = subjectRepository.getOne(sform.getId());
+    public Subject updateSubject(Long id, Subject sform) {
+        Optional<Subject> subjectExist = subjectRepository.findById(id);
+
+        if(!subjectExist.isPresent()) {
+            return null;
+        }
+
+        Subject subject = subjectExist.get();
 
         subject.setName(sform.getName());
         subject.setClassroom(sform.getClassroom());
         subject.setTeacher(sform.getTeacher());
 
-        subjectRepository.save(subject);
+        return subjectRepository.save(subject);
     }
 
     @Override
@@ -44,13 +51,18 @@ public class SubjectServiceImpl implements SubjectService{
 
     @Override
     public Subject getSubjectById(long id) {
-        return subjectRepository.getOne(id);
+        return subjectRepository.findById(id).orElse(null);
     }
 
     @Override
     public void deleteSubjectById(long id) {
-        Subject subject = subjectRepository.getOne(id);
+        Subject subject = subjectRepository.findById(id).orElse(null);
 
         subjectRepository.delete(subject);
+    }
+
+    @Override
+    public boolean existById(Long id) {
+        return subjectRepository.existsById(id);
     }
 }

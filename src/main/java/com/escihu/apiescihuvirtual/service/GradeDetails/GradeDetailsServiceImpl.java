@@ -28,4 +28,9 @@ public class GradeDetailsServiceImpl implements GradeDetailsService{
         return score;
     }
 
+    @Override
+    public boolean existById(Long id) {
+        return gradeDetailRepository.existsById(id);
+    }
+
 }

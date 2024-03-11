@@ -1,5 +1,6 @@
 package com.escihu.apiescihuvirtual.service.Grade;
 
+import com.escihu.apiescihuvirtual.Dto.Grade.GradeDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Grade.Grade;
 import com.escihu.apiescihuvirtual.persistence.Entity.Grade.GradeDetail;
 import com.escihu.apiescihuvirtual.persistence.Entity.Subject.Subject;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public interface GradeService {
 
-    public void addGrade(Grade grade);
+    public Grade addGrade(GradeDtoRequest gradeDtoRequest);
 
     public Grade getGradeById(long id);
 
@@ -16,11 +17,13 @@ public interface GradeService {
 
     public List<Grade> getGradesBySubjectId(long subjectId);
 
-    public Grade updateGrade(Grade grade);
+    public Grade updateGrade(Long id, GradeDtoRequest gradeDtoRequest);
 
     public void deleteGradeById(long id);
 
     public void deleteGrade(Grade grade);
 
     public List<GradeDetail> getGradeScorebook(long gradeId);
+
+    public boolean existById(Long id);
 }

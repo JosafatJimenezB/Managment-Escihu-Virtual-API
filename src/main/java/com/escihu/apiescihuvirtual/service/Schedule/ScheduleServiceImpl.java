@@ -22,8 +22,8 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public void save(SubjectSchedule schedule) {
-        scheduleRepository.save(schedule);
+    public SubjectSchedule save(SubjectSchedule schedule) {
+        return scheduleRepository.save(schedule);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public void deleteSchedule(SubjectSchedule schedule) {
-        scheduleRepository.delete(schedule);
+    public void deleteSchedule(Long id) {
+        scheduleRepository.deleteById(id);
     }
 
     @Override
@@ -55,5 +55,10 @@ public class ScheduleServiceImpl implements ScheduleService{
         schedule.put("saturday", saturday);
         schedule.put("sunday", sunday);
         return schedule;
+    }
+
+    @Override
+    public boolean existById(Long id) {
+        return scheduleRepository.existsById(id);
     }
 }

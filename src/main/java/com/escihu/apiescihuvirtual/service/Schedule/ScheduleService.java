@@ -8,11 +8,13 @@ import java.util.Optional;
 
 public interface ScheduleService {
 
-    public void save(SubjectSchedule schedule);
+    public SubjectSchedule save(SubjectSchedule schedule);
 
     public Optional<SubjectSchedule> getScheduleById(long id);
 
-    public void deleteSchedule(SubjectSchedule schedule);
+    public void deleteSchedule(Long id);
 
     public HashMap<String, List<SubjectSchedule>> getScheduleByCourseId(long courseId);
+
+    public boolean existById(Long id);
 }
