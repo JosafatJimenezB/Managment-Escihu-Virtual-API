@@ -68,7 +68,9 @@ public class ScheduleController {
         try {
             SubjectSchedule schedule = scheduleService.save(subjectSchedule);
 
-            return new ResponseEntity<>(schedule, HttpStatus.CREATED);
+            return new ResponseEntity<>(Message.builder()
+                    .message("Schedule created succesfully")
+                    .object(schedule), HttpStatus.CREATED);
 
         } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
