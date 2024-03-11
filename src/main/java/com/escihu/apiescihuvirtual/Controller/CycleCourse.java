@@ -99,14 +99,14 @@ public class CycleCourse {
         }
     }
 
-    @PutMapping("/classroom/{id}")
+    @PutMapping("/cycles/{id}")
     public ResponseEntity<?> update(@Valid @PathVariable Long id , @RequestBody CycleDtoRequest cycleDtoRequest) {
         Cycle cycle = null;
 
         try{
             if(!cycleService.exists(id)){
                 return new ResponseEntity<>(Message.builder()
-                        .message("Classroom not found")
+                        .message("Cycle not found")
                         .object(null)
                         .build(), HttpStatus.NOT_FOUND);
             }
@@ -114,7 +114,7 @@ public class CycleCourse {
             cycle = cycleService.updateCycle(cycleDtoRequest, id);
 
             return new ResponseEntity<>(Message.builder()
-                    .message("Classroom updated succesfully")
+                    .message("Cycle updated succesfully")
                     .object(cycle.builder()
                             .name(cycle.getName())
                             .createdAt(cycle.getCreatedAt())
