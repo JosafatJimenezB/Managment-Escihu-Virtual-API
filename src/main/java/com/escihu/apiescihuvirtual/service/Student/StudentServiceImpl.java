@@ -3,6 +3,7 @@ package com.escihu.apiescihuvirtual.service.Student;
 import com.escihu.apiescihuvirtual.Dto.Student.PaginatedStudentDtoResponse;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
+import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponseRecord;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.escihu.apiescihuvirtual.persistence.Repository.StudentRepository;
@@ -25,28 +26,28 @@ public class StudentServiceImpl implements StudentService{
 
 
     @Override
-    public Student createStudent(StudentDtoRequest studentDtoRequest) {
+    public Student createStudent(StudentDtoResponseRecord studentDtoRequest) {
         Student student = Student.builder()
-                .nombre(studentDtoRequest.getNombre())
-                .apellidoPaterno(studentDtoRequest.getApellidoPaterno())
-                .apellidoMaterno(studentDtoRequest.getApellidoMaterno())
-                .celular(studentDtoRequest.getCelular())
-                .curp(studentDtoRequest.getCurp())
-                .correoEscolar(null)
-                .estadoCivil(studentDtoRequest.getEstadoCivil())
-                .sexo(studentDtoRequest.getSexo())
-                .correoPersonal(studentDtoRequest.getCorreoPersonal())
-                .nacionalidad(studentDtoRequest.getNacionalidad())
-                .ingresoMensual(studentDtoRequest.getIngresoMensual())
-                .direccion(studentDtoRequest.getDireccion())
-                .matricula(null)
-                .tipoSangre(studentDtoRequest.getTipoSangre())
-                .nombreCarrera(studentDtoRequest.getNombreCarrera())
+                .nombre(studentDtoRequest.nombre())
+                .apellidoPaterno(studentDtoRequest.apellidoPaterno())
+                .apellidoMaterno(studentDtoRequest.apellidoMaterno())
+                .celular(studentDtoRequest.celular())
+                .curp(studentDtoRequest.curp())
+                .correoEscolar(studentDtoRequest.correoEscolar())
+                .estadoCivil(studentDtoRequest.estadoCivil())
+                .sexo(studentDtoRequest.sexo())
+                .correoPersonal(studentDtoRequest.correoPersonal())
+                .nacionalidad(studentDtoRequest.nacionalidad())
+                .ingresoMensual(studentDtoRequest.ingresoMensual())
+                .direccion(studentDtoRequest.direccion())
+                .matricula(studentDtoRequest.matricula())
+                .tipoSangre(studentDtoRequest.tipoSangre())
+                .nombreCarrera(studentDtoRequest.nombreCarrera())
                 .statusAlumno(StatusStudent.PROCESO_INSCRIPCION)
-                .institucionProcedenciaEstado(studentDtoRequest.getInstitucionProcedenciaEstado())
-                .telefono(studentDtoRequest.getTelefono())
-                .institucionProcedencia(studentDtoRequest.getInstitucionProcedencia())
-                .institucionProcedenciaMunicipio(studentDtoRequest.getInstitucionProcedenciaMunicipio())
+                .institucionProcedenciaEstado(studentDtoRequest.institucionProcedenciaEstado())
+                .telefono(studentDtoRequest.telefono())
+                .institucionProcedencia(studentDtoRequest.institucionProcedencia())
+                .institucionProcedenciaMunicipio(studentDtoRequest.institucionProcedenciaMunicipio())
                 .build();
 
         return studentRepository.save(student);

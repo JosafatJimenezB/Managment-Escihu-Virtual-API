@@ -3,12 +3,9 @@ package com.escihu.apiescihuvirtual.Controller;
 import com.escihu.apiescihuvirtual.Dto.Message;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
-import com.escihu.apiescihuvirtual.Dto.Teacher.TeacherDtoRequest;
-import com.escihu.apiescihuvirtual.Dto.Teacher.TeacherDtoResponse;
+import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponseRecord;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
-import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
 import com.escihu.apiescihuvirtual.service.Student.StudentService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
@@ -74,12 +71,10 @@ public class StudentController {
     }
 
     @PostMapping("/student")
-    public ResponseEntity<?> create(@Valid @RequestBody StudentDtoRequest studentDtoRequest) {
-        Student student = null;
-
+    public ResponseEntity<?> create(@Valid @RequestBody StudentDtoResponseRecord studentDtoRequest) {
+        Student student;
         try{
-            student = studentService.createStudent(studentDtoRequest);
-
+             student = studentService.createStudent(studentDtoRequest);
             return new ResponseEntity<>(Message.builder()
                     .message("Student created succesfully")
                     .object(student)
