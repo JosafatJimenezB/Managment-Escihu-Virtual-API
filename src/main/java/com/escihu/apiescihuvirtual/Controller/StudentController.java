@@ -3,6 +3,7 @@ package com.escihu.apiescihuvirtual.Controller;
 import com.escihu.apiescihuvirtual.Dto.Message;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
+import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponseRecord;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.escihu.apiescihuvirtual.service.Student.StudentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -70,10 +71,10 @@ public class StudentController {
     }
 
     @PostMapping("/student")
-    public ResponseEntity<?> create(@Valid @RequestBody StudentDtoRequest studentDtoRequest) {
+    public ResponseEntity<?> create(@Valid @RequestBody StudentDtoResponseRecord studentDtoRequest) {
+        Student student;
         try{
-            Student student = studentService.createStudent(studentDtoRequest);
-
+             student = studentService.createStudent(studentDtoRequest);
             return new ResponseEntity<>(Message.builder()
                     .message("Student created succesfully")
                     .object(student)
@@ -88,6 +89,8 @@ public class StudentController {
 
     @PutMapping("/student/{id}")
     public ResponseEntity<?> update(@Valid @PathVariable Long id, @RequestBody StudentDtoRequest studentDtoRequest) {
+        Student student = null;
+
         try {
             if(!studentService.exists(id)){
                 return new ResponseEntity<>(Message.builder()
@@ -96,7 +99,7 @@ public class StudentController {
                         .build(), HttpStatus.NOT_FOUND);
             }
 
-            Student student = studentService.updateStudent(id, studentDtoRequest);
+            student = studentService.updateStudent(id, studentDtoRequest);
 
             return new ResponseEntity<>(Message.builder()
                     .message("Student updated succesfully")
