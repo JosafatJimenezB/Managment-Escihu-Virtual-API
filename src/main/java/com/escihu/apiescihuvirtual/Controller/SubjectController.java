@@ -68,7 +68,9 @@ public class SubjectController {
 
             Subject subject = subjectService.addSubject(subjectRequest);
 
-            return new ResponseEntity<>(subject, HttpStatus.CREATED);
+            return new ResponseEntity<>(Message.builder()
+                    .message("Subject created succesfully")
+                    .object(subject), HttpStatus.CREATED);
 
         } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()

@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.*;
 import java.util.List;
 
 @RestController
@@ -103,7 +104,9 @@ public class GradeController {
         try {
             Grade grade = gradeService.addGrade(gradeDtoRequest);
 
-            return new ResponseEntity<>(grade, HttpStatus.CREATED);
+            return new ResponseEntity<>(Message.builder()
+                    .message("Subject created succesfully")
+                    .object(grade), HttpStatus.CREATED);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
