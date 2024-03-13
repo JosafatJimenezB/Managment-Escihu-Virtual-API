@@ -81,6 +81,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1/students/**", "/api/v1/student/").hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.PUT,"/api/v1/student/{id}").hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.GET,"/api/v1/student/{id}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
+                    auth.requestMatchers("/api/v1/admin/**").hasRole(ADMIN_ROLE);
                     auth.anyRequest().authenticated();
                 });
 
