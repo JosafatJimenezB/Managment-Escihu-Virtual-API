@@ -4,15 +4,15 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Address.Address;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.EstadoCivilEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.SexoEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
+import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
 import lombok.Builder;
 
 @Builder
 public class StudentDtoRequest {
-    private StatusStudent statusAlumno;
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
-    private String nombreCarrera;
+    private Licenciatura licenciatura;
     private String curp;
     private String nacionalidad;
     private SexoEnum sexo;
@@ -25,15 +25,8 @@ public class StudentDtoRequest {
     private String institucionProcedenciaEstado;
     private String institucionProcedenciaMunicipio;
     private String correoPersonal;
-    private String correoEscolar;
     private Address direccion;
-    public StatusStudent getStatusAlumno() {
-        return statusAlumno;
-    }
 
-    public void setStatusAlumno(StatusStudent statusAlumno) {
-        this.statusAlumno = statusAlumno;
-    }
 
     public String getNombre() {
         return nombre;
@@ -59,12 +52,12 @@ public class StudentDtoRequest {
         this.apellidoMaterno = apellidoMaterno;
     }
 
-    public String getNombreCarrera() {
-        return nombreCarrera;
+    public Licenciatura getLicenciatura() {
+        return licenciatura;
     }
 
-    public void setNombreCarrera(String nombreCarrera) {
-        this.nombreCarrera = nombreCarrera;
+    public void setLicenciatura(Licenciatura licenciatura) {
+        this.licenciatura = licenciatura;
     }
 
     public String getCurp() {
@@ -161,14 +154,6 @@ public class StudentDtoRequest {
 
     public void setCorreoPersonal(String correoPersonal) {
         this.correoPersonal = correoPersonal;
-    }
-
-    public String getCorreoEscolar() {
-        return correoEscolar;
-    }
-
-    public void setCorreoEscolar(String correoEscolar) {
-        this.correoEscolar = correoEscolar;
     }
 
     public Address getDireccion() {

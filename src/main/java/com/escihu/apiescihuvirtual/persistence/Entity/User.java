@@ -1,7 +1,9 @@
 package com.escihu.apiescihuvirtual.persistence.Entity;
 
+import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -49,6 +51,11 @@ public class User implements UserDetails {
     @Schema(description = "Password of the user.")
     private String password;
 
+    @Schema(description = "User asigned to one account")
+    @Column(name = "user_asigned", unique = true)
+    @NotNull()
+    private Long userAsigned;
+
     /**
      * The roles (authorities) of the user.
      * This field is mapped to the "user_role_function" table in the database.
@@ -62,21 +69,25 @@ public class User implements UserDetails {
     @Schema(description = "Roles (authorities) of the user.")
     private Set<Role> authorities;
 
-    public User(String username, String email, String password, Set<Role> authorities) {
+    public User(String username, String email, String password, Long userAsigned, Set<Role> authorities) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.userAsigned = userAsigned;
         this.authorities = authorities;
     }
 
 
-    public User(Long userId, String username, String email, String password, Set<Role> authorities) {
+    public User(Long userId, String username, String email, String password, Long userAsigned, Set<Role> authorities) {
         this.userId = userId;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.userAsigned = userAsigned;
         this.authorities = authorities;
     }
+
+
 
     /**
      * Returns the authorities granted to the user.

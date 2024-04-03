@@ -2,8 +2,12 @@ package com.escihu.apiescihuvirtual.persistence.Entity.Student;
 
 import com.escihu.apiescihuvirtual.persistence.Entity.Address.Address;
 import com.escihu.apiescihuvirtual.persistence.Entity.Course.Course;
+import com.escihu.apiescihuvirtual.persistence.Entity.Enums.EstadoCivilEnum;
+import com.escihu.apiescihuvirtual.persistence.Entity.Enums.SexoEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
+import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -31,17 +35,29 @@ public class Student {
     private String apellidoPaterno;
     @Column(name = "apellido_materno")
     private String apellidoMaterno;
-    private String nombreCarrera;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "licenciatura_id")
+    @JsonManagedReference
+    private Licenciatura licenciatura;
+
     @Column(unique = true)
     private String curp;
+
     private String nacionalidad;
-    private String sexo;
+
+    private SexoEnum sexo;
+
     @Column(name = "tipo_sangre")
     private String tipoSangre;
+
     @Column(name = "estado_civil")
-    private String estadoCivil;
+    private EstadoCivilEnum estadoCivil;
+
     private String telefono;
+
     private String celular;
+
     @Column(name = "ingreso_mensual")
     private String ingresoMensual;
 
@@ -50,6 +66,7 @@ public class Student {
 
     @Column(name = "institucion_procedencia_estado")
     private String institucionProcedenciaEstado;
+
     @Column(name = "institucion_procedencia_municipio")
     private String institucionProcedenciaMunicipio;
 
@@ -67,14 +84,14 @@ public class Student {
     @ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
     private List<Course> courses;
 
-    public Student(Long id, String matricula, StatusStudent statusAlumno, String nombre, String apellidoPaterno, String apellidoMaterno, String nombreCarrera, String curp, String nacionalidad, String sexo, String tipoSangre, String estadoCivil, String telefono, String celular, String ingresoMensual, String institucionProcedencia, String institucionProcedenciaEstado, String institucionProcedenciaMunicipio, String correoPersonal, String correoEscolar, Address direccion, List<Course> courses) {
+    public Student(Long id, String matricula, StatusStudent statusAlumno, String nombre, String apellidoPaterno, String apellidoMaterno, Licenciatura licenciatura, String curp, String nacionalidad, SexoEnum sexo, String tipoSangre, EstadoCivilEnum estadoCivil, String telefono, String celular, String ingresoMensual, String institucionProcedencia, String institucionProcedenciaEstado, String institucionProcedenciaMunicipio, String correoPersonal, String correoEscolar, Address direccion, List<Course> courses) {
         this.id = id;
         this.matricula = matricula;
         this.statusAlumno = statusAlumno;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
-        this.nombreCarrera = nombreCarrera;
+        this.licenciatura = licenciatura;
         this.curp = curp;
         this.nacionalidad = nacionalidad;
         this.sexo = sexo;
@@ -92,8 +109,7 @@ public class Student {
         this.courses = courses;
     }
 
-    public Student(){
-
+    public Student() {
     }
 
     public Long getId() {
@@ -144,12 +160,12 @@ public class Student {
         this.apellidoMaterno = apellidoMaterno;
     }
 
-    public String getNombreCarrera() {
-        return nombreCarrera;
+    public Licenciatura getLicenciatura() {
+        return licenciatura;
     }
 
-    public void setNombreCarrera(String nombreCarrera) {
-        this.nombreCarrera = nombreCarrera;
+    public void setLicenciatura(Licenciatura licenciatura) {
+        this.licenciatura = licenciatura;
     }
 
     public String getCurp() {
@@ -168,11 +184,11 @@ public class Student {
         this.nacionalidad = nacionalidad;
     }
 
-    public String getSexo() {
+    public SexoEnum getSexo() {
         return sexo;
     }
 
-    public void setSexo(String sexo) {
+    public void setSexo(SexoEnum sexo) {
         this.sexo = sexo;
     }
 
@@ -184,11 +200,11 @@ public class Student {
         this.tipoSangre = tipoSangre;
     }
 
-    public String getEstadoCivil() {
+    public EstadoCivilEnum getEstadoCivil() {
         return estadoCivil;
     }
 
-    public void setEstadoCivil(String estadoCivil) {
+    public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
         this.estadoCivil = estadoCivil;
     }
 

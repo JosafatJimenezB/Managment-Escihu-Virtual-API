@@ -1,5 +1,8 @@
 package com.escihu.apiescihuvirtual.Dto.Licenciatura;
 
+import lombok.Builder;
+
+@Builder
 public class LicenciaturaDtoRequest {
 
     private String name;

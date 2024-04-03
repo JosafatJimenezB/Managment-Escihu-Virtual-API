@@ -1,19 +1,25 @@
 package com.escihu.apiescihuvirtual.service;
 
 
+import com.escihu.apiescihuvirtual.Dto.Users.PaginatedUsersDtoResponse;
+import com.escihu.apiescihuvirtual.Dto.Users.UserDtoResponse;
 import com.escihu.apiescihuvirtual.persistence.Entity.Role;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
 import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * UserService is a service class that handles operations related to users.
@@ -27,6 +33,7 @@ public class UserService implements UserDetailsService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
+
 
     /**
      * Constructs a new UserService with the specified UserRepository.
@@ -52,6 +59,27 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    public PaginatedUsersDtoResponse listUsersPaginated(Pageable pageable) {
+
+        Page<User> usersPage = userRepository.findAll(pageable);
+
+        List<UserDtoResponse> usersDto = usersPage.getContent().stream()
+                .map(user -> new UserDtoResponse(
+                        user.getUserId(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getUserAsigned(),
+                        user.getAuthorities()
+                )).collect(Collectors.toList());
+
+        return new PaginatedUsersDtoResponse(
+                usersDto,
+                usersPage.getNumber(),
+                usersPage.getTotalPages(),
+                usersPage.getSize()
+        );
+    }
+
     /**
      * Finds a user by the specified username.
      *
@@ -74,7 +102,7 @@ public class UserService implements UserDetailsService {
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         logger.info(String.format("Saving user with username %s and de role %s", user.getUsername(), role.getAuthority()));
-        userRepository.save(new User(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(), roles));
+        userRepository.save(new User(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getUserAsigned(), roles));
     }
 
 }

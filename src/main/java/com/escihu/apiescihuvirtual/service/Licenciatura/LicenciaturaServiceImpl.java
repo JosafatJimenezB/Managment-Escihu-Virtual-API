@@ -24,10 +24,11 @@ public class LicenciaturaServiceImpl implements LicenciaturaService{
 
     @Override
     public Licenciatura create(LicenciaturaDtoRequest licenciaturaDtoRequest) {
-        Licenciatura licenciatura = Licenciatura.builder()
-                .name(licenciaturaDtoRequest.getName())
-                .code(licenciaturaDtoRequest.getCode())
-                .build();
+        Licenciatura licenciatura = new Licenciatura();
+
+        licenciatura.setName(licenciaturaDtoRequest.getName());
+        licenciatura.setCode(licenciaturaDtoRequest.getCode());
+
         return licenciaturaRepository.save(licenciatura);
     }
 

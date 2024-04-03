@@ -1,7 +1,13 @@
 package com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura;
 
+import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @Entity
@@ -14,12 +20,19 @@ public class Licenciatura {
 
     private String name;
 
+    @Column(unique = true)
     private short code;
 
-    public Licenciatura(Long id, String name, short code) {
+    @OneToMany(mappedBy = "licenciatura", cascade = CascadeType.PERSIST)
+    @JsonBackReference
+    @JsonIgnore
+    private Set<Student> students = new HashSet<>();
+
+    public Licenciatura(Long id, String name, short code, Set<Student> students) {
         this.id = id;
         this.name = name;
         this.code = code;
+        this.students = students;
     }
 
     public Licenciatura() {
@@ -48,5 +61,16 @@ public class Licenciatura {
 
     public void setCode(short code) {
         this.code = code;
+    }
+
+    public Set<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student> students) {
+        this.students = students;
+        for(Student student: students){
+            student.setLicenciatura(this);
+        }
     }
 }

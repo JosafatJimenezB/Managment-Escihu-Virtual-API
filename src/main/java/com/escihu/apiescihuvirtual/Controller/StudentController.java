@@ -3,7 +3,7 @@ package com.escihu.apiescihuvirtual.Controller;
 import com.escihu.apiescihuvirtual.Dto.Message;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
-import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponseRecord;
+import com.escihu.apiescihuvirtual.Dto.Student.StudentUpdateDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.escihu.apiescihuvirtual.service.Student.StudentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -71,7 +71,7 @@ public class StudentController {
     }
 
     @PostMapping("/student")
-    public ResponseEntity<?> create(@Valid @RequestBody StudentDtoResponseRecord studentDtoRequest) {
+    public ResponseEntity<?> create(@RequestBody StudentDtoRequest studentDtoRequest) {
         Student student;
         try{
              student = studentService.createStudent(studentDtoRequest);
@@ -88,7 +88,7 @@ public class StudentController {
     }
 
     @PutMapping("/student/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable Long id, @RequestBody StudentDtoRequest studentDtoRequest) {
+    public ResponseEntity<?> update(@Valid @PathVariable Long id, @RequestBody StudentUpdateDtoRequest studentDtoRequest) {
         Student student = null;
 
         try {

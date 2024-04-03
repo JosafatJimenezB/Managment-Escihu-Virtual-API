@@ -44,6 +44,7 @@ public class SecurityConfig {
             "/v3/api-docs",
             "/v3/api-docs/**",
             "/api-docs/**",
+            "/docs/**",
             "/swagger-resources",
             "/swagger-resources/**",
             "/configuration/ui",
@@ -52,6 +53,10 @@ public class SecurityConfig {
             "webjars/**",
             "/swagger-ui.html",
 
+    };
+
+    private static final String[] ADMIN_LIST = {
+            "/api/v1/**"
     };
 
     public SecurityConfig(RSAKeyProperties keys) {
@@ -81,6 +86,10 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1/students/**", "/api/v1/student/").hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.PUT,"/api/v1/student/{id}").hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.GET,"/api/v1/student/{id}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
+                    auth.requestMatchers(HttpMethod.GET, ADMIN_LIST).hasRole(ADMIN_ROLE);
+                    auth.requestMatchers(HttpMethod.POST, ADMIN_LIST).hasRole(ADMIN_ROLE);
+                    auth.requestMatchers(HttpMethod.PUT, ADMIN_LIST).hasRole(ADMIN_ROLE);
+                    auth.requestMatchers(HttpMethod.DELETE, ADMIN_LIST).hasRole(ADMIN_ROLE);
                     auth.requestMatchers("/api/v1/admin/**").hasRole(ADMIN_ROLE);
                     auth.anyRequest().authenticated();
                 });

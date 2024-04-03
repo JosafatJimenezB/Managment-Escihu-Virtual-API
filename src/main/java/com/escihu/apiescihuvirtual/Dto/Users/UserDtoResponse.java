@@ -1,10 +1,14 @@
 package com.escihu.apiescihuvirtual.Dto.Users;
 
 import com.escihu.apiescihuvirtual.persistence.Entity.Role;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 @Builder
-public class UsersDto {
+public class UserDtoResponse {
 
     Long id;
     String username;
@@ -12,7 +16,7 @@ public class UsersDto {
     Long userAsigned;
     Role role;
 
-    public UsersDto(Long id, String username, String email, Long userAsigned, Role role) {
+    public UserDtoResponse(Long id, String username, String email, Long userAsigned, Role role) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -20,7 +24,7 @@ public class UsersDto {
         this.role = role;
     }
 
-    public UsersDto() {
+    public UserDtoResponse(Long userId, String username, String email, @NotNull() Long userAsigned, Collection<? extends GrantedAuthority> authorities) {
 
     }
 
