@@ -6,15 +6,17 @@ import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collector;
 
 @Builder
 public class UserDtoResponse {
 
-    Long id;
-    String username;
-    String email;
-    Long userAsigned;
-    Role role;
+    private Long id;
+    private String username;
+    private String email;
+    private Long userAsigned;
+    private Role role;
 
     public UserDtoResponse(Long id, String username, String email, Long userAsigned, Role role) {
         this.id = id;
@@ -24,8 +26,7 @@ public class UserDtoResponse {
         this.role = role;
     }
 
-    public UserDtoResponse(Long userId, String username, String email, @NotNull() Long userAsigned, Collection<? extends GrantedAuthority> authorities) {
-
+    public UserDtoResponse() {
     }
 
     public Long getId() {

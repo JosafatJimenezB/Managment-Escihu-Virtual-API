@@ -63,20 +63,24 @@ public class UserService implements UserDetailsService {
 
         Page<User> usersPage = userRepository.findAll(pageable);
 
+        Set<Role> roles = new HashSet<>();
+
+
         List<UserDtoResponse> usersDto = usersPage.getContent().stream()
-                .map(user -> new UserDtoResponse(
-                        user.getUserId(),
-                        user.getUsername(),
-                        user.getEmail(),
-                        user.getUserAsigned(),
-                        user.getAuthorities()
-                )).collect(Collectors.toList());
+                .map(userDto -> new UserDtoResponse(
+                        userDto.getUserId(),
+                        userDto.getUsername(),
+                        userDto.getEmail(),
+                        userDto.getUserAsigned(),
+                        (Role) userDto.getAuthorities().stream().findFirst().orElseThrow(() -> new RuntimeException("User has no role")))
+                ).collect(Collectors.toList());
 
         return new PaginatedUsersDtoResponse(
                 usersDto,
                 usersPage.getNumber(),
                 usersPage.getTotalPages(),
-                usersPage.getSize()
+                usersPage.getSize(),
+                usersPage.getTotalElements()
         );
     }
 

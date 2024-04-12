@@ -1,6 +1,7 @@
 package com.escihu.apiescihuvirtual.persistence.Entity;
 
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -49,6 +50,7 @@ public class User implements UserDetails {
      * This field is mapped to the "password" column in the database.
      */
     @Schema(description = "Password of the user.")
+    @JsonIgnore
     private String password;
 
     @Schema(description = "User asigned to one account")
