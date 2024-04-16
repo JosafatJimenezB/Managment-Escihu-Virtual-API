@@ -19,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1")
+@CrossOrigin(origins = "*")
 public class CycleCourse {
 
     private final CycleService cycleService;

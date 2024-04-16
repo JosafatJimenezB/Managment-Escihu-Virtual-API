@@ -28,6 +28,7 @@ import java.util.List;
 @Tag(name = "Controlador de docentes")
 @RestController
 @RequestMapping("/api/v1")
+@CrossOrigin(origins = "*")
 public class TeacherController {
 
     private final TeacherService teacherService;

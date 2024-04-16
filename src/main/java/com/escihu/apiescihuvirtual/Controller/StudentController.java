@@ -20,6 +20,7 @@ import java.util.List;
 @Tag(name = "Controlador de estudiantes")
 @RestController
 @RequestMapping("/api/v1")
+@CrossOrigin(origins = "*")
 public class StudentController {
 
     private final StudentService studentService;

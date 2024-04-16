@@ -2,14 +2,15 @@ package com.escihu.apiescihuvirtual.persistence.Entity.Attendance;
 
 import com.escihu.apiescihuvirtual.persistence.Entity.Attendance.Enum.TypeAttendace;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "attendance")
+@CrossOrigin(origins = "*")
 public class Attendance {
 
     @Id

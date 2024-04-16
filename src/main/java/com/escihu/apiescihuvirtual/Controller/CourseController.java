@@ -18,6 +18,7 @@ import java.util.List;
 
 @Tag(name = "Controlador de cursos")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class CourseController {
 

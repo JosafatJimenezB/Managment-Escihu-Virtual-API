@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1")
+@CrossOrigin(origins = "*")
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
