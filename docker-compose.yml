@@ -1,0 +1,23 @@
+
+services:
+  spring-api:
+    container_name: escihu-api
+    build: .
+    ports:
+      - "9090:9090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://mypostgresdb:5432/escihu_virtual
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - mypostgresdb
+  mypostgresdb:
+    container_name: "mypostgresdb"
+    image: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: escihu_virtual
