@@ -42,7 +42,7 @@ public class TeacherController {
             parameters = {
                     @Parameter(description = "Número de la página de resultados (comenzando en 0)", name = "page", required = false, in = ParameterIn.QUERY)
             })
-    @GetMapping("/teachers")
+    @GetMapping("/teachers/list")
     public ResponseEntity<?> pageableAll(@RequestParam(name = "page", defaultValue = "0") int page) {
 
         try{
@@ -63,11 +63,30 @@ public class TeacherController {
             parameters = {
             @Parameter(description = "Tamaño de la página", name = "pageSize", required = false, in = ParameterIn.QUERY)
     })
-    @GetMapping("/teachers/paginated/{pageSize}")
-    public ResponseEntity<?> getTeachersPaginated(Pageable pageable, @RequestParam (value = "pageSize", defaultValue = "10") int pageSize) {
+    @GetMapping("/teachers/paginated1")
+    public ResponseEntity<?> getTeachersPaginated(
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
         try{
-            Pageable modifiedPage = PageRequest.of(pageable.getPageNumber(), pageSize);
+            Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
             return new ResponseEntity<>(teacherService.listTeachersPaginated(modifiedPage), HttpStatus.OK);
+        }catch (DataAccessException e) {
+            return new ResponseEntity<>(Message.builder()
+                    .message(e.getMessage())
+                    .object(null)
+                    .build(), HttpStatus.METHOD_NOT_ALLOWED
+            );
+        }
+    }
+
+    @GetMapping("/teachers/paginated")
+    public ResponseEntity<?> teachersPaginated(
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        try{
+            Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
+            Page<TeacherDtoResponse> teacherPage = teacherService.teachersClassicPagination(modifiedPage);
+            return new ResponseEntity<>(teacherPage, HttpStatus.OK);
         }catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())

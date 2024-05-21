@@ -5,6 +5,8 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Attendance.Attendance;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
 import com.escihu.apiescihuvirtual.persistence.Repository.AttendaceRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +37,17 @@ public class AttendanceServiceImpl implements AttendaceService{
     }
 
     @Override
+    public Page<Attendance> attendancePagination(Pageable pageable) {
+        return attendaceRepository.findAll(pageable);
+    }
+
+    @Override
     public List<Attendance> listAll() {
         return attendaceRepository.findAll();
+    }
+
+    @Override
+    public Page<Attendance> attendaceByUserId(Long userId, Pageable pageable) {
+        return attendaceRepository.findByUserUserId(userId, pageable);
     }
 }

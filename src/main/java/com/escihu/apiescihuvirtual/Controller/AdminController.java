@@ -36,10 +36,12 @@ public class AdminController {
         return ResponseEntity.ok("Role changed");
     }
 
-    @GetMapping("/list_users/{pageSize}")
-    public ResponseEntity<?> listUsers(Pageable pageable, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
+    @GetMapping("/list_users")
+    public ResponseEntity<?> listUsers(
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize){
         try{
-            Pageable modifiedPage = PageRequest.of(pageable.getPageNumber(), pageSize);
+            Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
             return new ResponseEntity<>(userService.listUsersPaginated(modifiedPage), HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()

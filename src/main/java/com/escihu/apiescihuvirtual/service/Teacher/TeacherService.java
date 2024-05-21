@@ -19,6 +19,8 @@ public interface TeacherService {
 
     PaginatedTeacherDtoResponse listTeachersPaginated(Pageable pageable);
 
+    public Page<TeacherDtoResponse> teachersClassicPagination(Pageable pageable);
+
     public List<TeacherDtoResponse> listTeachers();
 
     public Teacher getTeacherById(Long id);

@@ -7,14 +7,18 @@ import com.escihu.apiescihuvirtual.service.Attendance.AttendanceServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("/api/v1")
 @CrossOrigin(origins = "*")
 @Tag(name = "Controlador de asistencias")
 public class AttendanceController {
@@ -67,6 +71,43 @@ public class AttendanceController {
                     .object(null)
                     .build(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/attendance/paginated")
+    public ResponseEntity<?> paginatedAttendance(
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
+
+        try {
+            Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
+            Page<Attendance> attendancePage = attendanceService.attendancePagination(modifiedPage);
+            return new ResponseEntity<>(attendancePage, HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(Message.builder()
+                    .message(e.getMessage())
+                    .object(null)
+                    .build(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @GetMapping("/attendance/{userId}/paginated")
+    public ResponseEntity<?> paginatedAttendanceByUserId(
+            @PathVariable Long userId,
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
+
+        try {
+            Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
+            Page<Attendance> attendancePage = attendanceService.attendaceByUserId(userId, modifiedPage);
+            return new ResponseEntity<>(attendancePage, HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(Message.builder()
+                    .message(e.getMessage())
+                    .object(null)
+                    .build(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 }

@@ -31,10 +31,12 @@ public class ClassroomController {
 
     @Operation(summary = "Retorna todos los salones con paginación")
     @GetMapping("/classrooms")
-    public ResponseEntity<?> pageableAll(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public ResponseEntity<?> pageableAll(
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
 
         try{
-            PageRequest pageable = PageRequest.of(page, 10);
+            PageRequest pageable = PageRequest.of(currentPage, pageSize);
             Page<Classroom> classrooms = classroomService.getAllClassrooms(pageable);
             return new ResponseEntity<>(classrooms, HttpStatus.OK);
         }catch (DataAccessException e) {

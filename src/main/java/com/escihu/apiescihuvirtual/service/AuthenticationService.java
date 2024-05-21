@@ -7,7 +7,6 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Role;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
 import com.escihu.apiescihuvirtual.persistence.Repository.RoleRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
-import com.escihu.apiescihuvirtual.utils.CookieUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

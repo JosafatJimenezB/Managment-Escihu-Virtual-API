@@ -11,12 +11,14 @@ public class PaginatedTeacherDtoResponse {
     private int currentPage;
     private int totalPages;
     private int pageSize;
+    private int totalElements;
 
-    public PaginatedTeacherDtoResponse(List<TeacherDtoResponse> teachers, int currentPage, int totalPages, int pageSize) {
+    public PaginatedTeacherDtoResponse(List<TeacherDtoResponse> teachers, int currentPage, int totalPages, int pageSize, int totalElements) {
         this.teachers = teachers;
         this.currentPage = currentPage;
         this.totalPages = totalPages;
         this.pageSize = pageSize;
+        this.totalElements = totalElements;
     }
 
      public PaginatedTeacherDtoResponse() {
@@ -53,5 +55,13 @@ public class PaginatedTeacherDtoResponse {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public int getTotalElements() {
+        return totalElements;
+    }
+
+    public void setTotalElements(int totalElements) {
+        this.totalElements = totalElements;
     }
 }

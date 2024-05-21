@@ -6,7 +6,6 @@ import com.escihu.apiescihuvirtual.Dto.RegistrationDTO;
 import com.escihu.apiescihuvirtual.exceptions.UsernameNotFoundException;
 import com.escihu.apiescihuvirtual.service.AuthenticationService;
 import com.escihu.apiescihuvirtual.service.TokenService;
-import com.escihu.apiescihuvirtual.utils.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -15,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("/api/v1/auth")
 @CrossOrigin(origins = "*")
 public class AuthenticationController {
 
@@ -42,20 +41,6 @@ public class AuthenticationController {
     public ResponseEntity<LoginResponse> loginUser(HttpServletResponse res, @Valid @RequestBody LoginRequestDTO loginRequestDTO) {
         try {
             LoginResponse user = authenticationService.loginUser(loginRequestDTO.username(), loginRequestDTO.password());
-
-   //         CookieUtil.create(res, "Authorization", user.token(), false, -1, "localhost");
-  //          res.addHeader("Authorization", "Bearer " + user.token());
-
-            Cookie cookie = new Cookie("token", user.token());
-
-            cookie.setMaxAge(60);
-            cookie.setHttpOnly(true);
-            cookie.setSecure(true);
-
-            res.addCookie(cookie);
-
-            res.addHeader("Authorization", "Bearer " + user.token());
-
             return ResponseEntity.ok(user);
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

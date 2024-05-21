@@ -29,10 +29,12 @@ public class CycleCourse {
     }
 
     @GetMapping("/cycles/paginated")
-    public ResponseEntity<?> pageableAll(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public ResponseEntity<?> pageableAll(
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
 
         try{
-            PageRequest pageable = PageRequest.of(page, 10);
+            PageRequest pageable = PageRequest.of(currentPage, pageSize);
             Page<Cycle> cycle = cycleService.getAllCycles(pageable);
             return new ResponseEntity<>(cycle, HttpStatus.OK);
         }catch (DataAccessException e) {

@@ -9,6 +9,7 @@ import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -59,7 +60,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public PaginatedUsersDtoResponse listUsersPaginated(Pageable pageable) {
+    public Page<UserDtoResponse> listUsersPaginated(Pageable pageable) {
 
         Page<User> usersPage = userRepository.findAll(pageable);
 
@@ -75,13 +76,7 @@ public class UserService implements UserDetailsService {
                         (Role) userDto.getAuthorities().stream().findFirst().orElseThrow(() -> new RuntimeException("User has no role")))
                 ).collect(Collectors.toList());
 
-        return new PaginatedUsersDtoResponse(
-                usersDto,
-                usersPage.getNumber(),
-                usersPage.getTotalPages(),
-                usersPage.getSize(),
-                usersPage.getTotalElements()
-        );
+        return new PageImpl<>(usersDto, pageable, usersPage.getTotalElements());
     }
 
     /**

@@ -18,7 +18,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -59,6 +58,10 @@ public class SecurityConfig {
             "/api/v1/**"
     };
 
+    private static final String[] STUDENT_LIST = {
+            "/api/v1/attendance/**"
+    };
+
     public SecurityConfig(RSAKeyProperties keys) {
         this.keys = keys;
     }
@@ -82,11 +85,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(AUTH_WHITELIST).permitAll();
-                    auth.requestMatchers("/api/v1/auth/**").permitAll();
+                    auth.requestMatchers("/api/v1/auth/login").permitAll();
                     auth.requestMatchers("/api/v1/students/**", "/api/v1/student/").hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.PUT,"/api/v1/student/{id}").hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.GET,"/api/v1/student/{id}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.GET, ADMIN_LIST).hasRole(ADMIN_ROLE);
+                    auth.requestMatchers(HttpMethod.GET, STUDENT_LIST).hasRole(STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.POST, ADMIN_LIST).hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.PUT, ADMIN_LIST).hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.DELETE, ADMIN_LIST).hasRole(ADMIN_ROLE);

@@ -29,10 +29,12 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @GetMapping("/students/paginated/{pageSize}")
-    public ResponseEntity<?> getStudentsPaginated(Pageable pageable, @RequestParam (value = "pageSize", defaultValue = "10") int pageSize) {
+    @GetMapping("/students/paginated")
+    public ResponseEntity<?> getStudentsPaginated(
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
         try {
-            Pageable modifiedPage = PageRequest.of(pageable.getPageNumber(), pageSize);
+            Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
             return new ResponseEntity<>(studentService.listStudentsPaginated(modifiedPage), HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()

@@ -6,6 +6,7 @@ import com.escihu.apiescihuvirtual.Dto.Teacher.TeacherDtoResponse;
 import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
 import com.escihu.apiescihuvirtual.persistence.Repository.TeacherRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -107,8 +108,26 @@ public class TeacherServiceImpl implements TeacherService{
                 teachersDto,
                 teachersPage.getNumber(),
                 teachersPage.getTotalPages(),
-                teachersPage.getSize()
+                teachersPage.getSize(),
+                teachersPage.getNumberOfElements()
         );
+    }
+
+    @Override
+    public Page<TeacherDtoResponse> teachersClassicPagination(Pageable pageable) {
+        Page<Teacher> teachersPage = teacherRepository.findAll(pageable);
+
+        List<TeacherDtoResponse> teachersDto = teachersPage.getContent().stream()
+                .map(teacher -> new TeacherDtoResponse(
+                        teacher.getId(),
+                        teacher.getNombre(),
+                        teacher.getApellidoPaterno(),
+                        teacher.getApellidoMaterno(),
+                        teacher.getAreaConocimientos())
+                )
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(teachersDto, pageable, teachersPage.getTotalElements());
     }
 
     @Override
