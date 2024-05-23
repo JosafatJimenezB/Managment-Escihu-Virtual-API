@@ -10,6 +10,7 @@ import com.escihu.apiescihuvirtual.persistence.Repository.LicenciaturaRepository
 import com.escihu.apiescihuvirtual.persistence.Repository.RoleRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.StudentRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
+import com.escihu.apiescihuvirtual.utils.UserUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,8 +45,9 @@ public class StudentServiceImpl implements StudentService{
     public Student createStudent(StudentDtoRequest studentDtoRequest) {
 
         String username = studentDtoRequest.getNombre().toLowerCase() + "." + studentDtoRequest.getApellidoPaterno().toLowerCase();
-        String email = generateEmail(studentDtoRequest.getNombre(), studentDtoRequest.getApellidoPaterno());
-
+        //TODO: Investigar como evitar psar el repositorio
+        String email = UserUtils.generateEmail(studentDtoRequest.getNombre(), studentDtoRequest.getApellidoPaterno(), userRepository);
+        String password = UserUtils.generateRandomPassword();
         Role studentRole = roleRepository.findByAuthority("STUDENT")
                 .orElseThrow(() -> new RuntimeException("Student Role not found"));
         // Se crea el usuario
@@ -195,33 +197,4 @@ public class StudentServiceImpl implements StudentService{
         return String.format("%02d%02d%03d", year, licCode, randomNum);
     }
 
-
-    public String generateEmail(String nombre, String apellidoPaterno) {
-        String correo = "";
-        correo += nombre.toLowerCase() + "." + apellidoPaterno.toLowerCase()  + "@escihu.com";
-        Optional<User> existEmailUser = userRepository.findByEmail(correo);
-        int counter = 1;
-        while(existEmailUser.isPresent()) {
-            correo = nombre.toLowerCase() + "." + apellidoPaterno.toLowerCase() + counter + "@escihu.com";
-            counter++;
-            existEmailUser = userRepository.findByEmail(correo);
-        }
-
-        return correo;
-    }
-
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
-    private static final int PASSWORD_LENGTH = 12; // Longitud deseada de la contraseña
-
-    private String generateRandomPassword() {
-        SecureRandom random = new SecureRandom();
-        StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
-
-        for (int i = 0; i < PASSWORD_LENGTH; i++) {
-            password.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
-        }
-
-        return password.toString();
-
-    }
 }
