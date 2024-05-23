@@ -9,7 +9,9 @@ import com.escihu.apiescihuvirtual.persistence.Entity.User;
 import com.escihu.apiescihuvirtual.persistence.Repository.RoleRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.TeacherRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
+import com.escihu.apiescihuvirtual.service.EmailService;
 import com.escihu.apiescihuvirtual.utils.UserUtils;
+import jakarta.mail.MessagingException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -28,12 +30,14 @@ public class TeacherServiceImpl implements TeacherService{
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-    public TeacherServiceImpl(TeacherRepository teacherRepository, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.teacherRepository = teacherRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
 
@@ -41,6 +45,7 @@ public class TeacherServiceImpl implements TeacherService{
     public Teacher createTeacher(TeacherDtoRequest teacherDtoRequest) {
         String username = teacherDtoRequest.getNombre().toLowerCase() + teacherDtoRequest.getApellidoPaterno().toLowerCase();
         String email = UserUtils.generateEmail(teacherDtoRequest.getNombre(), teacherDtoRequest.getApellidoPaterno(), userRepository);
+        String password = UserUtils.generateRandomPassword();
 
         Role TeacherRole = roleRepository.findByAuthority("TEACHER")
                 .orElseThrow(() -> new RuntimeException("Teacher Role not found"));
@@ -48,7 +53,7 @@ public class TeacherServiceImpl implements TeacherService{
         User user = new User(
                 username,
                 email,
-                passwordEncoder.encode(UserUtils.generateRandomPassword()),
+                passwordEncoder.encode(password),
                 Set.of(TeacherRole)
         );
 
@@ -75,6 +80,14 @@ public class TeacherServiceImpl implements TeacherService{
                 .direccion(teacherDtoRequest.getDireccion())
                 .statusDocente(teacherDtoRequest.getStatusDocente())
                 .build();
+
+        try {
+            emailService.sendUserCredencials(teacher.getCorreoPersonal(), username, password);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+
+        }
+
 
         return teacherRepository.save(teacher);
     }
