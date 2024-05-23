@@ -1,11 +1,13 @@
 package com.escihu.apiescihuvirtual.persistence.Entity;
 
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
+import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -16,6 +18,7 @@ import java.util.Set;
 @Table(name = "users")
 @Schema(description = "Entity representing a user in the system.")
 @Getter
+@Setter
 @NoArgsConstructor
 public class User implements UserDetails {
 
@@ -53,10 +56,19 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
-    @Schema(description = "User asigned to one account")
+    /*@Schema(description = "User asigned to one account")
     @Column(name = "user_asigned", unique = true)
     @NotNull()
     private Long userAsigned;
+
+     */
+    // Asegurarse de que el usuario tenga un estudiante o un profesor
+    @OneToOne(mappedBy = "user")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Student student;
+
+    @OneToOne(mappedBy = "user")
+    private Teacher teacher;
 
     /**
      * The roles (authorities) of the user.
@@ -71,25 +83,31 @@ public class User implements UserDetails {
     @Schema(description = "Roles (authorities) of the user.")
     private Set<Role> authorities;
 
-    public User(String username, String email, String password, Long userAsigned, Set<Role> authorities) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.userAsigned = userAsigned;
-        this.authorities = authorities;
-    }
-
-
-    public User(Long userId, String username, String email, String password, Long userAsigned, Set<Role> authorities) {
+    public User(Long userId, String username, String email, String password, Student student, Teacher teacher, Set<Role> authorities) {
         this.userId = userId;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.userAsigned = userAsigned;
+        this.student = student;
+        this.teacher = teacher;
         this.authorities = authorities;
     }
 
+    public User(String username, String email, String password, Student student, Teacher teacher, Set<Role> authorities) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.student = student;
+        this.teacher = teacher;
+        this.authorities = authorities;
+    }
 
+    public User(String username, String email, String password, Set<Role> authorities) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+    }
 
     /**
      * Returns the authorities granted to the user.

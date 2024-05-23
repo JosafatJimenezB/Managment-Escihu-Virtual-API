@@ -3,16 +3,21 @@ package com.escihu.apiescihuvirtual.service.Student;
 import com.escihu.apiescihuvirtual.Dto.Student.*;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
+import com.escihu.apiescihuvirtual.persistence.Entity.Role;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
+import com.escihu.apiescihuvirtual.persistence.Entity.User;
 import com.escihu.apiescihuvirtual.persistence.Repository.LicenciaturaRepository;
+import com.escihu.apiescihuvirtual.persistence.Repository.RoleRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.StudentRepository;
+import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,29 +26,54 @@ public class StudentServiceImpl implements StudentService{
     private final StudentRepository studentRepository;
 
     private final LicenciaturaRepository licenciaturaRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public StudentServiceImpl(StudentRepository studentRepository, LicenciaturaRepository licenciaturaRepository) {
+
+    public StudentServiceImpl(StudentRepository studentRepository, LicenciaturaRepository licenciaturaRepository, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
         this.licenciaturaRepository = licenciaturaRepository;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @Override
     public Student createStudent(StudentDtoRequest studentDtoRequest) {
+
+        String username = studentDtoRequest.getNombre().toLowerCase() + "." + studentDtoRequest.getApellidoPaterno().toLowerCase();
+        String email = generateEmail(studentDtoRequest.getNombre(), studentDtoRequest.getApellidoPaterno());
+
+        Role studentRole = roleRepository.findByAuthority("STUDENT")
+                .orElseThrow(() -> new RuntimeException("Student Role not found"));
+        // Se crea el usuario
+        User user = new User(
+                username,
+                email,
+                passwordEncoder.encode(generateRandomPassword()),
+                Set.of(studentRole)
+        );
+        // Se guarda en la base de datos
+        userRepository.save(user);
+
+        // Se crea el estudiante con el usuario generado
         Student student = Student.builder()
                 .nombre(studentDtoRequest.getNombre())
                 .apellidoPaterno(studentDtoRequest.getApellidoPaterno())
                 .apellidoMaterno(studentDtoRequest.getApellidoMaterno())
                 .celular(studentDtoRequest.getCelular())
                 .curp(studentDtoRequest.getCurp())
-                .correoEscolar(null)
+                .correoEscolar(email)
+                .user(user)
                 .estadoCivil(studentDtoRequest.getEstadoCivil())
                 .sexo(studentDtoRequest.getSexo())
                 .correoPersonal(studentDtoRequest.getCorreoPersonal())
                 .nacionalidad(studentDtoRequest.getNacionalidad())
                 .ingresoMensual(studentDtoRequest.getIngresoMensual())
                 .direccion(studentDtoRequest.getDireccion())
-                .matricula(generarMatricula(studentDtoRequest.getLicenciatura().getCode(), 2))
+                .matricula(generarMatricula(studentDtoRequest.getLicenciatura().getCode()))
                 .tipoSangre(studentDtoRequest.getTipoSangre())
                 .statusAlumno(StatusStudent.PROCESO_INSCRIPCION)
                 .institucionProcedenciaEstado(studentDtoRequest.getInstitucionProcedenciaEstado())
@@ -59,6 +89,7 @@ public class StudentServiceImpl implements StudentService{
         }
 
         licenciatura.ifPresent(student::setLicenciatura);
+
 
         return studentRepository.save(student);
     }
@@ -153,19 +184,44 @@ public class StudentServiceImpl implements StudentService{
         return studentRepository.existsById(id);
     }
 
-    public String generarMatricula(int licCode, int studentId) {
+    public static String generarMatricula(int licCode) {
+        LocalDateTime now = LocalDateTime.now();
+        int year = now.getYear() % 100; // Obtiene los dos últimos dígitos del año
 
-        Date dt = new Date();
-        int year = dt.getYear();
+        Random random = new Random();
+        int randomNum = random.nextInt(1000); // Genera un número aleatorio de 3 dígitos
 
-        String matricula = "";
 
-        matricula += String.format("%02d", year);
+        return String.format("%02d%02d%03d", year, licCode, randomNum);
+    }
 
-        matricula += String.format("%02d", licCode);
 
-        matricula += String.format("%03d", studentId);
+    public String generateEmail(String nombre, String apellidoPaterno) {
+        String correo = "";
+        correo += nombre.toLowerCase() + "." + apellidoPaterno.toLowerCase()  + "@escihu.com";
+        Optional<User> existEmailUser = userRepository.findByEmail(correo);
+        int counter = 1;
+        while(existEmailUser.isPresent()) {
+            correo = nombre.toLowerCase() + "." + apellidoPaterno.toLowerCase() + counter + "@escihu.com";
+            counter++;
+            existEmailUser = userRepository.findByEmail(correo);
+        }
 
-        return matricula;
+        return correo;
+    }
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
+    private static final int PASSWORD_LENGTH = 12; // Longitud deseada de la contraseña
+
+    private String generateRandomPassword() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
+
+        for (int i = 0; i < PASSWORD_LENGTH; i++) {
+            password.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+
+        return password.toString();
+
     }
 }

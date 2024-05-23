@@ -6,6 +6,7 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Enums.EstadoCivilEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.SexoEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
+import com.escihu.apiescihuvirtual.persistence.Entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -29,6 +30,10 @@ public class Student {
 
     @Enumerated(EnumType.STRING)
     private StatusStudent statusAlumno;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String nombre;
     @Column(name = "apellido_paterno")
@@ -84,10 +89,11 @@ public class Student {
     @ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
     private List<Course> courses;
 
-    public Student(Long id, String matricula, StatusStudent statusAlumno, String nombre, String apellidoPaterno, String apellidoMaterno, Licenciatura licenciatura, String curp, String nacionalidad, SexoEnum sexo, String tipoSangre, EstadoCivilEnum estadoCivil, String telefono, String celular, String ingresoMensual, String institucionProcedencia, String institucionProcedenciaEstado, String institucionProcedenciaMunicipio, String correoPersonal, String correoEscolar, Address direccion, List<Course> courses) {
+    public Student(Long id, String matricula, StatusStudent statusAlumno, User user, String nombre, String apellidoPaterno, String apellidoMaterno, Licenciatura licenciatura, String curp, String nacionalidad, SexoEnum sexo, String tipoSangre, EstadoCivilEnum estadoCivil, String telefono, String celular, String ingresoMensual, String institucionProcedencia, String institucionProcedenciaEstado, String institucionProcedenciaMunicipio, String correoPersonal, String correoEscolar, Address direccion, List<Course> courses) {
         this.id = id;
         this.matricula = matricula;
         this.statusAlumno = statusAlumno;
+        this.user = user;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
