@@ -34,7 +34,7 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerUser(String username, String email, String password, Long userAsigned) {
+    public void registerUser(String username, String email, String password) {
 
         if (isUsersExists(username)) {
             throw new UsernameAlreadyTakenException("Username already taken");
@@ -44,6 +44,8 @@ public class AuthenticationService {
             throw new EmailAlreadyTakenException("Email already taken");
         }
 
+        // Investigar si hay una mejor forma de hacer esto
+
         if (userRepository.count() == 0) {
             Role adminRole = roleRepository.findByAuthority("ADMIN")
                     .orElseThrow(() -> new RuntimeException("Role not found"));
@@ -51,7 +53,8 @@ public class AuthenticationService {
 
             authorities.add(adminRole);
             String encodedPassword = passwordEncoder.encode(password);
-            userRepository.save(new User(username, email, encodedPassword, userAsigned, authorities));
+
+            userRepository.save(new User(username, email, encodedPassword, authorities));
             return;
         }
 
@@ -60,7 +63,7 @@ public class AuthenticationService {
         Set<Role> authorities = new HashSet<>();
         authorities.add(userRole);
         String encodedPassword = passwordEncoder.encode(password);
-        User user = new User(username, email, encodedPassword, userAsigned, authorities);
+        User user = new User(username, email, encodedPassword, authorities);
         userRepository.save(user);
 
     }
@@ -77,7 +80,7 @@ public class AuthenticationService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
         Role role = (Role) user.getAuthorities().stream().findFirst().orElseThrow(() -> new RuntimeException("User has no role"));
 
-        return new LoginResponse( user.getUserId(),username, token, user.getUserAsigned(), role);
+        return new LoginResponse( user.getUserId(),username, token, user.getStudent(),user.getTeacher(), role);
     }
 
     private boolean isUsersExists(String username) {
