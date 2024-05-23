@@ -30,7 +30,7 @@ public class AuthenticationController {
     // TODO: Exception en caso del correo sea el mismo
     public ResponseEntity<String> registerUser(@Valid @RequestBody RegistrationDTO registrationDTO) {
         try {
-            authenticationService.registerUser(registrationDTO.username(), registrationDTO.email(), registrationDTO.password(), registrationDTO.userAsigned());
+            authenticationService.registerUser(registrationDTO.username(), registrationDTO.email(), registrationDTO.password());
             return ResponseEntity.ok("User registered successfully");
         } catch (Exception e) {
             throw new RuntimeException(e);
