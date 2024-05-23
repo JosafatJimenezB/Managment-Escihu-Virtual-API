@@ -32,14 +32,16 @@ public class StudentServiceImpl implements StudentService{
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
 
-    public StudentServiceImpl(StudentRepository studentRepository, LicenciaturaRepository licenciaturaRepository, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public StudentServiceImpl(StudentRepository studentRepository, LicenciaturaRepository licenciaturaRepository, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.studentRepository = studentRepository;
         this.licenciaturaRepository = licenciaturaRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
 
@@ -56,7 +58,7 @@ public class StudentServiceImpl implements StudentService{
         User user = new User(
                 username,
                 email,
-                passwordEncoder.encode(generateRandomPassword()),
+                passwordEncoder.encode(password),
                 Set.of(studentRole)
         );
         // Se guarda en la base de datos
@@ -94,6 +96,12 @@ public class StudentServiceImpl implements StudentService{
 
         licenciatura.ifPresent(student::setLicenciatura);
 
+        try {
+            emailService.sendUserCredencials(student.getCorreoPersonal(), username, password);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+
+        }
 
         return studentRepository.save(student);
     }
