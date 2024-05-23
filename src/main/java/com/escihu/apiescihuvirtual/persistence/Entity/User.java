@@ -68,6 +68,7 @@ public class User implements UserDetails {
     private Student student;
 
     @OneToOne(mappedBy = "user")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Teacher teacher;
 
     /**
