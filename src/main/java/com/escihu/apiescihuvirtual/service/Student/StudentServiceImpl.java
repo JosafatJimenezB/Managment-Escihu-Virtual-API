@@ -10,7 +10,9 @@ import com.escihu.apiescihuvirtual.persistence.Repository.LicenciaturaRepository
 import com.escihu.apiescihuvirtual.persistence.Repository.RoleRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.StudentRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
+import com.escihu.apiescihuvirtual.service.EmailService;
 import com.escihu.apiescihuvirtual.utils.UserUtils;
+import jakarta.mail.MessagingException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;

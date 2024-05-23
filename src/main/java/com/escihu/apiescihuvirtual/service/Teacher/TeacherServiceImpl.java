@@ -3,29 +3,57 @@ package com.escihu.apiescihuvirtual.service.Teacher;
 import com.escihu.apiescihuvirtual.Dto.Teacher.PaginatedTeacherDtoResponse;
 import com.escihu.apiescihuvirtual.Dto.Teacher.TeacherDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Teacher.TeacherDtoResponse;
+import com.escihu.apiescihuvirtual.persistence.Entity.Role;
 import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
+import com.escihu.apiescihuvirtual.persistence.Entity.User;
+import com.escihu.apiescihuvirtual.persistence.Repository.RoleRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.TeacherRepository;
+import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
+import com.escihu.apiescihuvirtual.utils.UserUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class TeacherServiceImpl implements TeacherService{
 
     private final TeacherRepository teacherRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public TeacherServiceImpl(TeacherRepository teacherRepository) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.teacherRepository = teacherRepository;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @Override
     public Teacher createTeacher(TeacherDtoRequest teacherDtoRequest) {
+        String username = teacherDtoRequest.getNombre().toLowerCase() + teacherDtoRequest.getApellidoPaterno().toLowerCase();
+        String email = UserUtils.generateEmail(teacherDtoRequest.getNombre(), teacherDtoRequest.getApellidoPaterno(), userRepository);
+
+        Role TeacherRole = roleRepository.findByAuthority("TEACHER")
+                .orElseThrow(() -> new RuntimeException("Teacher Role not found"));
+
+        User user = new User(
+                username,
+                email,
+                passwordEncoder.encode(UserUtils.generateRandomPassword()),
+                Set.of(TeacherRole)
+        );
+
+        userRepository.save(user);
+
         Teacher teacher = Teacher.builder()
                 .nombre(teacherDtoRequest.getNombre())
                 .apellidoPaterno(teacherDtoRequest.getApellidoPaterno())
@@ -39,7 +67,8 @@ public class TeacherServiceImpl implements TeacherService{
                 .estadoCivil(teacherDtoRequest.getEstadoCivil())
                 .gradoEstudios(teacherDtoRequest.getGradoEstudios())
                 .sexo(teacherDtoRequest.getSexo())
-                .correoEscolar(null)
+                .correoEscolar(email)
+                .user(user)
                 .fechaBaja(null)
                 .tipoSangre(teacherDtoRequest.getTipoSangre())
                 .nacionalidad(teacherDtoRequest.getNacionalidad())
