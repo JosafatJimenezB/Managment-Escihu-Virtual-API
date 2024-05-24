@@ -1,10 +1,13 @@
 package com.escihu.apiescihuvirtual.service;
 
 
-import com.escihu.apiescihuvirtual.Dto.Users.PaginatedUsersDtoResponse;
 import com.escihu.apiescihuvirtual.Dto.Users.UserDtoResponse;
 import com.escihu.apiescihuvirtual.persistence.Entity.Role;
+import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
+import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
+import com.escihu.apiescihuvirtual.persistence.Repository.StudentRepository;
+import com.escihu.apiescihuvirtual.persistence.Repository.TeacherRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 /**
  * UserService is a service class that handles operations related to users.
  * It implements the UserDetailsService interface from Spring Security.
@@ -34,6 +38,8 @@ public class UserService implements UserDetailsService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
 
 
     /**
@@ -41,8 +47,10 @@ public class UserService implements UserDetailsService {
      *
      * @param userRepository the UserRepository to be used by the UserService
      */
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, StudentRepository studentRepository, TeacherRepository teacherRepository) {
         this.userRepository = userRepository;
+        this.studentRepository = studentRepository;
+        this.teacherRepository = teacherRepository;
     }
 
     /**
@@ -64,19 +72,79 @@ public class UserService implements UserDetailsService {
 
         Page<User> usersPage = userRepository.findAll(pageable);
 
-        Set<Role> roles = new HashSet<>();
 
 
         List<UserDtoResponse> usersDto = usersPage.getContent().stream()
-                .map(userDto -> new UserDtoResponse(
-                        userDto.getUserId(),
-                        userDto.getUsername(),
-                        userDto.getEmail(),
-                        userDto.getUserAsigned(),
-                        (Role) userDto.getAuthorities().stream().findFirst().orElseThrow(() -> new RuntimeException("User has no role")))
-                ).collect(Collectors.toList());
+                .map(user -> {
+                    Student studentDto = null;
+                    Teacher teacherDto = null;
+
+                    if (user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("STUDENT"))) {
+                    Student student = studentRepository.findByUserUserId(user.getUserId());
+                    if(student != null) {
+                        studentDto = Student.builder()
+                                .id(student.getId())
+                                .nombre(student.getNombre())
+                                .apellidoPaterno(student.getApellidoPaterno())
+                                .apellidoMaterno(student.getApellidoMaterno())
+                                .matricula(student.getMatricula())
+                                .licenciatura(student.getLicenciatura())
+                                .courses(student.getCourses())
+                                .nacionalidad(student.getNacionalidad())
+                                .sexo(student.getSexo())
+                                .estadoCivil(student.getEstadoCivil())
+                                .build();
+                        }
+                    }
+                    if (user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("TEACHER"))) {
+                        Teacher teacher = teacherRepository.findByUserUserId(user.getUserId());
+                        if(teacher != null) {
+                            teacherDto = Teacher.builder()
+                                    .id(teacher.getId())
+                                    .nombre(teacher.getNombre())
+                                    .apellidoPaterno(teacher.getApellidoPaterno())
+                                    .apellidoMaterno(teacher.getApellidoMaterno())
+                                    .RFC(teacher.getRFC())
+                                    .CURP(teacher.getCURP())
+                                    .cedulaProfesional(teacher.getCedulaProfesional())
+                                    .statusDocente(teacher.getStatusDocente())
+                                    .gradoEstudios(teacher.getGradoEstudios())
+                                    .areaConocimientos(teacher.getAreaConocimientos())
+                                    .fechaNacimiento(teacher.getFechaNacimiento())
+                                    .nacionalidad(teacher.getNacionalidad())
+                                    .fechaBaja(teacher.getFechaBaja())
+                                    .sexo(teacher.getSexo())
+                                    .estadoCivil(teacher.getEstadoCivil())
+                                    .tipoSangre(teacher.getTipoSangre())
+                                    .correoPersonal(teacher.getCorreoPersonal())
+                                    .correoEscolar(teacher.getCorreoEscolar())
+                                    .direccion(teacher.getDireccion())
+                                    .build();
+                        }
+                        }
+
+                        Set<Role> roles = user.getAuthorities().stream()
+                                .map(grantedAuthority -> {
+                                    Role role = new Role();
+                                    role.setAuthority(grantedAuthority.getAuthority());
+                                    return role;
+                                })
+                                .collect(Collectors.toSet());
+
+                        return UserDtoResponse.builder()
+                                .id(user.getUserId())
+                                .username(user.getUsername())
+                                .email(user.getEmail())
+                                .student(studentDto)
+                                .teacher(teacherDto)
+                                .role(roles)
+                                .build();
+                })
+                .collect(Collectors.toList());
+
 
         return new PageImpl<>(usersDto, pageable, usersPage.getTotalElements());
+
     }
 
     /**
@@ -99,9 +167,12 @@ public class UserService implements UserDetailsService {
      */
     public void saveUser(User user, Role role) {
         Set<Role> roles = new HashSet<>();
+        Student student = user.getStudent();
+        Teacher teacher = user.getTeacher();
+
         roles.add(role);
         logger.info(String.format("Saving user with username %s and de role %s", user.getUsername(), role.getAuthority()));
-        userRepository.save(new User(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getUserAsigned(), roles));
+        userRepository.save(new User(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(), student,teacher, roles));
     }
 
 }

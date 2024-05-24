@@ -143,8 +143,8 @@ public class TeacherController {
                     @ApiResponse(responseCode = "400", description = "Error en los datos proporcionados", content = @Content(schema = @Schema(implementation = Message.class)))
             })
     @PostMapping("/teacher")
-    public ResponseEntity<?> create(@Valid @RequestBody TeacherDtoRequest teacherDtoRequest) {
-        Teacher teacher = null;
+    public ResponseEntity<?> create(@Valid @org.springframework.web.bind.annotation.RequestBody TeacherDtoRequest teacherDtoRequest) {
+        Teacher teacher;
 
         try{
             teacher = teacherService.createTeacher(teacherDtoRequest);

@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
     public Teacher findUSerByNombre(String nombre);
+
+    Teacher findByUserUserId(Long userId);
 }

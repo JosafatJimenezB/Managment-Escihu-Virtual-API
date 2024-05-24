@@ -4,6 +4,7 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Address.Address;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.EstadoCivilEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.SexoEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusTeacherEnum;
+import com.escihu.apiescihuvirtual.persistence.Entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -26,6 +27,10 @@ public class Teacher {
 
     @JoinColumn(name = "apellido_materno")
     private String apellidoMaterno;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(unique = true)
     private String RFC;
@@ -52,6 +57,9 @@ public class Teacher {
     private String nacionalidad;
 
     @Column(name = "fecha_baja")
+    // TODO: java: @Builder will ignore the initializing expression entirely. If you want the initializing expression to serve as default,
+    //  add @Builder.Default. If it is not supposed to be settable during building, make the field final.
+    //  posible bug
     private Date fechaBaja = null;
 
     @Enumerated(EnumType.STRING)
@@ -73,11 +81,12 @@ public class Teacher {
     @JoinColumn(name = "direccion_id")
     private Address direccion;
 
-    public Teacher(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String RFC, String CURP, String cedulaProfesional, StatusTeacherEnum statusDocente, String gradoEstudios, String areaConocimientos, Date fechaNacimiento, String nacionalidad, Date fechaBaja, SexoEnum sexo, EstadoCivilEnum estadoCivil, String tipoSangre, String correoPersonal, String correoEscolar, Address direccion) {
+    public Teacher(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, User user, String RFC, String CURP, String cedulaProfesional, StatusTeacherEnum statusDocente, String gradoEstudios, String areaConocimientos, Date fechaNacimiento, String nacionalidad, Date fechaBaja, SexoEnum sexo, EstadoCivilEnum estadoCivil, String tipoSangre, String correoPersonal, String correoEscolar, Address direccion) {
         this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
+        this.user = user;
         this.RFC = RFC;
         this.CURP = CURP;
         this.cedulaProfesional = cedulaProfesional;
