@@ -1,6 +1,7 @@
 package com.escihu.apiescihuvirtual.service;
 
 
+import com.escihu.apiescihuvirtual.Dto.Users.ChangePasswordRequest;
 import com.escihu.apiescihuvirtual.Dto.Users.UserDtoResponse;
 import com.escihu.apiescihuvirtual.persistence.Entity.Role;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
@@ -17,8 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +43,8 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
 
     /**
@@ -47,10 +52,12 @@ public class UserService implements UserDetailsService {
      *
      * @param userRepository the UserRepository to be used by the UserService
      */
-    public UserService(UserRepository userRepository, StudentRepository studentRepository, TeacherRepository teacherRepository) {
+    public UserService(UserRepository userRepository, StudentRepository studentRepository, TeacherRepository teacherRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.teacherRepository = teacherRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     /**
@@ -175,4 +182,65 @@ public class UserService implements UserDetailsService {
         userRepository.save(new User(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(), student,teacher, roles));
     }
 
+    /**
+     * Changes the role of a user with the specified username.
+     *
+     * @param request {@link ChangePasswordRequest } the data transfer
+     * @param connectedUser the user that is connected
+     */
+    public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
+        String username = connectedUser.getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        System.out.println("username: " + username);
+        System.out.println("current password: " + request.getCurrentPassword());
+        System.out.println("new password: " + request.getNewPassword());
+        System.out.println("confirm password: " + request.getConfirmPassword());
+        if(!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())){
+            throw new IllegalStateException("Wrong password");
+        }
+
+        if(!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalStateException("Password are not the same");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        userRepository.save(user);
+    }
+
+
+    /**
+     * Sends an email to the user to change the password.
+     *
+     * @param email a string with the user email
+     */
+    public void forgotPassword(String email) {
+        userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalStateException("Email not found" + email)
+
+        );
+        try {
+            emailService.sendForgotPasswordEmail(email);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Changes the password of the user.
+     *
+     * @param email a string with the user email
+     * @param password a string the new password
+     */
+    public void setPassword(String email, String password) {
+User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalStateException("Email not found" + email)
+        );
+
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+
+    }
 }

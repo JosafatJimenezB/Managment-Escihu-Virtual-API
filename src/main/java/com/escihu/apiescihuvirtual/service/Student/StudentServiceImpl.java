@@ -14,6 +14,7 @@ import com.escihu.apiescihuvirtual.service.EmailService;
 import com.escihu.apiescihuvirtual.utils.UserUtils;
 import jakarta.mail.MessagingException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -86,6 +87,7 @@ public class StudentServiceImpl implements StudentService{
                 .telefono(studentDtoRequest.getTelefono())
                 .institucionProcedencia(studentDtoRequest.getInstitucionProcedencia())
                 .institucionProcedenciaMunicipio(studentDtoRequest.getInstitucionProcedenciaMunicipio())
+                .nss(studentDtoRequest.getNss())
                 .build();
 
         Optional<Licenciatura> licenciatura = licenciaturaRepository.findById(studentDtoRequest.getLicenciatura().getId());
@@ -122,7 +124,6 @@ public class StudentServiceImpl implements StudentService{
                 .apellidoMaterno(studentDtoRequest.getApellidoMaterno())
                 .celular(studentDtoRequest.getCelular())
                 .curp(studentDtoRequest.getCurp())
-                .correoEscolar(null)
                 .estadoCivil(studentDtoRequest.getEstadoCivil())
                 .sexo(studentDtoRequest.getSexo())
                 .correoPersonal(studentDtoRequest.getCorreoPersonal())
@@ -135,6 +136,7 @@ public class StudentServiceImpl implements StudentService{
                 .telefono(studentDtoRequest.getTelefono())
                 .institucionProcedencia(studentDtoRequest.getInstitucionProcedencia())
                 .institucionProcedenciaMunicipio(studentDtoRequest.getInstitucionProcedenciaMunicipio())
+                .nss(studentDtoRequest.getNss())
                 .build();
 
         Optional<Licenciatura> licenciatura = licenciaturaRepository.findById(studentDtoRequest.getLicenciatura().getId());
@@ -149,7 +151,7 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public PaginatedStudentDtoResponse listStudentsPaginated(Pageable pageable) {
+    public Page<StudentDtoResponse> listStudentsPaginated(Pageable pageable) {
         Page<Student> studentsPage = studentRepository.findAll(pageable);
 
         List<StudentDtoResponse> studentsDto = studentsPage.getContent().stream()
@@ -162,12 +164,7 @@ public class StudentServiceImpl implements StudentService{
                         student.getLicenciatura())
                 ).collect(Collectors.toList());
 
-        return new PaginatedStudentDtoResponse(
-                studentsDto,
-                studentsPage.getNumber(),
-                studentsPage.getTotalPages(),
-                studentsPage.getSize()
-        );
+        return new PageImpl<>(studentsDto, pageable, studentsPage.getTotalElements());
     }
 
     @Override

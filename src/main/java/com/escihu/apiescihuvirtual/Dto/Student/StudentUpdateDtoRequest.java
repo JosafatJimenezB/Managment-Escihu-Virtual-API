@@ -27,6 +27,7 @@ public class StudentUpdateDtoRequest {
     private String institucionProcedenciaEstado;
     private String institucionProcedenciaMunicipio;
     private String correoPersonal;
+    private String nss;
     private Address direccion;
 
     public StatusStudent getStatusAlumno() {
@@ -155,6 +156,14 @@ public class StudentUpdateDtoRequest {
 
     public void setInstitucionProcedenciaMunicipio(String institucionProcedenciaMunicipio) {
         this.institucionProcedenciaMunicipio = institucionProcedenciaMunicipio;
+    }
+
+    public String getNss() {
+        return nss;
+    }
+
+    public void setNss(String nss) {
+        this.nss = nss;
     }
 
     public String getCorreoPersonal() {
