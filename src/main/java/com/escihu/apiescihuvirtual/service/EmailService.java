@@ -19,6 +19,7 @@ public class EmailService {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
+        message.setFrom("escihuvirtual@escihupuebla.edu.mx");
         helper.setTo(to);
         helper.setSubject("Tus credenciales de acceso a EsciHu Virtual");
         helper.setText("Dear user,\n\nYour account has been created.\n\nUsername: " + username + "\nPassword: " + password + "\n\nBest regards,\nYour Team");
