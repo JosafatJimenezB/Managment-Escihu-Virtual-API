@@ -185,7 +185,12 @@ public class UserService implements UserDetailsService {
         userRepository.save(new User(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(), student,teacher, roles));
     }
 
-
+    /**
+     * Changes the role of a user with the specified username.
+     *
+     * @param request {@link ChangePasswordRequest } the data transfer
+     * @param connectedUser the user that is connected
+     */
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
         String username = connectedUser.getName();
 
@@ -203,13 +208,17 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("Password are not the same");
         }
 
-
-
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         userRepository.save(user);
     }
 
+
+    /**
+     * Sends an email to the user to change the password.
+     *
+     * @param email a string with the user email
+     */
     public void forgotPassword(String email) {
         userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalStateException("Email not found" + email)
@@ -222,7 +231,12 @@ public class UserService implements UserDetailsService {
         }
     }
 
-
+    /**
+     * Changes the password of the user.
+     *
+     * @param email a string with the user email
+     * @param password a string the new password
+     */
     public void setPassword(String email, String password) {
 User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalStateException("Email not found" + email)
