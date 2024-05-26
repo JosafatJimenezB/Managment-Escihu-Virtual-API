@@ -51,6 +51,7 @@ public class Student {
 
     private String nacionalidad;
 
+    @Enumerated(EnumType.STRING)
     private SexoEnum sexo;
 
     @Column(name = "tipo_sangre")
@@ -81,11 +82,11 @@ public class Student {
     @Column(name = "correo_escolar")
     private String correoEscolar;
 
+    private String nss;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "direccion_id")
     private Address direccion;
-
-    private String nss;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
