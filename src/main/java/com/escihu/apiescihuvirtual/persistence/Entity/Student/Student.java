@@ -81,6 +81,8 @@ public class Student {
     @Column(name = "correo_escolar")
     private String correoEscolar;
 
+    private String nss;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "direccion_id")
     private Address direccion;
@@ -115,6 +117,7 @@ public class Student {
         this.correoEscolar = correoEscolar;
         this.nss = nss;
         this.direccion = direccion;
+        this.nss = nss;
         this.courses = courses;
     }
 
