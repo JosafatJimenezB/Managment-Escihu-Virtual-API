@@ -27,7 +27,6 @@ public class EmailService {
         helper.setText("Dear user,\n\nYour account has been created.\n\nUsername: " + username + "\nPassword: " + password + "\n\nBest regards,\nYour Team");
 
         emailSender.send(message);
-
     }
     //TODO: documentar
     public void sendForgotPasswordEmail(String to) throws MessagingException {
