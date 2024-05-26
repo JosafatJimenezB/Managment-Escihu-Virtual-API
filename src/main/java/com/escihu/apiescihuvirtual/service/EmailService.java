@@ -25,6 +25,22 @@ public class EmailService {
         helper.setText("Dear user,\n\nYour account has been created.\n\nUsername: " + username + "\nPassword: " + password + "\n\nBest regards,\nYour Team");
 
         emailSender.send(message);
-
     }
+  
+    //TODO: Documentacion
+    public void sendForgotPasswordEmail(String to) throws MessagingException {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        String port = env.getProperty("server.port");
+        helper.setTo(to);
+        helper.setSubject("Recuperación de contraseña");
+        helper.setText("""
+                <diu>
+                    <a href="http://localhost:%s/set-password?email=%s">Click here to reset your password</a>
+                </div>
+                """.formatted(port,to), true);
+
+        emailSender.send(message);
+    }
+
 }
