@@ -165,6 +165,14 @@ public class StudentDtoRequest {
         this.correoPersonal = correoPersonal;
     }
 
+    public String getNss() {
+        return nss;
+    }
+
+    public void setNss(String nss) {
+        this.nss = nss;
+    }
+
     public Address getDireccion() {
         return direccion;
     }

@@ -124,6 +124,7 @@ public class StudentServiceImpl implements StudentService{
                 .apellidoMaterno(studentDtoRequest.getApellidoMaterno())
                 .celular(studentDtoRequest.getCelular())
                 .curp(studentDtoRequest.getCurp())
+                .correoEscolar(studentDtoRequest.getCorreoEscolar())
                 .estadoCivil(studentDtoRequest.getEstadoCivil())
                 .sexo(studentDtoRequest.getSexo())
                 .correoPersonal(studentDtoRequest.getCorreoPersonal())
@@ -163,7 +164,7 @@ public class StudentServiceImpl implements StudentService{
                         student.getApellidoMaterno(),
                         student.getLicenciatura())
                 ).collect(Collectors.toList());
-
+      
         return new PageImpl<>(studentsDto, pageable, studentsPage.getTotalElements());
     }
 
