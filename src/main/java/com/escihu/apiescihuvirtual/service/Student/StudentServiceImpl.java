@@ -164,12 +164,8 @@ public class StudentServiceImpl implements StudentService{
                         student.getApellidoMaterno(),
                         student.getLicenciatura())
                 ).collect(Collectors.toList());
-
-        return new PageImpl<>(
-                studentsDto,
-                pageable,
-                studentsPage.getTotalPages()
-        );
+      
+        return new PageImpl<>(studentsDto, pageable, studentsPage.getTotalElements());
     }
 
     @Override
