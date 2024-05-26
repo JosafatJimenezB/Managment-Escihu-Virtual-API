@@ -43,7 +43,9 @@ public class TeacherServiceImpl implements TeacherService{
 
     @Override
     public Teacher createTeacher(TeacherDtoRequest teacherDtoRequest) {
-        String username = teacherDtoRequest.getNombre().toLowerCase() + teacherDtoRequest.getApellidoPaterno().toLowerCase();
+
+        String[] splitName = teacherDtoRequest.getNombre().split(" ");
+        String username = splitName[0].toLowerCase() + teacherDtoRequest.getApellidoPaterno().toLowerCase();
         String email = UserUtils.generateEmail(teacherDtoRequest.getNombre(), teacherDtoRequest.getApellidoPaterno(), userRepository);
         String password = UserUtils.generateRandomPassword();
 
@@ -116,7 +118,7 @@ public class TeacherServiceImpl implements TeacherService{
                 .gradoEstudios(teacherDtoRequest.getGradoEstudios())
                 .sexo(teacherDtoRequest.getSexo())
                 .correoEscolar(teacherDtoRequest.getCorreoEscolar())
-                .fechaBaja(teacherDtoRequest.getFechaBaja())
+                .fechaBaja(null)
                 .tipoSangre(teacherDtoRequest.getTipoSangre())
                 .nacionalidad(teacherDtoRequest.getNacionalidad())
                 .direccion(teacherDtoRequest.getDireccion())

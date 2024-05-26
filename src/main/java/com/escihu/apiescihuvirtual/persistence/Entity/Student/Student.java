@@ -58,6 +58,7 @@ public class Student {
     private String tipoSangre;
 
     @Column(name = "estado_civil")
+    @Enumerated(EnumType.STRING)
     private EstadoCivilEnum estadoCivil;
 
     private String telefono;
