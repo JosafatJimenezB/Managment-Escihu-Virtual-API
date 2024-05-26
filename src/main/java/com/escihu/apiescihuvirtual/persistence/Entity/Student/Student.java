@@ -51,6 +51,7 @@ public class Student {
 
     private String nacionalidad;
 
+    @Enumerated(EnumType.STRING)
     private SexoEnum sexo;
 
     @Column(name = "tipo_sangre")
@@ -81,12 +82,11 @@ public class Student {
     @Column(name = "correo_escolar")
     private String correoEscolar;
 
-    private String nss;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "direccion_id")
     private Address direccion;
 
+    @Column(name = "nss")
     private String nss;
 
     @JsonIgnore
@@ -115,7 +115,6 @@ public class Student {
         this.institucionProcedenciaMunicipio = institucionProcedenciaMunicipio;
         this.correoPersonal = correoPersonal;
         this.correoEscolar = correoEscolar;
-        this.nss = nss;
         this.direccion = direccion;
         this.nss = nss;
         this.courses = courses;

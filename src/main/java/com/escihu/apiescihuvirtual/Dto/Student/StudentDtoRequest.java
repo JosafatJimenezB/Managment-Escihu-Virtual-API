@@ -149,14 +149,6 @@ public class StudentDtoRequest {
         this.institucionProcedenciaMunicipio = institucionProcedenciaMunicipio;
     }
 
-    public String getNss() {
-        return nss;
-    }
-
-    public void setNss(String nss) {
-        this.nss = nss;
-    }
-
     public String getCorreoPersonal() {
         return correoPersonal;
     }
