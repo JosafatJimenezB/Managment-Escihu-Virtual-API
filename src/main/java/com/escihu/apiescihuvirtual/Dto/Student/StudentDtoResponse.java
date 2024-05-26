@@ -1,6 +1,5 @@
 package com.escihu.apiescihuvirtual.Dto.Student;
 
-import com.escihu.apiescihuvirtual.persistence.Entity.Address.Address;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
 import lombok.Builder;
