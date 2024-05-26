@@ -166,12 +166,6 @@ public class StudentUpdateDtoRequest {
     public void setCorreoEscolar(String correoEscolar) {
         this.correoEscolar = correoEscolar;
 
-    public String getNss() {
-        return nss;
-    }
-
-    public void setNss(String nss) {
-        this.nss = nss;
     }
 
     public String getCorreoPersonal() {

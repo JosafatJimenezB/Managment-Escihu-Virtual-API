@@ -10,6 +10,7 @@ import com.escihu.apiescihuvirtual.persistence.Entity.User;
 import com.escihu.apiescihuvirtual.persistence.Repository.StudentRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.TeacherRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
+import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
