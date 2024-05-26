@@ -28,7 +28,8 @@ public class EmailService {
 
         emailSender.send(message);
     }
-    //TODO: documentar
+
+    //TODO: Documentacion
     public void sendForgotPasswordEmail(String to) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -43,4 +44,5 @@ public class EmailService {
 
         emailSender.send(message);
     }
+
 }
