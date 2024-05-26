@@ -115,6 +115,7 @@ public class Student {
         this.institucionProcedenciaMunicipio = institucionProcedenciaMunicipio;
         this.correoPersonal = correoPersonal;
         this.correoEscolar = correoEscolar;
+        this.nss = nss;
         this.direccion = direccion;
         this.nss = nss;
         this.courses = courses;
