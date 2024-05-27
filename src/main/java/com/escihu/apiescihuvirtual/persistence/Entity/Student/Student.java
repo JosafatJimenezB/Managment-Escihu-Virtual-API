@@ -7,6 +7,7 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Enums.SexoEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -33,6 +34,7 @@ public class Student {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     private String nombre;

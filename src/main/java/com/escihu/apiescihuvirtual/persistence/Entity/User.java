@@ -3,6 +3,7 @@ package com.escihu.apiescihuvirtual.persistence.Entity;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -65,10 +66,12 @@ public class User implements UserDetails {
     // Asegurarse de que el usuario tenga un estudiante o un profesor
     @OneToOne(mappedBy = "user")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @JsonManagedReference
     private Student student;
 
     @OneToOne(mappedBy = "user")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @JsonManagedReference
     private Teacher teacher;
 
     /**
@@ -76,6 +79,7 @@ public class User implements UserDetails {
      * This field is mapped to the "user_role_function" table in the database.
      */
     @ManyToMany(fetch = FetchType.LAZY)
+
     @JoinTable(
             name = "user_role_function",
             joinColumns = {@JoinColumn(name = "user_id")},
