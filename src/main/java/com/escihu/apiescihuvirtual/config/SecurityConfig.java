@@ -97,6 +97,7 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.PUT,"/api/v1/student/{id}").hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.GET,"/api/v1/student/{id}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.GET, "/api/v1/attendance/{userId}/paginated").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE, TEACHER_ROLE);
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/teacher/{id}").hasAnyRole(ADMIN_ROLE, TEACHER_ROLE);
                     auth.requestMatchers(HttpMethod.GET, ADMIN_LIST).hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.GET, TEACHER_LIST).hasRole(TEACHER_ROLE);
                     auth.requestMatchers(HttpMethod.GET, STUDENT_LIST).hasRole(STUDENT_ROLE);
