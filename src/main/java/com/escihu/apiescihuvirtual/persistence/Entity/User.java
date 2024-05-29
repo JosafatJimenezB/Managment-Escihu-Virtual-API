@@ -64,6 +64,12 @@ public class User implements UserDetails {
 
      */
     // Asegurarse de que el usuario tenga un estudiante o un profesor
+
+    @OneToOne
+    @JoinColumn(name = "profile_image_id")
+    private ImageData profileImage;
+    private String profileImageUrl;
+
     @OneToOne(mappedBy = "user")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JsonManagedReference
@@ -88,11 +94,24 @@ public class User implements UserDetails {
     @Schema(description = "Roles (authorities) of the user.")
     private Set<Role> authorities;
 
-    public User(Long userId, String username, String email, String password, Student student, Teacher teacher, Set<Role> authorities) {
+//    public User(Long userId, String username, String email, String password, Student student, Teacher teacher, Set<Role> authorities) {
+//        this.userId = userId;
+//        this.username = username;
+//        this.email = email;
+//        this.password = password;
+//        this.student = student;
+//        this.teacher = teacher;
+//        this.authorities = authorities;
+//    }
+
+
+    public User(Long userId, String username, String email, String password, ImageData profileImage, String profileImageUrl, Student student, Teacher teacher, Set<Role> authorities) {
         this.userId = userId;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.profileImage = profileImage;
+        this.profileImageUrl = profileImageUrl;
         this.student = student;
         this.teacher = teacher;
         this.authorities = authorities;
