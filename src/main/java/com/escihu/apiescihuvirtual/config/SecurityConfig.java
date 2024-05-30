@@ -92,10 +92,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(AUTH_WHITELIST).permitAll();
-                    auth.requestMatchers("/api/v1/auth/**").permitAll();
+                    auth.requestMatchers("/api/v1/auth/login").permitAll();
+                    auth.requestMatchers("/api/v1/auth/register").permitAll();
+                    auth.requestMatchers(HttpMethod.PUT,"/api/v1/user/**").permitAll();
                     auth.requestMatchers("/api/v1/students/**", "/api/v1/student/").hasAnyRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.PUT,"/api/v1/student/{id}").hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.GET,"/api/v1/student/{id}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/attendance/{userId}/paginated").hasRole(STUDENT_ROLE);
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/user/profile-image-url/{userId}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
+                    auth.requestMatchers(HttpMethod.POST, "/api/v1/user/upload/{userId}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.GET, "/api/v1/attendance/{userId}/paginated").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE, TEACHER_ROLE);
                     auth.requestMatchers(HttpMethod.GET, "/api/v1/teacher/{id}").hasAnyRole(ADMIN_ROLE, TEACHER_ROLE);
                     auth.requestMatchers(HttpMethod.GET, ADMIN_LIST).hasRole(ADMIN_ROLE);

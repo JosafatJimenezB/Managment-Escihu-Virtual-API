@@ -3,6 +3,7 @@ package com.escihu.apiescihuvirtual.service;
 
 import com.escihu.apiescihuvirtual.Dto.Users.ChangePasswordRequest;
 import com.escihu.apiescihuvirtual.Dto.Users.UserDtoResponse;
+import com.escihu.apiescihuvirtual.persistence.Entity.ImageData;
 import com.escihu.apiescihuvirtual.persistence.Entity.Role;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
@@ -180,7 +181,7 @@ public class UserService implements UserDetailsService {
 
         roles.add(role);
         logger.info(String.format("Saving user with username %s and de role %s", user.getUsername(), role.getAuthority()));
-        userRepository.save(new User(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(), student,teacher, roles));
+        userRepository.save(new User(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(),null , null,student,teacher, roles));
     }
 
     /**
@@ -244,4 +245,8 @@ User user = userRepository.findByEmail(email).orElseThrow(
         userRepository.save(user);
 
     }
+
+
+
+
 }

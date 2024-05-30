@@ -7,6 +7,7 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Enums.SexoEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -33,6 +34,7 @@ public class Student {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     private String nombre;
@@ -83,17 +85,19 @@ public class Student {
     @Column(name = "correo_escolar")
     private String correoEscolar;
 
-    private String nss;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "direccion_id")
     private Address direccion;
+
+    @Column(name = "nss")
+    private String nss;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
     private List<Course> courses;
 
-    public Student(Long id, String matricula, StatusStudent statusAlumno, User user, String nombre, String apellidoPaterno, String apellidoMaterno, Licenciatura licenciatura, String curp, String nacionalidad, SexoEnum sexo, String tipoSangre, EstadoCivilEnum estadoCivil, String telefono, String celular, String ingresoMensual, String institucionProcedencia, String institucionProcedenciaEstado, String institucionProcedenciaMunicipio, String correoPersonal, String correoEscolar, String nss, Address direccion, List<Course> courses) {
+
+    public Student(Long id, String matricula, StatusStudent statusAlumno, User user, String nombre, String apellidoPaterno, String apellidoMaterno, Licenciatura licenciatura, String curp, String nacionalidad, SexoEnum sexo, String tipoSangre, EstadoCivilEnum estadoCivil, String telefono, String celular, String ingresoMensual, String institucionProcedencia, String institucionProcedenciaEstado, String institucionProcedenciaMunicipio, String correoPersonal, String correoEscolar, Address direccion, String nss, List<Course> courses) {
         this.id = id;
         this.matricula = matricula;
         this.statusAlumno = statusAlumno;
@@ -115,10 +119,25 @@ public class Student {
         this.institucionProcedenciaMunicipio = institucionProcedenciaMunicipio;
         this.correoPersonal = correoPersonal;
         this.correoEscolar = correoEscolar;
-        this.nss = nss;
         this.direccion = direccion;
         this.nss = nss;
         this.courses = courses;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getNss() {
+        return nss;
+    }
+
+    public void setNss(String nss) {
+        this.nss = nss;
     }
 
     public Student() {
@@ -284,13 +303,6 @@ public class Student {
         this.correoEscolar = correoEscolar;
     }
 
-    public String getNss() {
-        return nss;
-    }
-
-    public void setNss(String nss) {
-        this.nss = nss;
-    }
 
     public Address getDireccion() {
         return direccion;

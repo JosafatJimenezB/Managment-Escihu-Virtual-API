@@ -5,6 +5,7 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Enums.EstadoCivilEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.SexoEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusTeacherEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -30,6 +31,7 @@ public class Teacher {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @Column(unique = true)

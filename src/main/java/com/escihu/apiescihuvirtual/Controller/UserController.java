@@ -1,13 +1,21 @@
 package com.escihu.apiescihuvirtual.Controller;
 
 import com.escihu.apiescihuvirtual.Dto.Users.ChangePasswordRequest;
+import com.escihu.apiescihuvirtual.persistence.Entity.User;
+import com.escihu.apiescihuvirtual.service.StorageService;
 import com.escihu.apiescihuvirtual.service.UserService;
+import com.escihu.apiescihuvirtual.utils.ImageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Controlador de usuarios
@@ -24,9 +32,11 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
+    private final StorageService storageService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, StorageService storageService) {
         this.userService = userService;
+        this.storageService = storageService;
     }
 
     /**
@@ -92,5 +102,34 @@ public class UserController {
         userService.setPassword(email, password);
         return ResponseEntity.ok("Password changed");
     }
+
+    @PostMapping("/upload/{userId}")
+    public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file,@PathVariable Long userId) throws IOException {
+
+        String uploadImage = storageService.uploadImageToFileSystem(file,userId);
+        return ResponseEntity.ok("File uploaded successfully:" + uploadImage);
+    }
+
+
+    @GetMapping("/profile-image/{userId}")
+    public ResponseEntity<byte[]> getUserProfileImage(@PathVariable Long userId) throws IOException {
+        byte[] imageData = storageService.load(userId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG) // Ajusta el tipo de contenido según tu imagen
+                .body(imageData);
+    }
+
+
+    @GetMapping("/profile-image-url/{userId}")
+    public ResponseEntity<?> getUserProfileImageUrl(@PathVariable Long userId) {
+        String imageUrl = storageService.loadFromFileSystem(userId);
+        Map<String, String> response = new HashMap<>();
+        response.put("imageUrl", imageUrl);
+
+        return ResponseEntity.ok(response);
+    }
+
+
+
 
 }
