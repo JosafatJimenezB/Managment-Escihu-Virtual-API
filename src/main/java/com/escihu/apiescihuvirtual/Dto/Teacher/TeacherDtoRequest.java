@@ -33,8 +33,6 @@ public class TeacherDtoRequest {
 
     private String nacionalidad;
 
-    private Date fechaBaja = null;
-
     private SexoEnum sexo;
 
     private EstadoCivilEnum estadoCivil;
@@ -46,6 +44,7 @@ public class TeacherDtoRequest {
     private String correoEscolar;
 
     private Address direccion;
+
 
     public String getNombre() {
         return nombre;
@@ -133,14 +132,6 @@ public class TeacherDtoRequest {
 
     public void setNacionalidad(String nacionalidad) {
         this.nacionalidad = nacionalidad;
-    }
-
-    public Date getFechaBaja() {
-        return fechaBaja;
-    }
-
-    public void setFechaBaja(Date fechaBaja) {
-        this.fechaBaja = fechaBaja;
     }
 
     public SexoEnum getSexo() {

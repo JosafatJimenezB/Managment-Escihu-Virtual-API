@@ -61,8 +61,8 @@ public class User implements UserDetails {
     @Column(name = "user_asigned", unique = true)
     @NotNull()
     private Long userAsigned;
-
      */
+
     // Asegurarse de que el usuario tenga un estudiante o un profesor
 
     @OneToOne

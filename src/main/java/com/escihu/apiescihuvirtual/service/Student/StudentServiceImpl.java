@@ -49,7 +49,8 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public Student createStudent(StudentDtoRequest studentDtoRequest) {
 
-        String username = studentDtoRequest.getNombre().toLowerCase() + "." + studentDtoRequest.getApellidoPaterno().toLowerCase();
+        String[] splitName = studentDtoRequest.getNombre().split(" ");
+        String username = splitName[0].toLowerCase() + "." + studentDtoRequest.getApellidoPaterno().toLowerCase();
         //TODO: Investigar como evitar psar el repositorio
         String email = UserUtils.generateEmail(studentDtoRequest.getNombre(), studentDtoRequest.getApellidoPaterno(), userRepository);
         String password = UserUtils.generateRandomPassword();

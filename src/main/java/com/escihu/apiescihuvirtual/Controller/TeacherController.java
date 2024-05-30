@@ -61,24 +61,9 @@ public class TeacherController {
     @Operation(summary = "Retorna todos los docentes con paginación sorteados",
             description = "Opcionalmente, se puede incluir en la petición el tamaño de la página con el parámetro `pageSize`. Por defecto el tamaño de la página es 10",
             parameters = {
+            @Parameter(description = "Página a consultar", name = "currentPage", required = false, in = ParameterIn.QUERY),
             @Parameter(description = "Tamaño de la página", name = "pageSize", required = false, in = ParameterIn.QUERY)
     })
-    @GetMapping("/teachers/paginated1")
-    public ResponseEntity<?> getTeachersPaginated(
-            @RequestParam(defaultValue = "0") int currentPage,
-            @RequestParam(defaultValue = "10") int pageSize) {
-        try{
-            Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
-            return new ResponseEntity<>(teacherService.listTeachersPaginated(modifiedPage), HttpStatus.OK);
-        }catch (DataAccessException e) {
-            return new ResponseEntity<>(Message.builder()
-                    .message(e.getMessage())
-                    .object(null)
-                    .build(), HttpStatus.METHOD_NOT_ALLOWED
-            );
-        }
-    }
-
     @GetMapping("/teachers/paginated")
     public ResponseEntity<?> teachersPaginated(
             @RequestParam(defaultValue = "0") int currentPage,

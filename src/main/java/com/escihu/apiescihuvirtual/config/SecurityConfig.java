@@ -35,6 +35,7 @@ public class SecurityConfig {
     private final RSAKeyProperties keys;
     private static final String ADMIN_ROLE = "ADMIN";
     private static final String USER_ROLE = "USER";
+    private static final String TEACHER_ROLE = "TEACHER";
 
     private static final String STUDENT_ROLE = "STUDENT";
 
@@ -60,6 +61,12 @@ public class SecurityConfig {
 
     private static final String[] STUDENT_LIST = {
             "/api/v1/attendance/**"
+    };
+
+    private static final String[] TEACHER_LIST = {
+            "/api/v1/attendance/**",
+            "/api/v1/teacher/{id}",
+            "/api/v1/attendance/{userId}/paginated"
     };
 
     public SecurityConfig(RSAKeyProperties keys) {
@@ -94,7 +101,10 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.GET, "/api/v1/attendance/{userId}/paginated").hasRole(STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.GET, "/api/v1/user/profile-image-url/{userId}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.POST, "/api/v1/user/upload/{userId}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/attendance/{userId}/paginated").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE, TEACHER_ROLE);
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/teacher/{id}").hasAnyRole(ADMIN_ROLE, TEACHER_ROLE);
                     auth.requestMatchers(HttpMethod.GET, ADMIN_LIST).hasRole(ADMIN_ROLE);
+                    auth.requestMatchers(HttpMethod.GET, TEACHER_LIST).hasRole(TEACHER_ROLE);
                     auth.requestMatchers(HttpMethod.GET, STUDENT_LIST).hasRole(STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.POST, ADMIN_LIST).hasRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.PUT, ADMIN_LIST).hasRole(ADMIN_ROLE);

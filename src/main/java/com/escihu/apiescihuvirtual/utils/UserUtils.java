@@ -11,11 +11,12 @@ public class UserUtils {
 
     public static String generateEmail(String nombre, String apellidoPaterno, UserRepository userRepository) {
         String correo = "";
-        correo += nombre.toLowerCase() + "." + apellidoPaterno.toLowerCase()  + "@escihu.com";
+        String[] splitName = nombre.split(" ");
+        correo += splitName[0].toLowerCase() + "." + apellidoPaterno.toLowerCase()  + "@escihupuebla.edu.mx";
         Optional<User> existEmailUser = userRepository.findByEmail(correo);
         int counter = 1;
         while(existEmailUser.isPresent()) {
-            correo = nombre.toLowerCase() + "." + apellidoPaterno.toLowerCase() + counter + "@escihu.com";
+            correo = splitName[0].toLowerCase() + "." + apellidoPaterno.toLowerCase() + counter + "@escihupuebla.edu.mx";
             counter++;
             existEmailUser = userRepository.findByEmail(correo);
         }
