@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,8 +42,14 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher createTeacher(TeacherDtoRequest teacherDtoRequest) {
-        String username = teacherDtoRequest.getNombre().toLowerCase() + teacherDtoRequest.getApellidoPaterno().toLowerCase();
-        String email = UserUtils.generateEmail(teacherDtoRequest.getNombre(), teacherDtoRequest.getApellidoPaterno(), userRepository);
+        String username = teacherDtoRequest.getNombre().toLowerCase()
+                + teacherDtoRequest.getApellidoPaterno().toLowerCase();
+
+        String email = UserUtils.generateEmail(
+                teacherDtoRequest.getNombre(),
+                teacherDtoRequest.getApellidoPaterno(),
+                userRepository);
+
         String password = UserUtils.generateRandomPassword();
 
         Role TeacherRole = roleRepository.findByAuthority("TEACHER")
@@ -59,27 +64,7 @@ public class TeacherServiceImpl implements TeacherService {
 
         userRepository.save(user);
 
-        Teacher teacher = Teacher.builder()
-                .nombre(teacherDtoRequest.getNombre())
-                .apellidoPaterno(teacherDtoRequest.getApellidoPaterno())
-                .apellidoMaterno(teacherDtoRequest.getApellidoMaterno())
-                .CURP(teacherDtoRequest.getCURP())
-                .cedulaProfesional(teacherDtoRequest.getCedulaProfesional())
-                .RFC(teacherDtoRequest.getRFC())
-                .areaConocimientos(teacherDtoRequest.getAreaConocimientos())
-                .correoPersonal(teacherDtoRequest.getCorreoPersonal())
-                .fechaNacimiento(teacherDtoRequest.getFechaNacimiento())
-                .estadoCivil(teacherDtoRequest.getEstadoCivil())
-                .gradoEstudios(teacherDtoRequest.getGradoEstudios())
-                .sexo(teacherDtoRequest.getSexo())
-                .correoEscolar(email)
-                .user(user)
-                .fechaBaja(null)
-                .tipoSangre(teacherDtoRequest.getTipoSangre())
-                .nacionalidad(teacherDtoRequest.getNacionalidad())
-                .direccion(teacherDtoRequest.getDireccion())
-                .statusDocente(teacherDtoRequest.getStatusDocente())
-                .build();
+        Teacher teacher = mapToTeacher(teacherDtoRequest, user, email);
 
         try {
             emailService.sendUserCredencials(teacher.getCorreoPersonal(), username, password);
@@ -88,42 +73,17 @@ public class TeacherServiceImpl implements TeacherService {
 
         }
 
-
         return teacherRepository.save(teacher);
     }
 
     @Override
     public Teacher updateTeacher(Long id, TeacherDtoRequest teacherDtoRequest) {
-        Optional<Teacher> teacherExists = teacherRepository.findById(id);
+        return teacherRepository.findById(id)
+                .map( existingTeacher -> {
+                    Teacher updatedTeacher = updateTeacherData(existingTeacher, teacherDtoRequest);
+                    return teacherRepository.save(updatedTeacher);
+                }).orElse(null);
 
-        if (!teacherExists.isPresent()) {
-            return null;
-        }
-
-        Teacher teacher = teacherExists.get();
-
-        teacher = Teacher.builder()
-                .nombre(teacherDtoRequest.getNombre())
-                .apellidoPaterno(teacherDtoRequest.getApellidoPaterno())
-                .apellidoMaterno(teacherDtoRequest.getApellidoMaterno())
-                .CURP(teacherDtoRequest.getCURP())
-                .cedulaProfesional(teacherDtoRequest.getCedulaProfesional())
-                .RFC(teacherDtoRequest.getRFC())
-                .areaConocimientos(teacherDtoRequest.getAreaConocimientos())
-                .correoPersonal(teacherDtoRequest.getCorreoPersonal())
-                .fechaNacimiento(teacherDtoRequest.getFechaNacimiento())
-                .estadoCivil(teacherDtoRequest.getEstadoCivil())
-                .gradoEstudios(teacherDtoRequest.getGradoEstudios())
-                .sexo(teacherDtoRequest.getSexo())
-                .correoEscolar(teacherDtoRequest.getCorreoEscolar())
-                .fechaBaja(teacherDtoRequest.getFechaBaja())
-                .tipoSangre(teacherDtoRequest.getTipoSangre())
-                .nacionalidad(teacherDtoRequest.getNacionalidad())
-                .direccion(teacherDtoRequest.getDireccion())
-                .statusDocente(teacherDtoRequest.getStatusDocente())
-                .build();
-
-        return teacherRepository.save(teacher);
     }
 
     @Override
@@ -137,13 +97,7 @@ public class TeacherServiceImpl implements TeacherService {
         Page<Teacher> teachersPage = teacherRepository.findAll(pageable);
 
         List<TeacherDtoResponse> teachersDto = teachersPage.getContent().stream()
-                .map(teacher -> new TeacherDtoResponse(
-                        teacher.getId(),
-                        teacher.getNombre(),
-                        teacher.getApellidoPaterno(),
-                        teacher.getApellidoMaterno(),
-                        teacher.getAreaConocimientos())
-                )
+                .map(this::mapToTeacherDtoResponse)
                 .collect(Collectors.toList());
 
         return new PaginatedTeacherDtoResponse(
@@ -160,13 +114,7 @@ public class TeacherServiceImpl implements TeacherService {
         Page<Teacher> teachersPage = teacherRepository.findAll(pageable);
 
         List<TeacherDtoResponse> teachersDto = teachersPage.getContent().stream()
-                .map(teacher -> new TeacherDtoResponse(
-                        teacher.getId(),
-                        teacher.getNombre(),
-                        teacher.getApellidoPaterno(),
-                        teacher.getApellidoMaterno(),
-                        teacher.getAreaConocimientos())
-                )
+                .map(this::mapToTeacherDtoResponse)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(teachersDto, pageable, teachersPage.getTotalElements());
@@ -178,13 +126,8 @@ public class TeacherServiceImpl implements TeacherService {
         List<Teacher> teachers = teacherRepository.findAll();
 
         return teachers.stream()
-                .map(teacher -> new TeacherDtoResponse(
-                        teacher.getId(),
-                        teacher.getNombre(),
-                        teacher.getApellidoPaterno(),
-                        teacher.getApellidoMaterno(),
-                        teacher.getAreaConocimientos()
-                )).collect(Collectors.toList());
+                .map(this::mapToTeacherDtoResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -195,5 +138,62 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public boolean exists(Long id) {
         return teacherRepository.existsById(id);
+    }
+
+    private TeacherDtoResponse mapToTeacherDtoResponse(Teacher teacher) {
+        return new TeacherDtoResponse(
+            teacher.getId(),
+            teacher.getNombre(),
+            teacher.getApellidoPaterno(),
+            teacher.getApellidoMaterno(),
+            teacher.getAreaConocimientos()
+        );
+    }
+
+    private Teacher updateTeacherData(Teacher existingTeacher, TeacherDtoRequest teacherDtoRequest) {
+        existingTeacher.setNombre(teacherDtoRequest.getNombre());
+        existingTeacher.setApellidoPaterno(teacherDtoRequest.getApellidoPaterno());
+        existingTeacher.setApellidoMaterno(teacherDtoRequest.getApellidoMaterno());
+        existingTeacher.setCURP(teacherDtoRequest.getCURP());
+        existingTeacher.setCedulaProfesional(teacherDtoRequest.getCedulaProfesional());
+        existingTeacher.setRFC(teacherDtoRequest.getRFC());
+        existingTeacher.setAreaConocimientos(teacherDtoRequest.getAreaConocimientos());
+        existingTeacher.setCorreoPersonal(teacherDtoRequest.getCorreoPersonal());
+        existingTeacher.setFechaNacimiento(teacherDtoRequest.getFechaNacimiento());
+        existingTeacher.setEstadoCivil(teacherDtoRequest.getEstadoCivil());
+        existingTeacher.setGradoEstudios(teacherDtoRequest.getGradoEstudios());
+        existingTeacher.setSexo(teacherDtoRequest.getSexo());
+        existingTeacher.setCorreoEscolar(teacherDtoRequest.getCorreoEscolar());
+        existingTeacher.setFechaBaja(teacherDtoRequest.getFechaBaja());
+        existingTeacher.setTipoSangre(teacherDtoRequest.getTipoSangre());
+        existingTeacher.setNacionalidad(teacherDtoRequest.getNacionalidad());
+        existingTeacher.setDireccion(teacherDtoRequest.getDireccion());
+        existingTeacher.setStatusDocente(teacherDtoRequest.getStatusDocente());
+        return existingTeacher;
+    }
+
+    private Teacher mapToTeacher(TeacherDtoRequest request, User user, String email) {
+        return Teacher.builder()
+                .nombre(request.getNombre())
+                .apellidoPaterno(request.getApellidoPaterno())
+                .apellidoMaterno(request.getApellidoMaterno())
+                .CURP(request.getCURP())
+                .cedulaProfesional(request.getCedulaProfesional())
+                .RFC(request.getRFC())
+                .areaConocimientos(request.getAreaConocimientos())
+                .correoPersonal(request.getCorreoPersonal())
+                .fechaNacimiento(request.getFechaNacimiento())
+                .estadoCivil(request.getEstadoCivil())
+                .gradoEstudios(request.getGradoEstudios())
+                .sexo(request.getSexo())
+                .correoEscolar(email)
+                .user(user)
+                .fechaBaja(null)
+                .tipoSangre(request.getTipoSangre())
+                .nacionalidad(request.getNacionalidad())
+                .direccion(request.getDireccion())
+                .statusDocente(request.getStatusDocente())
+                .build();
+
     }
 }

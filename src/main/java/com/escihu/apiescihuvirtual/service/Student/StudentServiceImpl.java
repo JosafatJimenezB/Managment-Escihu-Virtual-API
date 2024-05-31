@@ -15,6 +15,8 @@ import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
 import com.escihu.apiescihuvirtual.service.EmailService;
 import com.escihu.apiescihuvirtual.utils.UserUtils;
 import jakarta.mail.MessagingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -31,8 +33,8 @@ import java.util.stream.Collectors;
 @Service
 public class StudentServiceImpl implements StudentService {
 
+    private final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
     private final StudentRepository studentRepository;
-
     private final LicenciaturaRepository licenciaturaRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -70,33 +72,12 @@ public class StudentServiceImpl implements StudentService {
         userRepository.save(user);
 
         // Se crea el estudiante con el usuario generado
-        Student student = Student.builder()
-                .nombre(studentDtoRequest.getNombre())
-                .apellidoPaterno(studentDtoRequest.getApellidoPaterno())
-                .apellidoMaterno(studentDtoRequest.getApellidoMaterno())
-                .celular(studentDtoRequest.getCelular())
-                .curp(studentDtoRequest.getCurp())
-                .correoEscolar(email)
-                .user(user)
-                .estadoCivil(studentDtoRequest.getEstadoCivil())
-                .sexo(studentDtoRequest.getSexo())
-                .correoPersonal(studentDtoRequest.getCorreoPersonal())
-                .nacionalidad(studentDtoRequest.getNacionalidad())
-                .ingresoMensual(studentDtoRequest.getIngresoMensual())
-                .direccion(studentDtoRequest.getDireccion())
-                .matricula(generarMatricula(studentDtoRequest.getLicenciatura().getCode()))
-                .tipoSangre(studentDtoRequest.getTipoSangre())
-                .statusAlumno(StatusStudent.PROCESO_INSCRIPCION)
-                .institucionProcedenciaEstado(studentDtoRequest.getInstitucionProcedenciaEstado())
-                .telefono(studentDtoRequest.getTelefono())
-                .institucionProcedencia(studentDtoRequest.getInstitucionProcedencia())
-                .institucionProcedenciaMunicipio(studentDtoRequest.getInstitucionProcedenciaMunicipio())
-                .nss(studentDtoRequest.getNss())
-                .build();
+        Student student = mapToStudent(studentDtoRequest);
 
         Optional<Licenciatura> licenciatura = licenciaturaRepository.findById(studentDtoRequest.getLicenciatura().getId());
 
-        if (!licenciatura.isPresent()) {
+        if (licenciatura.isEmpty()) {
+            logger.error("Licenciatura not found");
             student.setLicenciatura(null);
         }
 
@@ -122,31 +103,12 @@ public class StudentServiceImpl implements StudentService {
 
         Student student = studentExists.get();
 
-        student = Student.builder()
-                .nombre(studentDtoRequest.getNombre())
-                .apellidoPaterno(studentDtoRequest.getApellidoPaterno())
-                .apellidoMaterno(studentDtoRequest.getApellidoMaterno())
-                .celular(studentDtoRequest.getCelular())
-                .curp(studentDtoRequest.getCurp())
-                .correoEscolar(studentDtoRequest.getCorreoEscolar())
-                .estadoCivil(studentDtoRequest.getEstadoCivil())
-                .sexo(studentDtoRequest.getSexo())
-                .correoPersonal(studentDtoRequest.getCorreoPersonal())
-                .nacionalidad(studentDtoRequest.getNacionalidad())
-                .ingresoMensual(studentDtoRequest.getIngresoMensual())
-                .direccion(studentDtoRequest.getDireccion())
-                .tipoSangre(studentDtoRequest.getTipoSangre())
-                .statusAlumno(studentDtoRequest.getStatusAlumno())
-                .institucionProcedenciaEstado(studentDtoRequest.getInstitucionProcedenciaEstado())
-                .telefono(studentDtoRequest.getTelefono())
-                .institucionProcedencia(studentDtoRequest.getInstitucionProcedencia())
-                .institucionProcedenciaMunicipio(studentDtoRequest.getInstitucionProcedenciaMunicipio())
-                .nss(studentDtoRequest.getNss())
-                .build();
+        updateStudentData(student, studentDtoRequest);
 
         Optional<Licenciatura> licenciatura = licenciaturaRepository.findById(studentDtoRequest.getLicenciatura().getId());
 
-        if (!licenciatura.isPresent()) {
+        if (licenciatura.isEmpty()) {
+            logger.error("Licenciatura not found");
             student.setLicenciatura(null);
         }
 
@@ -160,14 +122,8 @@ public class StudentServiceImpl implements StudentService {
         Page<Student> studentsPage = studentRepository.findAll(pageable);
 
         List<StudentDtoResponse> studentsDto = studentsPage.getContent().stream()
-                .map(student -> new StudentDtoResponse(
-                        student.getId(),
-                        student.getStatusAlumno(),
-                        student.getNombre(),
-                        student.getApellidoPaterno(),
-                        student.getApellidoMaterno(),
-                        student.getLicenciatura())
-                ).collect(Collectors.toList());
+                .map(this::mapStudentToDto)
+                .collect(Collectors.toList());
 
         return new PageImpl<>(studentsDto, pageable, studentsPage.getTotalElements());
     }
@@ -178,14 +134,8 @@ public class StudentServiceImpl implements StudentService {
         List<Student> students = studentRepository.findAll();
 
         return students.stream()
-                .map(student -> new StudentDtoResponse(
-                        student.getId(),
-                        student.getStatusAlumno(),
-                        student.getNombre(),
-                        student.getApellidoPaterno(),
-                        student.getApellidoMaterno(),
-                        student.getLicenciatura())
-                ).collect(Collectors.toList());
+                .map(this::mapStudentToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -210,8 +160,62 @@ public class StudentServiceImpl implements StudentService {
         Random random = new Random();
         int randomNum = random.nextInt(1000); // Genera un número aleatorio de 3 dígitos
 
-
         return String.format("%02d%02d%03d", year, licCode, randomNum);
+    }
+
+    private StudentDtoResponse mapStudentToDto(Student student) {
+        return new StudentDtoResponse(
+                student.getId(),
+                student.getStatusAlumno(),
+                student.getNombre(),
+                student.getApellidoPaterno(),
+                student.getApellidoMaterno(),
+                student.getLicenciatura()
+        );
+    }
+
+    private Student mapToStudent(StudentDtoRequest studentDtoRequest) {
+        return Student.builder()
+                .nombre(studentDtoRequest.getNombre())
+                .apellidoPaterno(studentDtoRequest.getApellidoPaterno())
+                .apellidoMaterno(studentDtoRequest.getApellidoMaterno())
+                .celular(studentDtoRequest.getCelular())
+                .curp(studentDtoRequest.getCurp())
+                .estadoCivil(studentDtoRequest.getEstadoCivil())
+                .sexo(studentDtoRequest.getSexo())
+                .correoPersonal(studentDtoRequest.getCorreoPersonal())
+                .nacionalidad(studentDtoRequest.getNacionalidad())
+                .ingresoMensual(studentDtoRequest.getIngresoMensual())
+                .direccion(studentDtoRequest.getDireccion())
+                .tipoSangre(studentDtoRequest.getTipoSangre())
+                .institucionProcedenciaEstado(studentDtoRequest.getInstitucionProcedenciaEstado())
+                .telefono(studentDtoRequest.getTelefono())
+                .institucionProcedencia(studentDtoRequest.getInstitucionProcedencia())
+                .institucionProcedenciaMunicipio(studentDtoRequest.getInstitucionProcedenciaMunicipio())
+                .nss(studentDtoRequest.getNss())
+                .build();
+
+    }
+
+    private Student updateStudentData(Student existingStudent, StudentUpdateDtoRequest studentDtoRequest) {
+        existingStudent.setNombre(studentDtoRequest.getNombre());
+        existingStudent.setApellidoPaterno(studentDtoRequest.getApellidoPaterno());
+        existingStudent.setApellidoMaterno(studentDtoRequest.getApellidoMaterno());
+        existingStudent.setCurp(studentDtoRequest.getCurp());
+        existingStudent.setNacionalidad(studentDtoRequest.getNacionalidad());
+        existingStudent.setSexo(studentDtoRequest.getSexo());
+        existingStudent.setTipoSangre(studentDtoRequest.getTipoSangre());
+        existingStudent.setEstadoCivil(studentDtoRequest.getEstadoCivil());
+        existingStudent.setTelefono(studentDtoRequest.getTelefono());
+        existingStudent.setCelular(studentDtoRequest.getCelular());
+        existingStudent.setIngresoMensual(studentDtoRequest.getIngresoMensual());
+        existingStudent.setInstitucionProcedencia(studentDtoRequest.getInstitucionProcedencia());
+        existingStudent.setInstitucionProcedenciaEstado(studentDtoRequest.getInstitucionProcedenciaEstado());
+        existingStudent.setInstitucionProcedenciaMunicipio(studentDtoRequest.getInstitucionProcedenciaMunicipio());
+        existingStudent.setCorreoPersonal(studentDtoRequest.getCorreoPersonal());
+        existingStudent.setDireccion(studentDtoRequest.getDireccion());
+        existingStudent.setNss(studentDtoRequest.getNss());
+        return existingStudent;
     }
 
 }
