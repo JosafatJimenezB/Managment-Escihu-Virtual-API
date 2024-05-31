@@ -17,6 +17,7 @@ public interface StudentService {
     public List<StudentDtoResponse> listStudents();
 
     public Student getStudentById(Long id);
+    Student findByIdAndUsername(Long studentId, String username);
 
     public boolean exists(Long id);
 }

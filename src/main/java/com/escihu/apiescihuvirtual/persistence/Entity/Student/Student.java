@@ -78,10 +78,10 @@ public class Student {
     @Column(name = "institucion_procedencia_municipio")
     private String institucionProcedenciaMunicipio;
 
-    @Column(name = "correo_personal")
+    @Column(name = "correo_personal",unique = true)
     private String correoPersonal;
 
-    @Column(name = "correo_escolar")
+    @Column(name = "correo_escolar", unique = true)
     private String correoEscolar;
 
     @OneToOne(cascade = CascadeType.ALL)

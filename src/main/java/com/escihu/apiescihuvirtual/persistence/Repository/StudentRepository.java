@@ -9,4 +9,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Student findByUserUserId(Long studentId);
 
+    Student findByCorreoPersonal(String correoPersonal);
 }

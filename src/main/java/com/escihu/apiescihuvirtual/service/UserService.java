@@ -217,15 +217,24 @@ public class UserService implements UserDetailsService {
      *
      * @param email a string with the user email
      */
-    public void forgotPassword(String email) {
-        userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalStateException("Email not found" + email)
+    public void forgotPassword(String email)  {
 
-        );
+        boolean emailFound = false;
+
+        // Intentar encontrar el correo en studentRepository
+        if (studentRepository.findByCorreoPersonal(email) != null) {
+            emailFound = true;
+        }
+
+        // Intentar encontrar el correo en userRepository si no se encontró en studentRepository
+        if (!emailFound) {
+            userRepository.findByEmail(email);
+        }
+
         try {
             emailService.sendForgotPasswordEmail(email);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to send forgot password email", e);
         }
     }
 
