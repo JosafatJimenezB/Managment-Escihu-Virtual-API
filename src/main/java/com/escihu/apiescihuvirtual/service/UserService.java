@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -62,78 +60,12 @@ public class UserService {
     }
 
 
-
     public Page<UserDtoResponse> listUsersPaginated(Pageable pageable) {
 
         Page<User> usersPage = userRepository.findAll(pageable);
 
-
         List<UserDtoResponse> usersDto = usersPage.getContent().stream()
-                .map(user -> {
-                    Student studentDto = null;
-                    Teacher teacherDto = null;
-
-                    if (user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("STUDENT"))) {
-                        Student student = studentRepository.findByUserUserId(user.getUserId());
-                        if (student != null) {
-                            studentDto = Student.builder()
-                                    .id(student.getId())
-                                    .nombre(student.getNombre())
-                                    .apellidoPaterno(student.getApellidoPaterno())
-                                    .apellidoMaterno(student.getApellidoMaterno())
-                                    .matricula(student.getMatricula())
-                                    .licenciatura(student.getLicenciatura())
-                                    .courses(student.getCourses())
-                                    .nacionalidad(student.getNacionalidad())
-                                    .sexo(student.getSexo())
-                                    .estadoCivil(student.getEstadoCivil())
-                                    .build();
-                        }
-                    }
-                    if (user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("TEACHER"))) {
-                        Teacher teacher = teacherRepository.findByUserUserId(user.getUserId());
-                        if (teacher != null) {
-                            teacherDto = Teacher.builder()
-                                    .id(teacher.getId())
-                                    .nombre(teacher.getNombre())
-                                    .apellidoPaterno(teacher.getApellidoPaterno())
-                                    .apellidoMaterno(teacher.getApellidoMaterno())
-                                    .RFC(teacher.getRFC())
-                                    .CURP(teacher.getCURP())
-                                    .cedulaProfesional(teacher.getCedulaProfesional())
-                                    .statusDocente(teacher.getStatusDocente())
-                                    .gradoEstudios(teacher.getGradoEstudios())
-                                    .areaConocimientos(teacher.getAreaConocimientos())
-                                    .fechaNacimiento(teacher.getFechaNacimiento())
-                                    .nacionalidad(teacher.getNacionalidad())
-                                    .fechaBaja(teacher.getFechaBaja())
-                                    .sexo(teacher.getSexo())
-                                    .estadoCivil(teacher.getEstadoCivil())
-                                    .tipoSangre(teacher.getTipoSangre())
-                                    .correoPersonal(teacher.getCorreoPersonal())
-                                    .correoEscolar(teacher.getCorreoEscolar())
-                                    .direccion(teacher.getDireccion())
-                                    .build();
-                        }
-                    }
-
-                    Set<Role> roles = user.getAuthorities().stream()
-                            .map(grantedAuthority -> {
-                                Role role = new Role();
-                                role.setAuthority(grantedAuthority.getAuthority());
-                                return role;
-                            })
-                            .collect(Collectors.toSet());
-
-                    return UserDtoResponse.builder()
-                            .id(user.getUserId())
-                            .username(user.getUsername())
-                            .email(user.getEmail())
-                            .student(studentDto)
-                            .teacher(teacherDto)
-                            .role(roles)
-                            .build();
-                })
+                .map(this::mapToUserDtoResponse)
                 .collect(Collectors.toList());
 
 
@@ -180,20 +112,11 @@ public class UserService {
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        System.out.println("username: " + username);
-        System.out.println("current password: " + request.getCurrentPassword());
-        System.out.println("new password: " + request.getNewPassword());
-        System.out.println("confirm password: " + request.getConfirmPassword());
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new IllegalStateException("Wrong password");
-        }
 
-        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-            throw new IllegalStateException("Password are not the same");
-        }
+        logger.info(String.format("Changing password for user with username %s", user.getUsername()));
+        validatePasswordChange(request, user);
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-
         userRepository.save(user);
     }
 
@@ -205,16 +128,8 @@ public class UserService {
      */
     public void forgotPassword(String email) {
 
-        boolean emailFound = false;
-
-        // Intentar encontrar el correo en studentRepository
-        if (studentRepository.findByCorreoPersonal(email) != null) {
-            emailFound = true;
-        }
-
-        // Intentar encontrar el correo en userRepository si no se encontró en studentRepository
-        if (!emailFound) {
-            userRepository.findByEmail(email);
+        if (!emailExists(email)) {
+            throw new IllegalStateException("Email not found");
         }
 
         try {
@@ -224,6 +139,7 @@ public class UserService {
         }
     }
 
+
     /**
      * Changes the password of the user.
      *
@@ -231,6 +147,7 @@ public class UserService {
      * @param password a string the new password
      */
     public void setPassword(String email, String password) {
+
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalStateException("Email not found" + email)
         );
@@ -238,6 +155,44 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
 
+    }
+
+
+    private boolean emailExists(String email) {
+        logger.info(String.format("Checking if email %s exists", email));
+        return studentRepository.findByCorreoPersonal(email) != null || userRepository.findByEmail(email).isPresent();
+    }
+
+    private UserDtoResponse mapToUserDtoResponse(User user) {
+        Student student = user.getStudent();
+        Teacher teacher = user.getTeacher();
+
+        Set<Role> roles = user.getAuthorities().stream()
+                .map(role -> new Role(role.getAuthority()))
+                .collect(Collectors.toSet());
+
+        return UserDtoResponse.builder()
+                .id(user.getUserId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .student(student)
+                .teacher(teacher)
+                .role(roles)
+                .build();
+
+    }
+
+    private void validatePasswordChange(ChangePasswordRequest request, User user) {
+        logger.info(String.format("Validating password change for user with username %s", user.getUsername()));
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            logger.error(String.format("Wrong password for user with username %s", user.getUsername()));
+            throw new IllegalStateException("Wrong password");
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            logger.error(String.format("Passwords are not the same for user with username %s", user.getUsername()));
+            throw new IllegalStateException("Password are not the same");
+        }
     }
 
 }
