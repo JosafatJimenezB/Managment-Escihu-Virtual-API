@@ -2,7 +2,6 @@ package com.escihu.apiescihuvirtual.Controller;
 
 import com.escihu.apiescihuvirtual.Dto.CourseDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Message;
-import com.escihu.apiescihuvirtual.persistence.Entity.Classroom.Classroom;
 import com.escihu.apiescihuvirtual.persistence.Entity.Course.Course;
 import com.escihu.apiescihuvirtual.persistence.Entity.Cycle.Cycle;
 import com.escihu.apiescihuvirtual.service.Course.CourseService;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.annotation.Repeatable;
 import java.util.List;
 
 @Tag(name = "Controlador de cursos")
@@ -22,8 +20,8 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class CourseController {
 
-     private final CourseService courseService;
-     private final StudentService studentService;
+    private final CourseService courseService;
+    private final StudentService studentService;
 
     public CourseController(CourseService courseService, StudentService studentService) {
         this.courseService = courseService;
@@ -33,10 +31,10 @@ public class CourseController {
     @GetMapping("/courses/cycle/{id}")
     public ResponseEntity<?> listAll(@PathVariable Long id) {
 
-        try{
+        try {
             List<Course> courses = courseService.getAllCoursesByCycleId(id);
             return new ResponseEntity<>(courses, HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -47,10 +45,10 @@ public class CourseController {
 
     @GetMapping("/courses/cycle")
     public ResponseEntity<?> listCourse(@RequestBody Cycle cycle) {
-        try{
+        try {
             List<Course> courses = courseService.getAllCoursesByCycle(cycle);
             return new ResponseEntity<>(courses, HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -60,12 +58,12 @@ public class CourseController {
     }
 
     @GetMapping("/course/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id){
+    public ResponseEntity<?> findById(@PathVariable Long id) {
 
         try {
             Course course = courseService.getCourseById(id);
 
-            if(course == null) {
+            if (course == null) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Course not found")
                         .object(null)
@@ -107,14 +105,14 @@ public class CourseController {
 
         try {
 
-            if(!courseService.existById(id)){
+            if (!courseService.existById(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Course not found")
                         .object(null)
                         .build(), HttpStatus.NOT_FOUND);
             }
 
-            courseService.updateCourse(id,courseDtoRequest);
+            courseService.updateCourse(id, courseDtoRequest);
 
             return new ResponseEntity<>(Message.builder()
                     .message("Course Updated succesfully")
@@ -132,8 +130,8 @@ public class CourseController {
 
     @DeleteMapping("/courses/{idCourse}/unsuscribe/student/{idStudent}")
     public ResponseEntity<?> unsuscribeStudent(@PathVariable Long idCourse, @PathVariable Long idStudent) {
-        try{
-            if(!courseService.existById(idCourse)){
+        try {
+            if (!courseService.existById(idCourse)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Course not found")
                         .object(null)
@@ -161,8 +159,8 @@ public class CourseController {
 
     @DeleteMapping("/courses/{idCourse}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long idCourse) {
-        try{
-            if(!courseService.existById(idCourse)){
+        try {
+            if (!courseService.existById(idCourse)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Course not found")
                         .object(null)

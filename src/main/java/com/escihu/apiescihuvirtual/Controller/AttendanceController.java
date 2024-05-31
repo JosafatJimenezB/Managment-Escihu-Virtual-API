@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
 @RestController
@@ -31,7 +30,7 @@ public class AttendanceController {
 
     @Operation(summary = "Retorna un listado de todas las asistencias registradas")
     @GetMapping("/attendance")
-    public ResponseEntity<?> listAll(){
+    public ResponseEntity<?> listAll() {
         try {
             List<Attendance> attendaceList = attendanceService.listAll();
 
@@ -50,11 +49,11 @@ public class AttendanceController {
     public ResponseEntity<?> registerAttendance(@RequestBody AttendaceDtoRequest attendanceDto) {
         Attendance attendance = null;
 
-        try{
+        try {
 
             attendance = attendanceService.register(attendanceDto);
 
-            if(attendance == null) {
+            if (attendance == null) {
                 return new ResponseEntity<>(Message.builder()
                         .message("User not found")
                         .object(null)

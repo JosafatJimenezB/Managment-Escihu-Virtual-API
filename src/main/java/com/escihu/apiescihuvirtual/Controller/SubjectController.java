@@ -4,7 +4,6 @@ import com.escihu.apiescihuvirtual.Dto.Message;
 import com.escihu.apiescihuvirtual.persistence.Entity.Subject.Subject;
 import com.escihu.apiescihuvirtual.service.Course.CourseService;
 import com.escihu.apiescihuvirtual.service.Subject.SubjectService;
-import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,7 +82,7 @@ public class SubjectController {
     @PutMapping("/schedules/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, Subject subjectRequest) {
         try {
-            if(!subjectService.existById(id)) {
+            if (!subjectService.existById(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Subject not found")
                         .object(null), HttpStatus.NOT_FOUND);

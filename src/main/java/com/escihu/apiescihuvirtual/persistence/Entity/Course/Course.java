@@ -63,7 +63,7 @@ public class Course implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "student_id")})
     private List<Student> students = new ArrayList<>();
 
-    public Course(Long id, String name , Date createdAt, Date updatedAt, Teacher manager, Cycle cycle, Classroom classroom, List<Subject> subjects, List<Student> students) {
+    public Course(Long id, String name, Date createdAt, Date updatedAt, Teacher manager, Cycle cycle, Classroom classroom, List<Subject> subjects, List<Student> students) {
         this.id = id;
         this.name = name;
         this.createdAt = createdAt;
@@ -75,7 +75,7 @@ public class Course implements Serializable {
         this.students = students;
     }
 
-    public Course(){
+    public Course() {
 
     }
 

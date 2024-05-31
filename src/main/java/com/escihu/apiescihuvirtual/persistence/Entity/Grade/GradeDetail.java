@@ -57,7 +57,7 @@ public class GradeDetail implements Serializable {
         this.deleteComment = deleteComment;
     }
 
-    public GradeDetail(){
+    public GradeDetail() {
 
     }
 

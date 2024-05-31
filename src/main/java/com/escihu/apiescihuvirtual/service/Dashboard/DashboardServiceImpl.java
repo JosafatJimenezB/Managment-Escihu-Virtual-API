@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class DashboardServiceImpl implements DashboardService{
+public class DashboardServiceImpl implements DashboardService {
 
     private final ClassroomRepository classroomRepository;
     private final CourseRepository courseRepository;

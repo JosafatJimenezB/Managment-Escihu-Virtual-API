@@ -5,7 +5,7 @@ import lombok.Builder;
 
 @Builder
 @Entity
-@Table(name =  "address")
+@Table(name = "address")
 public class Address {
 
     @Id
@@ -34,7 +34,7 @@ public class Address {
         this.estado = estado;
     }
 
-    public Address(){
+    public Address() {
 
     }
 

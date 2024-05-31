@@ -7,12 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CycleServiceImpl implements CycleService{
+public class CycleServiceImpl implements CycleService {
 
     private final CycleRepository cycleRepository;
 
@@ -39,7 +38,7 @@ public class CycleServiceImpl implements CycleService{
     public Cycle updateCycle(CycleDtoRequest cycleDtoRequest, Long id) {
         Optional<Cycle> cycleExist = cycleRepository.findById(id);
 
-        if(!cycleExist.isPresent()) {
+        if (!cycleExist.isPresent()) {
             return null;
         }
 

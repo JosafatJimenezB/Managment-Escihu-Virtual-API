@@ -47,7 +47,7 @@ public class StorageService {
         return "File uploaded successfully";
     }
 
-    public String loadFromFileSystem(Long userId)  {
+    public String loadFromFileSystem(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -59,8 +59,7 @@ public class StorageService {
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Path destinationFile = this.rootLocation.resolve(Paths.get(user.getProfileImageUrl()));
         System.out.println("File path: " + destinationFile);
-        if(Files.exists(destinationFile))
-        {
+        if (Files.exists(destinationFile)) {
 
             Files.readAllBytes(destinationFile);
         } else throw new IOException("File not found");

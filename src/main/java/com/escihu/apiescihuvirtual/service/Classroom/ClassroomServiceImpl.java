@@ -7,13 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ClassroomServiceImpl implements ClassroomService{
+public class ClassroomServiceImpl implements ClassroomService {
 
     private final ClassroomRepository classroomRepository;
 
@@ -25,9 +23,9 @@ public class ClassroomServiceImpl implements ClassroomService{
     public Classroom addClassroom(ClassroomDto classroomDto) {
 
         Classroom classroom = Classroom.builder()
-                        .name(classroomDto.getName())
-                        .description(classroomDto.getDescription())
-                        .build();
+                .name(classroomDto.getName())
+                .description(classroomDto.getDescription())
+                .build();
         return classroomRepository.save(classroom);
     }
 
@@ -35,7 +33,7 @@ public class ClassroomServiceImpl implements ClassroomService{
     public Classroom updateClassroom(Long id, ClassroomDto classroomDto) {
         Optional<Classroom> classroomExists = classroomRepository.findById(id);
 
-        if(!classroomExists.isPresent()){
+        if (!classroomExists.isPresent()) {
             return null;
         }
 
@@ -46,6 +44,7 @@ public class ClassroomServiceImpl implements ClassroomService{
 
         return classroomRepository.save(classroom);
     }
+
     @Override
     public Page<Classroom> getAllClassrooms(Pageable pageable) {
         return classroomRepository.findAll(pageable);
@@ -62,7 +61,7 @@ public class ClassroomServiceImpl implements ClassroomService{
     }
 
     @Override
-    public boolean exists(Long id){
+    public boolean exists(Long id) {
         return classroomRepository.existsById(id);
     }
 }

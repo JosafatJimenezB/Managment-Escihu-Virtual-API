@@ -1,7 +1,6 @@
 package com.escihu.apiescihuvirtual.Dto.Grade;
 
 import com.escihu.apiescihuvirtual.persistence.Entity.Subject.Subject;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder

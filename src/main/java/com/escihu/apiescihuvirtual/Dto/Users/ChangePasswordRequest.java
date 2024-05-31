@@ -2,6 +2,7 @@ package com.escihu.apiescihuvirtual.Dto.Users;
 
 import lombok.Getter;
 import lombok.Setter;
+
 /**
  * ChangePasswordRequest es una clase DTO que representa la solicitud de cambio de contraseña de un usuario.
  * Esta clase contiene los campos {@code currentPassword} , {@code newPassword} y  {@code confirmPassword}.

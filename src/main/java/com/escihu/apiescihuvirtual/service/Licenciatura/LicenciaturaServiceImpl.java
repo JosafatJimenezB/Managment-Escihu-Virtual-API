@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LicenciaturaServiceImpl implements LicenciaturaService{
+public class LicenciaturaServiceImpl implements LicenciaturaService {
 
-     private final LicenciaturaRepository licenciaturaRepository;
+    private final LicenciaturaRepository licenciaturaRepository;
 
     public LicenciaturaServiceImpl(LicenciaturaRepository licenciaturaRepository) {
         this.licenciaturaRepository = licenciaturaRepository;
@@ -36,7 +36,7 @@ public class LicenciaturaServiceImpl implements LicenciaturaService{
     public Licenciatura update(Long id, LicenciaturaDtoRequest licenciaturaDtoRequest) {
         Optional<Licenciatura> licenciaturaExist = licenciaturaRepository.findById(id);
 
-        if(!licenciaturaExist.isPresent()) {
+        if (!licenciaturaExist.isPresent()) {
             return null;
         }
 

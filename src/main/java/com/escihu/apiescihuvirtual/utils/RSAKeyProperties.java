@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+
 /**
  * RSAKeyProperties is a component that holds the public and private keys of an RSA key pair.
  * It uses the KeyGeneratorUtility to generate the key pair.

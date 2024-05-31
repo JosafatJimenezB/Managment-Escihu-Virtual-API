@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SubjectServiceImpl implements SubjectService{
+public class SubjectServiceImpl implements SubjectService {
 
     private final SubjectRepository subjectRepository;
     private final CourseRepository courseRepository;
@@ -29,7 +29,7 @@ public class SubjectServiceImpl implements SubjectService{
     public Subject updateSubject(Long id, Subject sform) {
         Optional<Subject> subjectExist = subjectRepository.findById(id);
 
-        if(!subjectExist.isPresent()) {
+        if (!subjectExist.isPresent()) {
             return null;
         }
 

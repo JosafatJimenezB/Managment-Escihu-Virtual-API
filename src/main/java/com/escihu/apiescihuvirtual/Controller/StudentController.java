@@ -49,10 +49,10 @@ public class StudentController {
 
     @GetMapping("/students/list")
     public ResponseEntity<?> listAll() {
-        try{
+        try {
             List<StudentDtoResponse> students = studentService.listStudents();
             return new ResponseEntity<>(students, HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -62,15 +62,14 @@ public class StudentController {
     }
 
     @GetMapping("/student/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id){
+    public ResponseEntity<?> findById(@PathVariable Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
 
 
+        Student student = studentService.findByIdAndUsername(id, currentUsername);
 
-        Student student = studentService.findByIdAndUsername(id,currentUsername);
-
-        if(student == null) {
+        if (student == null) {
             return new ResponseEntity<>(Message.builder()
                     .message("Student not found")
                     .object(null)
@@ -83,13 +82,13 @@ public class StudentController {
     @PostMapping("/student")
     public ResponseEntity<?> create(@RequestBody StudentDtoRequest studentDtoRequest) {
         Student student;
-        try{
-             student = studentService.createStudent(studentDtoRequest);
+        try {
+            student = studentService.createStudent(studentDtoRequest);
             return new ResponseEntity<>(Message.builder()
                     .message("Student created succesfully")
                     .object(student)
                     .build(), HttpStatus.CREATED);
-        } catch (DataAccessException e){
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -102,7 +101,7 @@ public class StudentController {
         Student student = null;
 
         try {
-            if(!studentService.exists(id)){
+            if (!studentService.exists(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Student not found")
                         .object(null)

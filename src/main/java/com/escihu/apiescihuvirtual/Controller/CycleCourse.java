@@ -1,12 +1,9 @@
 package com.escihu.apiescihuvirtual.Controller;
 
-import com.escihu.apiescihuvirtual.Dto.ClassroomDto;
 import com.escihu.apiescihuvirtual.Dto.Cycle.CycleDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Message;
-import com.escihu.apiescihuvirtual.persistence.Entity.Classroom.Classroom;
 import com.escihu.apiescihuvirtual.persistence.Entity.Cycle.Cycle;
 import com.escihu.apiescihuvirtual.service.Cycle.CycleService;
-import com.escihu.apiescihuvirtual.service.Cycle.CycleServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -33,11 +30,11 @@ public class CycleCourse {
             @RequestParam(defaultValue = "0") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize) {
 
-        try{
+        try {
             PageRequest pageable = PageRequest.of(currentPage, pageSize);
             Page<Cycle> cycle = cycleService.getAllCycles(pageable);
             return new ResponseEntity<>(cycle, HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -48,10 +45,10 @@ public class CycleCourse {
 
     @GetMapping("/cycles")
     public ResponseEntity<?> listAll() {
-        try{
+        try {
             List<Cycle> cycle = cycleService.getActiveCycles();
             return new ResponseEntity<>(cycle, HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -61,12 +58,12 @@ public class CycleCourse {
     }
 
     @GetMapping("/cycles/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id){
+    public ResponseEntity<?> findById(@PathVariable Long id) {
 
         try {
             Cycle cycle = cycleService.getcycleById(id);
 
-            if(cycle == null) {
+            if (cycle == null) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Clycle not found")
                         .object(null)
@@ -103,11 +100,11 @@ public class CycleCourse {
     }
 
     @PutMapping("/cycles/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable Long id , @RequestBody CycleDtoRequest cycleDtoRequest) {
+    public ResponseEntity<?> update(@Valid @PathVariable Long id, @RequestBody CycleDtoRequest cycleDtoRequest) {
         Cycle cycle = null;
 
-        try{
-            if(!cycleService.exists(id)){
+        try {
+            if (!cycleService.exists(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Cycle not found")
                         .object(null)
@@ -125,7 +122,7 @@ public class CycleCourse {
                             .build())
                     .build(), HttpStatus.OK);
 
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)

@@ -3,7 +3,6 @@ package com.escihu.apiescihuvirtual.service.Course;
 import com.escihu.apiescihuvirtual.Dto.CourseDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Course.Course;
 import com.escihu.apiescihuvirtual.persistence.Entity.Cycle.Cycle;
-import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.escihu.apiescihuvirtual.persistence.Repository.CourseRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.CycleRepository;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CourseServiceImpl implements CourseService{
+public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final CycleRepository cycleRepository;
@@ -38,7 +37,7 @@ public class CourseServiceImpl implements CourseService{
     public Course updateCourse(Long id, CourseDtoRequest courseDtoRequest) {
         Optional<Course> courseExists = courseRepository.findById(id);
 
-        if(!courseExists.isPresent()){
+        if (!courseExists.isPresent()) {
             return null;
         }
 

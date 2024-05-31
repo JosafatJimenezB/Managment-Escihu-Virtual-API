@@ -29,7 +29,7 @@ public class ScheduleController {
     @GetMapping("/schedules/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         try {
-            if(!scheduleService.existById(id)) {
+            if (!scheduleService.existById(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Schedule not found")
                         .object(null), HttpStatus.NOT_FOUND);
@@ -48,7 +48,7 @@ public class ScheduleController {
     @GetMapping("/schedules/{id}/course")
     public ResponseEntity<?> getScheduleByCourseId(@PathVariable Long id) {
         try {
-            if (!courseService.existById(id)){
+            if (!courseService.existById(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Course Not found")
                         .object(null), HttpStatus.NOT_FOUND);
@@ -83,7 +83,7 @@ public class ScheduleController {
     @DeleteMapping("/schedules/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
-            if(!scheduleService.existById(id)) {
+            if (!scheduleService.existById(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Schedule not found")
                         .object(null), HttpStatus.NOT_FOUND);
@@ -93,7 +93,7 @@ public class ScheduleController {
 
             return new ResponseEntity<>(Message.builder()
                     .message("Schedule deleted succesfully")
-                    .object(null),HttpStatus.NO_CONTENT);
+                    .object(null), HttpStatus.NO_CONTENT);
 
         } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()

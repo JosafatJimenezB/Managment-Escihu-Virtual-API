@@ -58,7 +58,7 @@ public class Subject implements Serializable {
         this.grades = grades;
     }
 
-    public Subject(){
+    public Subject() {
 
     }
 

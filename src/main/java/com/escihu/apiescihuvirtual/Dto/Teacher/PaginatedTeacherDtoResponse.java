@@ -21,9 +21,9 @@ public class PaginatedTeacherDtoResponse {
         this.totalElements = totalElements;
     }
 
-     public PaginatedTeacherDtoResponse() {
+    public PaginatedTeacherDtoResponse() {
 
-     }
+    }
 
     public List<TeacherDtoResponse> getTeachers() {
         return teachers;

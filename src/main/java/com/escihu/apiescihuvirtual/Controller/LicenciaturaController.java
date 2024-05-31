@@ -18,7 +18,7 @@ import java.util.List;
 @Tag(name = "Controlador de Licenciaturas")
 public class LicenciaturaController {
 
-     private final LicenciaturaService service;
+    private final LicenciaturaService service;
 
     public LicenciaturaController(LicenciaturaService service) {
         this.service = service;
@@ -81,7 +81,7 @@ public class LicenciaturaController {
                         .build(), HttpStatus.NOT_FOUND);
             }
 
-            Licenciatura licenciatura = service. update(id, licenciaturaDtoRequest);
+            Licenciatura licenciatura = service.update(id, licenciaturaDtoRequest);
 
             return new ResponseEntity<>(Message.builder()
                     .message("Licenciatura updated succesfully")

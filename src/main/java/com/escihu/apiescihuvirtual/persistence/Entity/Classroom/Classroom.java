@@ -44,7 +44,7 @@ public class Classroom implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public Classroom(){
+    public Classroom() {
 
     }
 

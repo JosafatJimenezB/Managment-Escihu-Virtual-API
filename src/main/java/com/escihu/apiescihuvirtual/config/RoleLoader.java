@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+
 @Component
 public class RoleLoader implements CommandLineRunner {
     private final RoleRepository repository;
@@ -16,7 +17,7 @@ public class RoleLoader implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args)  {
+    public void run(String... args) {
         List<Role> roles = Arrays.asList(
                 new Role("ADMIN"),
                 new Role("STUDENT"),

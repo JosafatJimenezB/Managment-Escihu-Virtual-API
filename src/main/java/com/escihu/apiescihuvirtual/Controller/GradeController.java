@@ -2,18 +2,15 @@ package com.escihu.apiescihuvirtual.Controller;
 
 import com.escihu.apiescihuvirtual.Dto.Grade.GradeDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Message;
-import com.escihu.apiescihuvirtual.persistence.Entity.Classroom.Classroom;
 import com.escihu.apiescihuvirtual.persistence.Entity.Grade.Grade;
 import com.escihu.apiescihuvirtual.persistence.Entity.Grade.GradeDetail;
 import com.escihu.apiescihuvirtual.persistence.Entity.Subject.Subject;
 import com.escihu.apiescihuvirtual.service.Grade.GradeService;
-import org.apache.coyote.Response;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.*;
 import java.util.List;
 
 @RestController
@@ -29,11 +26,11 @@ public class GradeController {
 
     @GetMapping("/grades/{id}/subject")
     public ResponseEntity<?> listAll(@PathVariable Long id) {
-        try{
+        try {
             List<Grade> grades = gradeService.getGradesBySubjectId(id);
 
             return new ResponseEntity<>(grades, HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -46,7 +43,7 @@ public class GradeController {
     public ResponseEntity<?> getGradeScorebook(@PathVariable Long id) {
         try {
 
-            if (!gradeService.existById(id)){
+            if (!gradeService.existById(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Grade not found")
                         .object(null), HttpStatus.NOT_FOUND);
@@ -65,8 +62,8 @@ public class GradeController {
     }
 
     @PostMapping("/grades/getBySubject")
-    public ResponseEntity<?> getGradesBySubject(@RequestBody Subject subject){
-        try{
+    public ResponseEntity<?> getGradesBySubject(@RequestBody Subject subject) {
+        try {
             List<Grade> grades = gradeService.getGradesBySubject(subject);
 
             return new ResponseEntity<>(grades, HttpStatus.OK);
@@ -83,7 +80,7 @@ public class GradeController {
         try {
             Grade grade = gradeService.updateGrade(id, gradeDtoRequest);
 
-            if (!gradeService.existById(id)){
+            if (!gradeService.existById(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Grade not found")
                         .object(null), HttpStatus.NOT_FOUND);
@@ -120,7 +117,7 @@ public class GradeController {
         try {
             Grade grade = gradeService.getGradeById(id);
 
-            if (!gradeService.existById(id)){
+            if (!gradeService.existById(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Grade not found")
                         .object(null), HttpStatus.NOT_FOUND);
@@ -139,7 +136,7 @@ public class GradeController {
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
 
-            if (!gradeService.existById(id)){
+            if (!gradeService.existById(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Grade not found")
                         .object(null), HttpStatus.NOT_FOUND);
@@ -163,7 +160,7 @@ public class GradeController {
     public ResponseEntity<?> delete(@RequestBody Grade grade) {
         try {
 
-            if (!gradeService.existById(grade.getId())){
+            if (!gradeService.existById(grade.getId())) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Grade not found")
                         .object(null), HttpStatus.NOT_FOUND);
@@ -181,7 +178,6 @@ public class GradeController {
                     .object(null), HttpStatus.METHOD_NOT_ALLOWED);
         }
     }
-
 
 
 }

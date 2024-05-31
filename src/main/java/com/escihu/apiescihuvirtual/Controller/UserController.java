@@ -1,10 +1,8 @@
 package com.escihu.apiescihuvirtual.Controller;
 
 import com.escihu.apiescihuvirtual.Dto.Users.ChangePasswordRequest;
-import com.escihu.apiescihuvirtual.persistence.Entity.User;
 import com.escihu.apiescihuvirtual.service.StorageService;
 import com.escihu.apiescihuvirtual.service.UserService;
-import com.escihu.apiescihuvirtual.utils.ImageUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
@@ -23,7 +21,6 @@ import java.util.Map;
  * <p>
  * Este controlador contiene los métodos para cambiar la contraseña de un usuario.
  * </p>
- *
  */
 @Tag(name = "Controlador de usuarios")
 @RestController
@@ -46,12 +43,11 @@ public class UserController {
      * Este método permite al usuario autenticado cambiar su contraseña.
      * </p>
      *
-     * @param request {@link ChangePasswordRequest} la solicitud de cambio de contraseña del usuario
+     * @param request       {@link ChangePasswordRequest} la solicitud de cambio de contraseña del usuario
      * @param connectedUser {@link Principal} el usuario conectado
-     *
      */
     @Operation(summary = "Cambia la contraseña del usuario conectado",
-    description = "Cambia la contraseña del usuario conectado usando su usuario para autenticarse")
+            description = "Cambia la contraseña del usuario conectado usando su usuario para autenticarse")
     @PatchMapping
     public ResponseEntity<?> changePassword(
             @RequestBody ChangePasswordRequest request,
@@ -69,10 +65,9 @@ public class UserController {
      * </p>
      *
      * @param email un string con el correo del usuario
-     *
      */
     @Operation(summary = "Envia un correo para cambiar la contraseña",
-    description = "Envia un correo para cambiar la contraseña del usuario sin tener que autenticarse")
+            description = "Envia un correo para cambiar la contraseña del usuario sin tener que autenticarse")
     @PutMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(
             @RequestParam String email
@@ -88,12 +83,11 @@ public class UserController {
      * Este método permite al usuario cambiar su contraseña.
      * </p>
      *
-     * @param email un string con el correo del usuario
+     * @param email    un string con el correo del usuario
      * @param password un string la nueva contraseña
-     *
      */
     @Operation(summary = "Cambia la contraseña del usuario",
-    description = "Cambia la contraseña del usuario usando su correo para autenticarse")
+            description = "Cambia la contraseña del usuario usando su correo para autenticarse")
     @PutMapping("/set-password")
     public ResponseEntity<String> setPassword(
             @RequestParam String email,
@@ -104,9 +98,9 @@ public class UserController {
     }
 
     @PostMapping("/upload/{userId}")
-    public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file,@PathVariable Long userId) throws IOException {
+    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, @PathVariable Long userId) throws IOException {
 
-        String uploadImage = storageService.uploadImageToFileSystem(file,userId);
+        String uploadImage = storageService.uploadImageToFileSystem(file, userId);
         return ResponseEntity.ok("File uploaded successfully:" + uploadImage);
     }
 
@@ -128,8 +122,6 @@ public class UserController {
 
         return ResponseEntity.ok(response);
     }
-
-
 
 
 }

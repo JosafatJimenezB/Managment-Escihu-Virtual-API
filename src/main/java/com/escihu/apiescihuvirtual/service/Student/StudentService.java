@@ -1,6 +1,8 @@
 package com.escihu.apiescihuvirtual.service.Student;
 
-import com.escihu.apiescihuvirtual.Dto.Student.*;
+import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoRequest;
+import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
+import com.escihu.apiescihuvirtual.Dto.Student.StudentUpdateDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ public interface StudentService {
     public List<StudentDtoResponse> listStudents();
 
     public Student getStudentById(Long id);
+
     Student findByIdAndUsername(Long studentId, String username);
 
     public boolean exists(Long id);

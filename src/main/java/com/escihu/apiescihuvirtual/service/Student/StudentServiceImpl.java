@@ -1,6 +1,8 @@
 package com.escihu.apiescihuvirtual.service.Student;
 
-import com.escihu.apiescihuvirtual.Dto.Student.*;
+import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoRequest;
+import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
+import com.escihu.apiescihuvirtual.Dto.Student.StudentUpdateDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
 import com.escihu.apiescihuvirtual.persistence.Entity.Role;
@@ -19,13 +21,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class StudentServiceImpl implements StudentService{
+public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
 
@@ -92,7 +96,7 @@ public class StudentServiceImpl implements StudentService{
 
         Optional<Licenciatura> licenciatura = licenciaturaRepository.findById(studentDtoRequest.getLicenciatura().getId());
 
-        if(!licenciatura.isPresent()){
+        if (!licenciatura.isPresent()) {
             student.setLicenciatura(null);
         }
 
@@ -112,7 +116,7 @@ public class StudentServiceImpl implements StudentService{
     public Student updateStudent(Long id, StudentUpdateDtoRequest studentDtoRequest) {
         Optional<Student> studentExists = studentRepository.findById(id);
 
-        if(!studentExists.isPresent()){
+        if (!studentExists.isPresent()) {
             return null;
         }
 
@@ -142,7 +146,7 @@ public class StudentServiceImpl implements StudentService{
 
         Optional<Licenciatura> licenciatura = licenciaturaRepository.findById(studentDtoRequest.getLicenciatura().getId());
 
-        if(!licenciatura.isPresent()){
+        if (!licenciatura.isPresent()) {
             student.setLicenciatura(null);
         }
 
@@ -164,7 +168,7 @@ public class StudentServiceImpl implements StudentService{
                         student.getApellidoMaterno(),
                         student.getLicenciatura())
                 ).collect(Collectors.toList());
-      
+
         return new PageImpl<>(studentsDto, pageable, studentsPage.getTotalElements());
     }
 

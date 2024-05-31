@@ -80,7 +80,7 @@ public class AuthenticationService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
         Role role = (Role) user.getAuthorities().stream().findFirst().orElseThrow(() -> new RuntimeException("User has no role"));
 
-        return new LoginResponse( user.getUserId(),username, token, user.getStudent(),user.getTeacher(), role);
+        return new LoginResponse(user.getUserId(), username, token, user.getStudent(), user.getTeacher(), role);
     }
 
     private boolean isUsersExists(String username) {

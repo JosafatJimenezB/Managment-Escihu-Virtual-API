@@ -35,11 +35,11 @@ public class ClassroomController {
             @RequestParam(defaultValue = "0") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize) {
 
-        try{
+        try {
             PageRequest pageable = PageRequest.of(currentPage, pageSize);
             Page<Classroom> classrooms = classroomService.getAllClassrooms(pageable);
             return new ResponseEntity<>(classrooms, HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -51,11 +51,11 @@ public class ClassroomController {
     @Operation(summary = "Retornar todos los salones en una lista")
     @GetMapping("/classrooms/list")
     public ResponseEntity<?> listAll() {
-        try{
+        try {
             List<Classroom> classrooms = classroomService.getAllClassrooms();
 
             return new ResponseEntity<>(classrooms, HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -66,12 +66,12 @@ public class ClassroomController {
 
     @Operation(summary = "Retornar un salon por id")
     @GetMapping("/classroom/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id){
+    public ResponseEntity<?> findById(@PathVariable Long id) {
 
         try {
             Classroom classroom = classroomService.getClassroomById(id);
 
-            if(classroom == null) {
+            if (classroom == null) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Classroom not found")
                         .object(null)
@@ -93,7 +93,7 @@ public class ClassroomController {
     public ResponseEntity<?> create(@Valid @RequestBody ClassroomDto classroomDto) {
         Classroom classroom = null;
 
-        try{
+        try {
             classroom = classroomService.addClassroom(classroomDto);
 
             return new ResponseEntity<>(Message.builder()
@@ -101,7 +101,7 @@ public class ClassroomController {
                     .object(classroom)
                     .build(), HttpStatus.CREATED);
 
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -111,12 +111,12 @@ public class ClassroomController {
 
     @Operation(summary = "Actualiza un salon por id")
     @PutMapping("/classroom/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable Long id , @RequestBody ClassroomDto classroomDto) {
+    public ResponseEntity<?> update(@Valid @PathVariable Long id, @RequestBody ClassroomDto classroomDto) {
         Classroom classroom = null;
 
-        try{
+        try {
 
-            if(!classroomService.exists(id)){
+            if (!classroomService.exists(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Classroom not found")
                         .object(null)
@@ -136,7 +136,7 @@ public class ClassroomController {
                             .build())
                     .build(), HttpStatus.OK);
 
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)

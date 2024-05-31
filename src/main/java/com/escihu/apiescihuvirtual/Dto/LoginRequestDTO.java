@@ -10,4 +10,5 @@ public record LoginRequestDTO(
         @NotNull(message = "Password cannot be null")
         @NotBlank(message = "Password cannot be blank")
         String password
-) { }
+) {
+}

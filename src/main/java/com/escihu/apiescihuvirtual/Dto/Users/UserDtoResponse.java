@@ -3,14 +3,9 @@ package com.escihu.apiescihuvirtual.Dto.Users;
 import com.escihu.apiescihuvirtual.persistence.Entity.Role;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collector;
 
 @Builder
 public class UserDtoResponse {

@@ -177,7 +177,7 @@ CREATE TABLE token
     created_at   TIMESTAMP WITHOUT TIME ZONE,
     expires_at   TIMESTAMP WITHOUT TIME ZONE,
     validated_at TIMESTAMP WITHOUT TIME ZONE,
-    user_id      BIGINT                                   NOT NULL,
+    user_id      BIGINT                                  NOT NULL,
     CONSTRAINT pk_token PRIMARY KEY (id)
 );
 

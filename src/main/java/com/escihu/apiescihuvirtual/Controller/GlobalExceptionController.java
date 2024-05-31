@@ -44,8 +44,8 @@ public class GlobalExceptionController {
                 .stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
-        ErrorDto errorDTO = new ErrorDto(HttpStatus.BAD_REQUEST.value(), errorMessage,"api/v1/","Bad Request", e.getClass().getName(),Instant.now());
-        return new ResponseEntity<>(errorDTO,HttpStatus.BAD_REQUEST);
+        ErrorDto errorDTO = new ErrorDto(HttpStatus.BAD_REQUEST.value(), errorMessage, "api/v1/", "Bad Request", e.getClass().getName(), Instant.now());
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
 }

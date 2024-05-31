@@ -10,14 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 /**
  * TokenService is a service class that handles operations related to JSON Web Tokens (JWTs).
  * It provides a method for generating a JWT for an authenticated user.
  * It uses JwtEncoder and JwtDecoder for encoding and decoding JWTs.
- *
  */
 @Service
 public class TokenService {
@@ -57,7 +55,7 @@ public class TokenService {
                 .issuedAt(now)
                 .subject(auth.getName())
                 .expiresAt(expiresAt)
-                .claim("roles",scope)
+                .claim("roles", scope)
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

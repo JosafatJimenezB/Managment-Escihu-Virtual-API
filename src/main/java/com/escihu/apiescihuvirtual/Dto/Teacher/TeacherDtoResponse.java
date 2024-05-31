@@ -23,7 +23,7 @@ public class TeacherDtoResponse {
         this.areaConocimientos = areaConocimientos;
     }
 
-    public TeacherDtoResponse(){
+    public TeacherDtoResponse() {
 
     }
 

@@ -8,10 +8,10 @@ import com.escihu.apiescihuvirtual.service.Teacher.TeacherService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -45,11 +45,11 @@ public class TeacherController {
     @GetMapping("/teachers/list")
     public ResponseEntity<?> pageableAll(@RequestParam(name = "page", defaultValue = "0") int page) {
 
-        try{
+        try {
             PageRequest pageable = PageRequest.of(page, 10);
             Page<Teacher> teachers = teacherService.getAllTeachers(pageable);
             return new ResponseEntity<>(teachers, HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -61,16 +61,16 @@ public class TeacherController {
     @Operation(summary = "Retorna todos los docentes con paginación sorteados",
             description = "Opcionalmente, se puede incluir en la petición el tamaño de la página con el parámetro `pageSize`. Por defecto el tamaño de la página es 10",
             parameters = {
-            @Parameter(description = "Tamaño de la página", name = "pageSize", required = false, in = ParameterIn.QUERY)
-    })
+                    @Parameter(description = "Tamaño de la página", name = "pageSize", required = false, in = ParameterIn.QUERY)
+            })
     @GetMapping("/teachers/paginated1")
     public ResponseEntity<?> getTeachersPaginated(
             @RequestParam(defaultValue = "0") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize) {
-        try{
+        try {
             Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
             return new ResponseEntity<>(teacherService.listTeachersPaginated(modifiedPage), HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -83,11 +83,11 @@ public class TeacherController {
     public ResponseEntity<?> teachersPaginated(
             @RequestParam(defaultValue = "0") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize) {
-        try{
+        try {
             Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
             Page<TeacherDtoResponse> teacherPage = teacherService.teachersClassicPagination(modifiedPage);
             return new ResponseEntity<>(teacherPage, HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -100,10 +100,10 @@ public class TeacherController {
             description = "Retorna una lista de docentes con la información relevante (ID, nombre completo) para ser utilizada en un componente de selección (select) en el frontend.")
     @GetMapping("/teacher/list")
     public ResponseEntity<?> listAll() {
-        try{
+        try {
             List<TeacherDtoResponse> teachers = teacherService.listTeachers();
             return new ResponseEntity<>(teachers, HttpStatus.OK);
-        }catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -115,17 +115,17 @@ public class TeacherController {
     @Operation(summary = "Retorna un docente por ID",
             description = "Este endpoint permite obtener la información detallada de un docente específico a partir de su ID.",
             parameters = {
-                    @Parameter(description = "ID del docente a buscar", name= "id", required = true, in = ParameterIn.PATH)
+                    @Parameter(description = "ID del docente a buscar", name = "id", required = true, in = ParameterIn.PATH)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Docente encontrado", content = @Content(schema = @Schema(implementation = Teacher.class))),
                     @ApiResponse(responseCode = "404", description = "Docente no encontrado", content = @Content(schema = @Schema(implementation = Message.class)))
             })
     @GetMapping("/teacher/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id){
+    public ResponseEntity<?> findById(@PathVariable Long id) {
         Teacher teacher = teacherService.getTeacherById(id);
 
-        if(teacher == null) {
+        if (teacher == null) {
             return new ResponseEntity<>(Message.builder()
                     .message("Teacher not found")
                     .object(null)
@@ -146,14 +146,14 @@ public class TeacherController {
     public ResponseEntity<?> create(@Valid @org.springframework.web.bind.annotation.RequestBody TeacherDtoRequest teacherDtoRequest) {
         Teacher teacher;
 
-        try{
+        try {
             teacher = teacherService.createTeacher(teacherDtoRequest);
 
             return new ResponseEntity<>(Message.builder()
                     .message("Teacher created succesfully")
                     .object(teacher)
                     .build(), HttpStatus.CREATED);
-        } catch (DataAccessException e){
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
                     .object(null)
@@ -173,13 +173,13 @@ public class TeacherController {
                             schema = @Schema(implementation = TeacherDtoRequest.class),
                             examples = @ExampleObject(
                                     value = """
-                        {
-                            "nombre": "Juan Carlos",   // Nombre actualizado
-                            "apellido": "López Gómez",  // Apellido actualizado
-                            "correo": "juan.lopez@correo.com",
-                            "telefono": "5512345678"
-                        }
-                        """
+                                            {
+                                                "nombre": "Juan Carlos",   // Nombre actualizado
+                                                "apellido": "López Gómez",  // Apellido actualizado
+                                                "correo": "juan.lopez@correo.com",
+                                                "telefono": "5512345678"
+                                            }
+                                            """
                             )
                     )
             ),
@@ -197,7 +197,7 @@ public class TeacherController {
         Teacher teacher = null;
 
         try {
-            if(!teacherService.exists(id)){
+            if (!teacherService.exists(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Teacher not found")
                         .object(null)

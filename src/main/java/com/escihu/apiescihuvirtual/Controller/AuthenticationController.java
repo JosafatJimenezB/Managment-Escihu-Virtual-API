@@ -6,7 +6,6 @@ import com.escihu.apiescihuvirtual.Dto.RegistrationDTO;
 import com.escihu.apiescihuvirtual.exceptions.UsernameNotFoundException;
 import com.escihu.apiescihuvirtual.service.AuthenticationService;
 import com.escihu.apiescihuvirtual.service.TokenService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

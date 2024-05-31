@@ -78,7 +78,7 @@ public class Student {
     @Column(name = "institucion_procedencia_municipio")
     private String institucionProcedenciaMunicipio;
 
-    @Column(name = "correo_personal",unique = true)
+    @Column(name = "correo_personal", unique = true)
     private String correoPersonal;
 
     @Column(name = "correo_escolar", unique = true)

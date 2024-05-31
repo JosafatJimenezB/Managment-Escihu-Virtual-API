@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class TeacherServiceImpl implements TeacherService{
+public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final UserRepository userRepository;
@@ -96,7 +96,7 @@ public class TeacherServiceImpl implements TeacherService{
     public Teacher updateTeacher(Long id, TeacherDtoRequest teacherDtoRequest) {
         Optional<Teacher> teacherExists = teacherRepository.findById(id);
 
-        if(!teacherExists.isPresent()){
+        if (!teacherExists.isPresent()) {
             return null;
         }
 

@@ -6,8 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -56,7 +57,6 @@ public class User implements UserDetails {
     @Schema(description = "Password of the user.")
     @JsonIgnore
     private String password;
-
 
 
     private String profileImageUrl;
@@ -115,6 +115,7 @@ public class User implements UserDetails {
 
     /**
      * Returns the authorities granted to the user.
+     *
      * @return a collection of granted authorities.
      */
     @Override
@@ -135,6 +136,7 @@ public class User implements UserDetails {
 
     /**
      * Checks if the user's account has not expired.
+     *
      * @return true if the account is valid (non-expired), false otherwise.
      */
     @Override
@@ -144,6 +146,7 @@ public class User implements UserDetails {
 
     /**
      * Checks if the user is not locked.
+     *
      * @return true if the user is not locked, false otherwise.
      */
     @Override
@@ -153,6 +156,7 @@ public class User implements UserDetails {
 
     /**
      * Checks if the user's credentials (password) have not expired.
+     *
      * @return true if the credentials are valid (non-expired), false otherwise.
      */
     @Override
@@ -162,6 +166,7 @@ public class User implements UserDetails {
 
     /**
      * Checks if the user is enabled.
+     *
      * @return true if the user is enabled, false otherwise.
      */
     @Override

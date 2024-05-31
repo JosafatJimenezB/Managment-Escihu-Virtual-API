@@ -43,7 +43,7 @@ public class SubjectSchedule implements Serializable {
         this.endTime = endTime;
     }
 
-    public SubjectSchedule(){
+    public SubjectSchedule() {
 
     }
 

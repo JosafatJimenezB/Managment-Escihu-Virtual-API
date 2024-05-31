@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
  * It implements the UserDetailsService interface from Spring Security.
  * It provides methods for loading a user by username, finding a user by username, and saving a user.
  * It uses the UserRepository to perform these operations.
- *
  */
 @Service
 public class UserService implements UserDetailsService {
@@ -81,32 +80,31 @@ public class UserService implements UserDetailsService {
         Page<User> usersPage = userRepository.findAll(pageable);
 
 
-
         List<UserDtoResponse> usersDto = usersPage.getContent().stream()
                 .map(user -> {
                     Student studentDto = null;
                     Teacher teacherDto = null;
 
                     if (user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("STUDENT"))) {
-                    Student student = studentRepository.findByUserUserId(user.getUserId());
-                    if(student != null) {
-                        studentDto = Student.builder()
-                                .id(student.getId())
-                                .nombre(student.getNombre())
-                                .apellidoPaterno(student.getApellidoPaterno())
-                                .apellidoMaterno(student.getApellidoMaterno())
-                                .matricula(student.getMatricula())
-                                .licenciatura(student.getLicenciatura())
-                                .courses(student.getCourses())
-                                .nacionalidad(student.getNacionalidad())
-                                .sexo(student.getSexo())
-                                .estadoCivil(student.getEstadoCivil())
-                                .build();
+                        Student student = studentRepository.findByUserUserId(user.getUserId());
+                        if (student != null) {
+                            studentDto = Student.builder()
+                                    .id(student.getId())
+                                    .nombre(student.getNombre())
+                                    .apellidoPaterno(student.getApellidoPaterno())
+                                    .apellidoMaterno(student.getApellidoMaterno())
+                                    .matricula(student.getMatricula())
+                                    .licenciatura(student.getLicenciatura())
+                                    .courses(student.getCourses())
+                                    .nacionalidad(student.getNacionalidad())
+                                    .sexo(student.getSexo())
+                                    .estadoCivil(student.getEstadoCivil())
+                                    .build();
                         }
                     }
                     if (user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("TEACHER"))) {
                         Teacher teacher = teacherRepository.findByUserUserId(user.getUserId());
-                        if(teacher != null) {
+                        if (teacher != null) {
                             teacherDto = Teacher.builder()
                                     .id(teacher.getId())
                                     .nombre(teacher.getNombre())
@@ -129,24 +127,24 @@ public class UserService implements UserDetailsService {
                                     .direccion(teacher.getDireccion())
                                     .build();
                         }
-                        }
+                    }
 
-                        Set<Role> roles = user.getAuthorities().stream()
-                                .map(grantedAuthority -> {
-                                    Role role = new Role();
-                                    role.setAuthority(grantedAuthority.getAuthority());
-                                    return role;
-                                })
-                                .collect(Collectors.toSet());
+                    Set<Role> roles = user.getAuthorities().stream()
+                            .map(grantedAuthority -> {
+                                Role role = new Role();
+                                role.setAuthority(grantedAuthority.getAuthority());
+                                return role;
+                            })
+                            .collect(Collectors.toSet());
 
-                        return UserDtoResponse.builder()
-                                .id(user.getUserId())
-                                .username(user.getUsername())
-                                .email(user.getEmail())
-                                .student(studentDto)
-                                .teacher(teacherDto)
-                                .role(roles)
-                                .build();
+                    return UserDtoResponse.builder()
+                            .id(user.getUserId())
+                            .username(user.getUsername())
+                            .email(user.getEmail())
+                            .student(studentDto)
+                            .teacher(teacherDto)
+                            .role(roles)
+                            .build();
                 })
                 .collect(Collectors.toList());
 
@@ -180,13 +178,13 @@ public class UserService implements UserDetailsService {
 
         roles.add(role);
         logger.info(String.format("Saving user with username %s and de role %s", user.getUsername(), role.getAuthority()));
-        userRepository.save(new User(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword() , null,student,teacher, roles));
+        userRepository.save(new User(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(), null, student, teacher, roles));
     }
 
     /**
      * Changes the role of a user with the specified username.
      *
-     * @param request {@link ChangePasswordRequest } the data transfer
+     * @param request       {@link ChangePasswordRequest } the data transfer
      * @param connectedUser the user that is connected
      */
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
@@ -198,11 +196,11 @@ public class UserService implements UserDetailsService {
         System.out.println("current password: " + request.getCurrentPassword());
         System.out.println("new password: " + request.getNewPassword());
         System.out.println("confirm password: " + request.getConfirmPassword());
-        if(!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new IllegalStateException("Wrong password");
         }
 
-        if(!request.getNewPassword().equals(request.getConfirmPassword())) {
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
             throw new IllegalStateException("Password are not the same");
         }
 
@@ -217,7 +215,7 @@ public class UserService implements UserDetailsService {
      *
      * @param email a string with the user email
      */
-    public void forgotPassword(String email)  {
+    public void forgotPassword(String email) {
 
         boolean emailFound = false;
 
@@ -241,11 +239,11 @@ public class UserService implements UserDetailsService {
     /**
      * Changes the password of the user.
      *
-     * @param email a string with the user email
+     * @param email    a string with the user email
      * @param password a string the new password
      */
     public void setPassword(String email, String password) {
-User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalStateException("Email not found" + email)
         );
 
@@ -253,8 +251,5 @@ User user = userRepository.findByEmail(email).orElseThrow(
         userRepository.save(user);
 
     }
-
-
-
 
 }

@@ -21,6 +21,7 @@ public class EmailService {
         this.emailSender = emailSender;
         this.env = env;
     }
+
     // TODO: Manejar excepciones en caso de se configutr stmp para gmail
     //TODO: documentar
     public void sendUserCredencials(String to, String username, String password) throws MessagingException {
@@ -40,6 +41,7 @@ public class EmailService {
         }
 
     }
+
     //TODO: documentar
     public void sendForgotPasswordEmail(String to) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
@@ -51,7 +53,7 @@ public class EmailService {
                 <diu>
                     <a href="http://localhost:%s/set-password?email=%s">Click here to reset your password</a>
                 </div>
-                """.formatted(port,to), true);
+                """.formatted(port, to), true);
 
         try {
             emailSender.send(message);

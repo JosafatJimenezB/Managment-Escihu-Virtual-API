@@ -87,12 +87,12 @@ public class SecurityConfig {
                     auth.requestMatchers(AUTH_WHITELIST).permitAll();
                     auth.requestMatchers("/api/v1/auth/login").permitAll();
                     auth.requestMatchers("/api/v1/auth/register").permitAll();
-                    auth.requestMatchers(HttpMethod.PUT,"/api/v1/user/**").permitAll();
+                    auth.requestMatchers(HttpMethod.PUT, "/api/v1/user/**").permitAll();
                     auth.requestMatchers(HttpMethod.PUT, "/api/v1/user/forgot-password/**").permitAll();
                     auth.requestMatchers(HttpMethod.PUT, "/api/v1/user/set-password/**").permitAll();
                     auth.requestMatchers("/api/v1/students/**", "/api/v1/student/").hasAnyRole(ADMIN_ROLE);
-                    auth.requestMatchers(HttpMethod.PUT,"/api/v1/student/{id}").hasRole(ADMIN_ROLE);
-                    auth.requestMatchers(HttpMethod.GET,"/api/v1/student/{id}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
+                    auth.requestMatchers(HttpMethod.PUT, "/api/v1/student/{id}").hasRole(ADMIN_ROLE);
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/student/{id}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.GET, "/api/v1/attendance/{userId}/paginated").hasRole(STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.GET, "/api/v1/user/profile-image-url/{userId}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.POST, "/api/v1/user/upload/{userId}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);

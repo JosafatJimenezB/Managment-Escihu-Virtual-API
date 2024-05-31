@@ -7,7 +7,6 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.escihu.apiescihuvirtual.persistence.Entity.Subject.Subject;
 import com.escihu.apiescihuvirtual.persistence.Repository.GradeDetailRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.GradeRepository;
-import com.escihu.apiescihuvirtual.persistence.Repository.StudentRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.SubjectRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GradeServiceImpl implements GradeService{
+public class GradeServiceImpl implements GradeService {
 
     private final GradeRepository gradeRepository;
     private final SubjectRepository subjectRepository;

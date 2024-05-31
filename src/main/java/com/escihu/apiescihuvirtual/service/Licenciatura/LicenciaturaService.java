@@ -2,7 +2,6 @@ package com.escihu.apiescihuvirtual.service.Licenciatura;
 
 import com.escihu.apiescihuvirtual.Dto.Licenciatura.LicenciaturaDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

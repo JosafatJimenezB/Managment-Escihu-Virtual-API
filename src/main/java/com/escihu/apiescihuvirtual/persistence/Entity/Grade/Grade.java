@@ -50,7 +50,7 @@ public class Grade implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public Grade(){
+    public Grade() {
 
     }
 

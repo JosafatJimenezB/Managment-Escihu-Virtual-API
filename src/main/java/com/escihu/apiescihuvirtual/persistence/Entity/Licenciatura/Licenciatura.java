@@ -69,7 +69,7 @@ public class Licenciatura {
 
     public void setStudents(Set<Student> students) {
         this.students = students;
-        for(Student student: students){
+        for (Student student : students) {
             student.setLicenciatura(this);
         }
     }

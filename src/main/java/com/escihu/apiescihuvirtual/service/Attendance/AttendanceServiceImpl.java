@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AttendanceServiceImpl implements AttendaceService{
+public class AttendanceServiceImpl implements AttendaceService {
 
     private final AttendaceRepository attendaceRepository;
     private final UserRepository userRepository;

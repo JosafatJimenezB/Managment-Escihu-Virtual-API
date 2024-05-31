@@ -1,6 +1,5 @@
 package com.escihu.apiescihuvirtual.Dto.Student;
 
-import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import lombok.Builder;
 
 import java.util.List;
@@ -20,9 +19,9 @@ public class PaginatedStudentDtoResponse {
         this.pageSize = pageSize;
     }
 
-     public PaginatedStudentDtoResponse(){
+    public PaginatedStudentDtoResponse() {
 
-     }
+    }
 
     public List<StudentDtoResponse> getStudents() {
         return students;

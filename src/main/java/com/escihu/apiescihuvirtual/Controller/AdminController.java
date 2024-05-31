@@ -8,7 +8,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +29,7 @@ public class AdminController {
         Optional<User> existUser = userService.findUserByUsername(username);
         if (existUser.isPresent()) {
             User user = existUser.get();
-            userService.saveUser(user,role);
+            userService.saveUser(user, role);
             return ResponseEntity.ok("Role changed");
         }
         return ResponseEntity.ok("Role changed");
@@ -39,8 +38,8 @@ public class AdminController {
     @GetMapping("/list_users")
     public ResponseEntity<?> listUsers(
             @RequestParam(defaultValue = "0") int currentPage,
-            @RequestParam(defaultValue = "10") int pageSize){
-        try{
+            @RequestParam(defaultValue = "10") int pageSize) {
+        try {
             Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
             return new ResponseEntity<>(userService.listUsersPaginated(modifiedPage), HttpStatus.OK);
         } catch (DataAccessException e) {

@@ -5,7 +5,7 @@ import com.escihu.apiescihuvirtual.persistence.Repository.GradeDetailRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GradeDetailsServiceImpl implements GradeDetailsService{
+public class GradeDetailsServiceImpl implements GradeDetailsService {
 
     private final GradeDetailRepository gradeDetailRepository;
 

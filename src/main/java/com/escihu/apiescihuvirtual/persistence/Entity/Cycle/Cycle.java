@@ -45,7 +45,7 @@ public class Cycle implements Serializable {
         this.closedAt = closedAt;
     }
 
-    public Cycle(){
+    public Cycle() {
 
     }
 
