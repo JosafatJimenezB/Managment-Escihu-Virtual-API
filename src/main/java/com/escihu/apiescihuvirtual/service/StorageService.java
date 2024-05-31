@@ -1,12 +1,8 @@
 package com.escihu.apiescihuvirtual.service;
 
 import com.escihu.apiescihuvirtual.exceptions.UsernameNotFoundException;
-import com.escihu.apiescihuvirtual.persistence.Entity.ImageData;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
-import com.escihu.apiescihuvirtual.persistence.Repository.StorageRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
-import com.escihu.apiescihuvirtual.utils.ImageUtils;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,18 +10,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 
 @Service
 public class StorageService {
 
-    private final StorageRepository storageRepository;
     private final UserRepository userRepository;
     private final Path rootLocation;
 
 
-    public StorageService(StorageRepository storageRepository, UserRepository userRepository) {
-        this.storageRepository = storageRepository;
+    public StorageService(UserRepository userRepository) {
         this.userRepository = userRepository;
         this.rootLocation = Paths.get("../profile-images").toAbsolutePath().normalize();
         try {
@@ -36,27 +29,6 @@ public class StorageService {
         }
     }
 
-    @Transactional
-    public String uploadImage(MultipartFile file, Long userId) throws IOException {
-
-
-        ImageData imageData = storageRepository.save(ImageData.builder()
-                .name(file.getOriginalFilename())
-                .type(file.getContentType())
-                .data(ImageUtils.compressImage(file.getBytes()))
-                .build());
-
-        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        user.setProfileImage(imageData);
-        userRepository.save(user);
-        return "Image uploaded successfully";
-    }
-
-    public byte[] downloadImage(String fileName) {
-        Optional<ImageData> imageData = storageRepository.findByName(fileName);
-        byte[] images = ImageUtils.decompressImage(imageData.get().getData());
-        return images;
-    }
 
     public String uploadImageToFileSystem(MultipartFile file, Long userId) throws IOException {
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
