@@ -37,9 +37,10 @@ import java.util.stream.Collectors;
  * It uses the UserRepository to perform these operations.
  */
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
@@ -60,20 +61,7 @@ public class UserService implements UserDetailsService {
         this.emailService = emailService;
     }
 
-    /**
-     * Loads a user by the specified username.
-     * If the user does not exist, a UsernameNotFoundException is thrown.
-     *
-     * @param username the username of the user to load
-     * @return a UserDetails object containing the user's details
-     * @throws UsernameNotFoundException if the user does not exist
-     */
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.info("in the user details service");
 
-        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
 
     public Page<UserDtoResponse> listUsersPaginated(Pageable pageable) {
 
