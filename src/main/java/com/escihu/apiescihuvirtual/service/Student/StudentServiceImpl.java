@@ -190,6 +190,11 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
+    public Student findByIdAndUsername(Long studentId, String username) {
+        return studentRepository.findByIdAndUserUsername(studentId, username);
+    }
+
+    @Override
     public boolean exists(Long id) {
         return studentRepository.existsById(id);
     }
