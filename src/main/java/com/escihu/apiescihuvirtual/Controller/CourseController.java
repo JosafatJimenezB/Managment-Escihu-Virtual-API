@@ -105,7 +105,7 @@ public class CourseController {
 
         try {
 
-            if (!courseService.existById(id)) {
+            if (courseService.existCourse(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Course not found")
                         .object(null)
@@ -131,7 +131,7 @@ public class CourseController {
     @DeleteMapping("/courses/{idCourse}/unsuscribe/student/{idStudent}")
     public ResponseEntity<?> unsuscribeStudent(@PathVariable Long idCourse, @PathVariable Long idStudent) {
         try {
-            if (!courseService.existById(idCourse)) {
+            if (courseService.existCourse(idCourse)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Course not found")
                         .object(null)
@@ -160,7 +160,7 @@ public class CourseController {
     @DeleteMapping("/courses/{idCourse}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long idCourse) {
         try {
-            if (!courseService.existById(idCourse)) {
+            if (courseService.existCourse(idCourse)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Course not found")
                         .object(null)

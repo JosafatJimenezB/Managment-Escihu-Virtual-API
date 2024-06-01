@@ -34,8 +34,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course updateCourse(Long id, CourseDtoRequest courseDtoRequest) {
-        Optional<Course> courseExists = courseRepository.findById(id);
+    public Course updateCourse(Long courseId, CourseDtoRequest courseDtoRequest) {
+        Optional<Course> courseExists = courseRepository.findById(courseId);
 
         if (!courseExists.isPresent()) {
             return null;
@@ -68,8 +68,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course getCourseById(long id) {
-        return courseRepository.findById(id).orElse(null);
+    public Course getCourseById(long courseId) {
+        return courseRepository.findById(courseId).orElse(null);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public boolean existById(Long id) {
-        return courseRepository.existsById(id);
+    public boolean existCourse(Long id) {
+        return !courseRepository.existsById(id);
     }
 }
