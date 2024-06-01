@@ -30,8 +30,8 @@ public class ClassroomServiceImpl implements ClassroomService {
     }
 
     @Override
-    public Classroom updateClassroom(Long id, ClassroomDto classroomDto) {
-        Optional<Classroom> classroomExists = classroomRepository.findById(id);
+    public Classroom updateClassroom(Long classroomId, ClassroomDto classroomDto) {
+        Optional<Classroom> classroomExists = classroomRepository.findById(classroomId);
 
         if (!classroomExists.isPresent()) {
             return null;
@@ -51,8 +51,8 @@ public class ClassroomServiceImpl implements ClassroomService {
     }
 
     @Override
-    public Classroom getClassroomById(long id) {
-        return classroomRepository.findById(id).orElse(null);
+    public Classroom getClassroomById(long classroomId) {
+        return classroomRepository.findById(classroomId).orElse(null);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     }
 
     @Override
-    public boolean exists(Long id) {
-        return classroomRepository.existsById(id);
+    public boolean existsClassroom(Long classroomId) {
+        return classroomRepository.existsById(classroomId);
     }
 }

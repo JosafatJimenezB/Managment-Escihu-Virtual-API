@@ -116,7 +116,7 @@ public class ClassroomController {
 
         try {
 
-            if (!classroomService.exists(id)) {
+            if (!classroomService.existsClassroom(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Classroom not found")
                         .object(null)

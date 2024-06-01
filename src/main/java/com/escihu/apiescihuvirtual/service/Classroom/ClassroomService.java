@@ -8,16 +8,41 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ClassroomService {
+    /**
+     * Agrega un aula
+     * @param classroomDto objeto con los datos del aula {@link ClassroomDto}
+     * @return el aula {@link Classroom}
+     */
+    Classroom addClassroom(ClassroomDto classroomDto);
+    /**
+     * Actualiza un aula
+     * @param classroomId id del aula
+     * @param classroomDto objeto con los datos del aula actualizados {@link ClassroomDto}
+     * @return el aula {@link Classroom}
+     */
+    Classroom updateClassroom(Long classroomId, ClassroomDto classroomDto);
 
-    public Classroom addClassroom(ClassroomDto classroomDto);
+    /**
+     * Obtiene las aulas paginadas
+     * @param pageable objeto con los datos de paginación {@link Pageable}
+     * @return lista de aulas {@link Classroom}
+     */
+    Page<Classroom> getAllClassrooms(Pageable pageable);
+    /**
+     * Obtiene todas las aulas
+     * @return lista de aulas {@link Classroom}
+     */
+    List<Classroom> getAllClassrooms();
 
-    public Classroom updateClassroom(Long id, ClassroomDto classroomDto);
-
-    public Page<Classroom> getAllClassrooms(Pageable pageable);
-
-    public List<Classroom> getAllClassrooms();
-
-    public Classroom getClassroomById(long id);
-
-    public boolean exists(Long id);
+    /**
+     * Obtiene el aula por id
+     * @param classroomId id del aula
+     * @return el aula {@link Classroom}
+     */
+    Classroom getClassroomById(long classroomId);
+    /**
+     * Comprueba si existe el aula
+     * @param classroomId id del aula
+     */
+    boolean existsClassroom(Long classroomId);
 }
