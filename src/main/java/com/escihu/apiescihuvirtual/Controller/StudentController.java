@@ -6,6 +6,11 @@ import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentUpdateDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.escihu.apiescihuvirtual.service.Student.StudentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
@@ -30,7 +35,17 @@ public class StudentController {
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
-
+    @Operation(summary = "Retorna una lista de estudiantes paginada",
+            description = "Retorna una lista de estudiantes paginada, se puede especificar el número de página y el tamaño de la página.",
+            tags = {"Controlador de estudiantes"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Estudiantes obtenidos correctamente",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StudentDtoResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Error al obtener los estudiantes",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Message.class))),
+    })
     @GetMapping("/students/paginated")
     public ResponseEntity<?> getStudentsPaginated(
             @RequestParam(defaultValue = "0") int currentPage,
