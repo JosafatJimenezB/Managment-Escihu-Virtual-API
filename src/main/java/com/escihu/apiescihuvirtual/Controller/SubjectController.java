@@ -27,7 +27,7 @@ public class SubjectController {
     @GetMapping("/subjects/{courseId}/course")
     public ResponseEntity<?> getAllSubjectsById(@PathVariable Long courseId) {
         try {
-            if (!courseService.existById(courseId)) {
+            if (courseService.existCourse(courseId)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Course not found")
                         .object(null), HttpStatus.NOT_FOUND);
