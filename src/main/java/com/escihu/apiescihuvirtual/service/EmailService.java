@@ -10,6 +10,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+/**
+ * Servicio para enviar correos electrónicos
+ *
+ */
 @Service
 public class EmailService {
 
@@ -23,7 +27,12 @@ public class EmailService {
     }
 
     // TODO: Manejar excepciones en caso de se configutr stmp para gmail
-    //TODO: documentar
+    /**
+     * Envia un correo con las credenciales de acceso al usuario
+     * @param to - Correo del destinatario
+     * @param username - Nombre de usuario
+     * @param password - Contraseña del usuario
+     */
     public void sendUserCredencials(String to, String username, String password) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -38,11 +47,15 @@ public class EmailService {
         } catch (MailException e) {
             LOGGER.error("Error sending email to {}", to, e);
             //TODO: Implementar un mensaje de error en caso de que no se pueda enviar el correo
+
         }
 
     }
 
-    //TODO: documentar
+    /**
+     * Envia un correo con un enlace para restablecer la contraseña
+     * @param to - Correo del destinatario
+     */
     public void sendForgotPasswordEmail(String to) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
