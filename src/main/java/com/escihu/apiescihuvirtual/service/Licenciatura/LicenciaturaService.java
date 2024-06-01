@@ -7,15 +7,45 @@ import java.util.List;
 
 public interface LicenciaturaService {
 
-    public List<Licenciatura> listAll();
+    /**
+     * Lista de todas las licenciaturas.
+     * @return Lista de licenciaturas {@link Licenciatura}
+     */
+    List<Licenciatura> listAll();
 
-    public Licenciatura create(LicenciaturaDtoRequest licenciaturaDtoRequest);
-
-    public Licenciatura update(Long id, LicenciaturaDtoRequest licenciaturaDtoRequest);
-
-    public Licenciatura getById(Long id);
-
-    public void delete(Long id);
-
-    public boolean existById(Long id);
+    /**
+     * Crea una nueva licenciatura.
+     *
+     * @param licenciaturaDtoRequest objeto con los datos de la licenciatura {@link LicenciaturaDtoRequest}
+     * @return la licenciatura creada {@link Licenciatura}
+     */
+    Licenciatura create(LicenciaturaDtoRequest licenciaturaDtoRequest);
+    /**
+     * Actualiza una licenciatura.
+     *
+     * @param licenciaturaId el id de la licenciatura a ser actualizada
+     * @param licenciaturaDtoRequest objeto con los nuevos datos de la licenciatura {@link LicenciaturaDtoRequest}
+     * @return la licenciatura actualizada {@link Licenciatura}
+     */
+    Licenciatura update(Long licenciaturaId, LicenciaturaDtoRequest licenciaturaDtoRequest);
+    /**
+     * Obtiene una licenciatura por su id.
+     *
+     * @param licenciaturaId el id de la licenciatura
+     * @return la licenciatura {@link Licenciatura}
+     */
+    Licenciatura getById(Long licenciaturaId);
+    /**
+     * Elimina una licenciatura.
+     *
+     * @param licenciaturaId el id de la licenciatura a eliminar
+     */
+    void delete(Long licenciaturaId);
+    /**
+     * Verifica si una licenciatura existe por su id.
+     *
+     * @param id el id de la licenciatura a verificar
+     * @return true si existe, false si no
+     */
+    boolean existLicenciatura(Long id);
 }

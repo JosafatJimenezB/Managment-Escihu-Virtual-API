@@ -74,7 +74,7 @@ public class LicenciaturaController {
     @PutMapping("/licenciatura/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody LicenciaturaDtoRequest licenciaturaDtoRequest) {
         try {
-            if (!service.existById(id)) {
+            if (service.existLicenciatura(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Licenciatura not found")
                         .object(null)
@@ -97,7 +97,7 @@ public class LicenciaturaController {
     @DeleteMapping("/licenciatura/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
-            if (!service.existById(id)) {
+            if (service.existLicenciatura(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Licenciatura not found")
                         .object(null)

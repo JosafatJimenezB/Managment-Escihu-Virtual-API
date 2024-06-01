@@ -33,8 +33,8 @@ public class LicenciaturaServiceImpl implements LicenciaturaService {
     }
 
     @Override
-    public Licenciatura update(Long id, LicenciaturaDtoRequest licenciaturaDtoRequest) {
-        Optional<Licenciatura> licenciaturaExist = licenciaturaRepository.findById(id);
+    public Licenciatura update(Long licenciaturaId, LicenciaturaDtoRequest licenciaturaDtoRequest) {
+        Optional<Licenciatura> licenciaturaExist = licenciaturaRepository.findById(licenciaturaId);
 
         if (!licenciaturaExist.isPresent()) {
             return null;
@@ -49,17 +49,17 @@ public class LicenciaturaServiceImpl implements LicenciaturaService {
     }
 
     @Override
-    public Licenciatura getById(Long id) {
-        return licenciaturaRepository.findById(id).orElse(null);
+    public Licenciatura getById(Long licenciaturaId) {
+        return licenciaturaRepository.findById(licenciaturaId).orElse(null);
     }
 
     @Override
-    public void delete(Long id) {
-        licenciaturaRepository.deleteById(id);
+    public void delete(Long licenciaturaId) {
+        licenciaturaRepository.deleteById(licenciaturaId);
     }
 
     @Override
-    public boolean existById(Long id) {
-        return licenciaturaRepository.existsById(id);
+    public boolean existLicenciatura(Long id) {
+        return !licenciaturaRepository.existsById(id);
     }
 }
