@@ -27,13 +27,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Optional<SubjectSchedule> getScheduleById(long id) {
-        return scheduleRepository.findById(id);
+    public Optional<SubjectSchedule> getScheduleById(long scheduleId) {
+        return scheduleRepository.findById(scheduleId);
     }
 
     @Override
-    public void deleteSchedule(Long id) {
-        scheduleRepository.deleteById(id);
+    public void deleteSchedule(Long scheduleId) {
+        scheduleRepository.deleteById(scheduleId);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public boolean existById(Long id) {
-        return scheduleRepository.existsById(id);
+    public boolean existsSchedule(Long scheduleId) {
+        return !scheduleRepository.existsById(scheduleId);
     }
 }
