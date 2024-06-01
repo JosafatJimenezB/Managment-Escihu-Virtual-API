@@ -101,7 +101,7 @@ public class StudentController {
         Student student = null;
 
         try {
-            if (!studentService.exists(id)) {
+            if (studentService.existsStudent(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Student not found")
                         .object(null)
