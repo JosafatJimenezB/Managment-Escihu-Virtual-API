@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Servicio para autenticar y registrar usuarios
+ */
 @Service
 public class AuthenticationService {
 
@@ -34,6 +37,12 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Registra un usuario en la base de datos
+     * @param username un string con el nombre de usuario
+     * @param email un string con el correo del usuario
+     * @param password un string con la contraseña del usuario
+     */
     public void registerUser(String username, String email, String password) {
 
         if (isUsersExists(username)) {
@@ -68,6 +77,12 @@ public class AuthenticationService {
 
     }
 
+    /**
+     * Autentica un usuario en el sistema
+     * @param username un string con el nombre de usuario
+     * @param password un string con la contraseña del usuario
+     * @return un objeto {@link LoginResponse} con la información del usuario
+     */
     public LoginResponse loginUser(String username, String password) {
 
         if (!isUsersExists(username)) {
@@ -83,10 +98,20 @@ public class AuthenticationService {
         return new LoginResponse(user.getUserId(), username, token, user.getStudent(), user.getTeacher(), role);
     }
 
+    /**
+     * Verifica si un usuario ya existe en la base de datos
+     * @param username un string con el nombre de usuario
+     * @return un true si el usuario ya existe, false en caso contrario
+     */
     private boolean isUsersExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
 
+    /**
+     * Verifica si un correo ya existe en la base de datos
+     * @param email un string con el correo del usuario
+     * @return un true si el correo ya existe, false en caso contrario
+     */
     private boolean isEmailExists(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
