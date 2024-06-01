@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+/**
+ * TeacherServiceImpl es una clase que implementa los metodos de la interfaz TeacherService.
+ */
 @Service
 public class TeacherServiceImpl implements TeacherService {
 
@@ -77,8 +79,8 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Teacher updateTeacher(Long id, TeacherDtoRequest teacherDtoRequest) {
-        return teacherRepository.findById(id)
+    public Teacher updateTeacher(Long teacherId, TeacherDtoRequest teacherDtoRequest) {
+        return teacherRepository.findById(teacherId)
                 .map( existingTeacher -> {
                     Teacher updatedTeacher = updateTeacherData(existingTeacher, teacherDtoRequest);
                     return teacherRepository.save(updatedTeacher);
@@ -131,15 +133,21 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Teacher getTeacherById(Long id) {
-        return teacherRepository.findById(id).orElse(null);
+    public Teacher getTeacherById(Long teacherId) {
+        return teacherRepository.findById(teacherId).orElse(null);
     }
 
     @Override
-    public boolean exists(Long id) {
-        return teacherRepository.existsById(id);
+    public boolean existsTeacher(Long teacherId) {
+        return teacherRepository.existsById(teacherId);
     }
 
+    /**
+     * Mapea un objeto Teacher a un objeto TeacherDtoResponse
+     *
+     * @param teacher el profesor a ser mapeado
+     * @return el profesor mapeado {@link TeacherDtoResponse}
+     */
     private TeacherDtoResponse mapToTeacherDtoResponse(Teacher teacher) {
         return new TeacherDtoResponse(
             teacher.getId(),
@@ -150,6 +158,13 @@ public class TeacherServiceImpl implements TeacherService {
         );
     }
 
+    /**
+     * Actualiza los datos de un profesor existente con los datos de un profesor nuevo
+     *
+     * @param existingTeacher el profesor existente a ser actualizado {@link Teacher}
+     * @param teacherDtoRequest el objeto con los nuevos datos del docente {@link TeacherDtoRequest}
+     * @return el profesor actualizado {@link Teacher}
+     */
     private Teacher updateTeacherData(Teacher existingTeacher, TeacherDtoRequest teacherDtoRequest) {
         existingTeacher.setNombre(teacherDtoRequest.getNombre());
         existingTeacher.setApellidoPaterno(teacherDtoRequest.getApellidoPaterno());
@@ -172,6 +187,14 @@ public class TeacherServiceImpl implements TeacherService {
         return existingTeacher;
     }
 
+    /**
+     * Mapea un objeto TeacherDtoRequest a un objeto Teacher
+     *
+     * @param request el objeto con los datos del profesor {@link TeacherDtoRequest}
+     * @param user el usuario asociado al profesor {@link User}
+     * @param email el correo del profesor {@link String}
+     * @return el profesor mapeado {@link Teacher}
+     */
     private Teacher mapToTeacher(TeacherDtoRequest request, User user, String email) {
         return Teacher.builder()
                 .nombre(request.getNombre())

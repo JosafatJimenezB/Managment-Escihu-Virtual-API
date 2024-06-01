@@ -197,7 +197,7 @@ public class TeacherController {
         Teacher teacher = null;
 
         try {
-            if (!teacherService.exists(id)) {
+            if (!teacherService.existsTeacher(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Teacher not found")
                         .object(null)
