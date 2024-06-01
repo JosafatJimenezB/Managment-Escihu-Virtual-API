@@ -54,6 +54,10 @@ public interface CourseService {
     void deleteCourseById(long courseId);
 
     void deleteCourse(Course course);
-
+    /**
+     * Verifica si existe un curso
+     * @param id id del curso
+     * @return true si existe, false si no
+     */
     boolean existCourse(Long id);
 }
