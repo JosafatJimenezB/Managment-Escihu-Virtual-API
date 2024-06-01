@@ -11,13 +11,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Servicio para almacenar imagenes en el sistema de archivos
+ */
 @Service
 public class StorageService {
 
     private final UserRepository userRepository;
     private final Path rootLocation;
 
-
+    /**
+     * Constructor de la clase StorageService que inicializa el repositorio de usuarios y la ruta de almacenamiento
+     *
+     * @param userRepository el repositorio de usuarios
+     * @throws RuntimeException si no se puede crear el directorio
+     */
     public StorageService(UserRepository userRepository) {
         this.userRepository = userRepository;
         this.rootLocation = Paths.get("../profile-images").toAbsolutePath().normalize();
@@ -29,8 +37,14 @@ public class StorageService {
         }
     }
 
-
-    public String uploadImageToFileSystem(MultipartFile file, Long userId) throws IOException {
+    /**
+     * Almacena una imagen en el sistema de archivos y actualiza la URL de la imagen en la base de datos
+     *
+     * @param file {@link MultipartFile} el archivo a almacenar
+     * @param userId el id del usuario al que pertenece la imagen
+     * @throws IOException si no se puede almacenar el archivo
+     */
+    public void uploadImageToFileSystem(MultipartFile file, Long userId) throws IOException {
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         String fileName = userId + "_" + file.getOriginalFilename();
         Path destinationFile = this.rootLocation.resolve(Paths.get(fileName)).normalize().toAbsolutePath();
@@ -43,10 +57,14 @@ public class StorageService {
         user.setProfileImageUrl(fileName);
         userRepository.save(user);
         generateFileUrl(fileName);
-
-        return "File uploaded successfully";
     }
 
+    /**
+     * Carga una imagen del sistema de archivos y regresa la URL de la imagen
+     *
+     * @param userId el id del usuario al que pertenece la imagen
+     * @return la URL de la imagen
+     */
     public String loadFromFileSystem(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -55,7 +73,14 @@ public class StorageService {
 
     }
 
-    public byte[] load(Long userId) throws IOException {
+    /**
+     * Carga una imagen del sistema de archivos
+     *
+     * @param userId el id del usuario al que pertenece la imagen
+     * @return un arreglo de bytes con la imagen
+     * @throws IOException si no se puede cargar la imagen
+     */
+    public byte[] loadImage(Long userId) throws IOException {
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Path destinationFile = this.rootLocation.resolve(Paths.get(user.getProfileImageUrl()));
         System.out.println("File path: " + destinationFile);
@@ -66,6 +91,12 @@ public class StorageService {
         return null;
     }
 
+    /**
+     * Genera la URL de un archivo
+     *
+     * @param filename el nombre del archivo
+     * @return la URL del archivo
+     */
     private String generateFileUrl(String filename) {
         return rootLocation.resolve(filename).toUri().toString();
     }
