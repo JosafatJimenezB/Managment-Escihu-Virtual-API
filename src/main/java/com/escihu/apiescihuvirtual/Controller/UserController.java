@@ -2,7 +2,7 @@ package com.escihu.apiescihuvirtual.Controller;
 
 import com.escihu.apiescihuvirtual.Dto.Users.ChangePasswordRequest;
 import com.escihu.apiescihuvirtual.service.StorageService;
-import com.escihu.apiescihuvirtual.service.UserService;
+import com.escihu.apiescihuvirtual.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
@@ -106,7 +106,7 @@ public class UserController {
 
     @GetMapping("/profile-image/{userId}")
     public ResponseEntity<byte[]> getUserProfileImage(@PathVariable Long userId) throws IOException {
-        byte[] imageData = storageService.load(userId);
+        byte[] imageData = storageService.loadImage(userId);
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG) // Ajusta el tipo de contenido según tu imagen
                 .body(imageData);
