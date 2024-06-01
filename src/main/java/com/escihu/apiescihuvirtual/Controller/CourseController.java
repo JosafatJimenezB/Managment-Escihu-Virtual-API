@@ -136,7 +136,7 @@ public class CourseController {
                         .message("Course not found")
                         .object(null)
                         .build(), HttpStatus.NOT_FOUND);
-            } else if (!studentService.exists(idStudent)) {
+            } else if (studentService.existsStudent(idStudent)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Student not found")
                         .object(null)
