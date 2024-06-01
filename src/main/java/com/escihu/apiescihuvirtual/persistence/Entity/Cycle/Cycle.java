@@ -9,7 +9,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/**
+ * La clase Cycle representa un ciclo en la base de datos.
+ * Está mapeada a la tabla "cycles" en la base de datos.
+ */
 @Builder
 @Entity
 @Table(name = "cycles")

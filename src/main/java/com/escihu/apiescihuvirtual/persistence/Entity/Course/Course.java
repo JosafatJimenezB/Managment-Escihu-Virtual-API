@@ -16,7 +16,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * La clase Course representa un curso en la base de datos.
+ * Está mapeada a la tabla "courses" en la base de datos.
+ */
 @Builder
 @Entity
 @Table(name = "courses")

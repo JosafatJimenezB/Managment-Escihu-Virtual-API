@@ -10,7 +10,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * La clase Grade representa una calificación en la base de datos.
+ * Está mapeada a la tabla "grades" en la base de datos.
+ */
 @Builder
 @Entity
 @Table(name = "grades")

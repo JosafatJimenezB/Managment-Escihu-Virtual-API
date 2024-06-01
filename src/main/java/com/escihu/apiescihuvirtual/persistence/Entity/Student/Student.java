@@ -15,7 +15,10 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.util.List;
-
+/**
+ * La clase Student representa la entidad Estudiante de la base de datos.
+ * Está mapeada a la tabla "students" en la base de datos.
+ */
 @Builder
 @Entity
 @Table(name = "students")

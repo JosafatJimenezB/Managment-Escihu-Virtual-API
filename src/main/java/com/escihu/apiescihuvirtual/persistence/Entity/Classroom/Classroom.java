@@ -9,7 +9,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/**
+ * La clase Classroom representa un salón en la base de datos.
+ * Está mapeada a la tabla "classrooms" en la base de datos.
+ */
 @Entity
 @Builder
 @Table(name = "classrooms")

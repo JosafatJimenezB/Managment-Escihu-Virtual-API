@@ -2,7 +2,10 @@ package com.escihu.apiescihuvirtual.persistence.Entity.Address;
 
 import jakarta.persistence.*;
 import lombok.Builder;
-
+/**
+ * La clase Address representa una dirección en la base de datos.
+ * Está mapeada a la tabla "address" en la base de datos.
+ */
 @Builder
 @Entity
 @Table(name = "address")

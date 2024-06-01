@@ -11,7 +11,10 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.util.Date;
-
+/**
+ * La clase Teacher representa la entidad Docente de la base de datos.
+ * Está mapeada a la tabla "teachers" en la base de datos.
+ */
 @Builder
 @Entity
 @Table(name = "teachers")

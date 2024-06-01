@@ -9,6 +9,10 @@ import lombok.Builder;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * La clase Licenciatura representa la entidad Licenciatura de la base de datos.
+ * Está mapeada a la tabla "licenciatura" en la base de datos.
+ */
 @Builder
 @Entity
 @Table(name = "licenciatura")

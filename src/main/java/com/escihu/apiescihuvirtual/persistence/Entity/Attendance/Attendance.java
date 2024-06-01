@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.sql.Timestamp;
 
+/**
+ * Clase que representa la asistencia de un usuario
+ * Está mapeada a la tabla "attendance" en la base de datos.
+ */
 @Entity
 @Table(name = "attendance")
 @CrossOrigin(origins = "*")

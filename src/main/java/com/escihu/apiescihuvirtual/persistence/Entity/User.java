@@ -15,7 +15,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
-
+/**
+ * El usuario representa la entidad Usuario de la base de datos.
+    * Está mapeada a la tabla "users" en la base de datos.
+ */
 @Entity
 @Table(name = "users")
 @Schema(description = "Entity representing a user in the system.")

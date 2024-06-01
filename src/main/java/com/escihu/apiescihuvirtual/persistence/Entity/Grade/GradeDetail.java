@@ -9,7 +9,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/**
+ * La clase GradeDetail representa un detalle de calificación en la base de datos.
+ * Está mapeada a la tabla "grade_details" en la base de datos.
+ */
 @Builder
 @Entity
 @Table(name = "grade_details")
