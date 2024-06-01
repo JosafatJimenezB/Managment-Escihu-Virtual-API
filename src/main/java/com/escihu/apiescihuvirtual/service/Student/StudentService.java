@@ -10,17 +10,58 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface StudentService {
-    public Student createStudent(StudentDtoRequest studentDtoRequest);
 
-    public Student updateStudent(Long id, StudentUpdateDtoRequest studentDtoRequest);
+    /**
+     * Crea un nuevo estudiante.
+     *
+     * @param studentDtoRequest objeto con los datos estudiante {@link StudentDtoRequest}
+     * @return el estudiante creado {@link Student}
+     */
+    Student createStudent(StudentDtoRequest studentDtoRequest);
 
+    /**
+     * Actualiza un estudiante.
+     *
+     * @param studentId el id del estudiante a ser actualizado
+     * @param studentDtoRequest objeto con los nuevos datos del estudiante {@link StudentUpdateDtoRequest}
+     * @return el estudiante actualizado {@link Student}
+     */
+    Student updateStudent(Long studentId, StudentUpdateDtoRequest studentDtoRequest);
+
+    /**
+     * Lista todos los estudiantes.
+     *
+     * @return una lista de objetos {@link StudentDtoResponse} con todos los estudiantes
+     */
     Page<StudentDtoResponse> listStudentsPaginated(Pageable pageable);
+    /**
+     * Lista todos los estudiantes paginados.
+     *
+     * @return un objeto Page con los estudiantes
+     */
+    List<StudentDtoResponse> listStudents();
 
-    public List<StudentDtoResponse> listStudents();
+    /**
+     * Obtiene un estudiante por su id.
+     *
+     * @param studentId el id del estudiante
+     * @return el estudiante {@link Student}
+     */
+    Student getStudentById(Long studentId
+    );
 
-    public Student getStudentById(Long id);
-
+    /**
+     * Obtiene un estudiante por su id y username.
+     * @param studentId el id del estudiante a buscar
+     * @param username el username del estudiante a buscar
+     * @return el estudiante {@link Student}
+     */
     Student findByIdAndUsername(Long studentId, String username);
 
-    public boolean exists(Long id);
+    /**
+     * Verifica si un estudiante existe.
+     * @param studentId el id del estudiante a verificar
+     * @return true si el estudiante existe, false si no existe
+     */
+    boolean existsStudent(Long studentId);
 }

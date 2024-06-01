@@ -3,7 +3,6 @@ package com.escihu.apiescihuvirtual.service.Student;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentUpdateDtoRequest;
-import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
 import com.escihu.apiescihuvirtual.persistence.Entity.Role;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
@@ -94,8 +93,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student updateStudent(Long id, StudentUpdateDtoRequest studentDtoRequest) {
-        Optional<Student> studentExists = studentRepository.findById(id);
+    public Student updateStudent(Long studentId, StudentUpdateDtoRequest studentDtoRequest) {
+        Optional<Student> studentExists = studentRepository.findById(studentId);
 
         if (!studentExists.isPresent()) {
             return null;
@@ -139,8 +138,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student getStudentById(Long id) {
-        return studentRepository.findById(id).orElse(null);
+    public Student getStudentById(Long studentId) {
+        return studentRepository.findById(studentId).orElse(null);
     }
 
     @Override
@@ -149,11 +148,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public boolean exists(Long id) {
-        return studentRepository.existsById(id);
+    public boolean existsStudent(Long id) {
+        return !studentRepository.existsById(id);
     }
 
-    public static String generarMatricula(int licCode) {
+    private static String generarMatricula(int licCode) {
         LocalDateTime now = LocalDateTime.now();
         int year = now.getYear() % 100; // Obtiene los dos últimos dígitos del año
 
@@ -176,6 +175,7 @@ public class StudentServiceImpl implements StudentService {
 
     private Student mapToStudent(StudentDtoRequest studentDtoRequest) {
         return Student.builder()
+                .matricula(generarMatricula(studentDtoRequest.getLicenciatura().getCode()))
                 .nombre(studentDtoRequest.getNombre())
                 .apellidoPaterno(studentDtoRequest.getApellidoPaterno())
                 .apellidoMaterno(studentDtoRequest.getApellidoMaterno())
