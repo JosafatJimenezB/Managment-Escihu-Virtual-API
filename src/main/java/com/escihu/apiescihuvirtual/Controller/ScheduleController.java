@@ -29,7 +29,7 @@ public class ScheduleController {
     @GetMapping("/schedules/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         try {
-            if (!scheduleService.existById(id)) {
+            if (scheduleService.existsSchedule(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Schedule not found")
                         .object(null), HttpStatus.NOT_FOUND);
@@ -83,7 +83,7 @@ public class ScheduleController {
     @DeleteMapping("/schedules/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
-            if (!scheduleService.existById(id)) {
+            if (scheduleService.existsSchedule(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Schedule not found")
                         .object(null), HttpStatus.NOT_FOUND);
