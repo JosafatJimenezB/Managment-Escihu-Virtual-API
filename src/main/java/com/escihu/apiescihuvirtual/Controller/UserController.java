@@ -99,9 +99,8 @@ public class UserController {
 
     @PostMapping("/upload/{userId}")
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, @PathVariable Long userId) throws IOException {
-
-        String uploadImage = storageService.uploadImageToFileSystem(file, userId);
-        return ResponseEntity.ok("File uploaded successfully:" + uploadImage);
+        storageService.uploadImageToFileSystem(file, userId);
+        return ResponseEntity.ok("File uploaded successfully:");
     }
 
 
