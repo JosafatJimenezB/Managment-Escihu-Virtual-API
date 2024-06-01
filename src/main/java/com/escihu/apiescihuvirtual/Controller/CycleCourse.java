@@ -104,7 +104,7 @@ public class CycleCourse {
         Cycle cycle = null;
 
         try {
-            if (!cycleService.exists(id)) {
+            if (!cycleService.existsCycle(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Cycle not found")
                         .object(null)

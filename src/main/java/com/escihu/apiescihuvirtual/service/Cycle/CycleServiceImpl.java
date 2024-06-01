@@ -35,8 +35,8 @@ public class CycleServiceImpl implements CycleService {
     }
 
     @Override
-    public Cycle updateCycle(CycleDtoRequest cycleDtoRequest, Long id) {
-        Optional<Cycle> cycleExist = cycleRepository.findById(id);
+    public Cycle updateCycle(CycleDtoRequest cycleDtoRequest, Long cycleId) {
+        Optional<Cycle> cycleExist = cycleRepository.findById(cycleId);
 
         if (!cycleExist.isPresent()) {
             return null;
@@ -59,7 +59,7 @@ public class CycleServiceImpl implements CycleService {
     }
 
     @Override
-    public boolean exists(Long id) {
-        return cycleRepository.existsById(id);
+    public boolean existsCycle(Long cycleId) {
+        return cycleRepository.existsById(cycleId);
     }
 }
