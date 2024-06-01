@@ -48,7 +48,7 @@ public class ScheduleController {
     @GetMapping("/schedules/{id}/course")
     public ResponseEntity<?> getScheduleByCourseId(@PathVariable Long id) {
         try {
-            if (!courseService.existById(id)) {
+            if (courseService.existCourse(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Course Not found")
                         .object(null), HttpStatus.NOT_FOUND);
