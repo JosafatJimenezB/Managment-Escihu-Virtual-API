@@ -1,4 +1,4 @@
-package com.escihu.apiescihuvirtual.service;
+package com.escihu.apiescihuvirtual.service.user;
 
 
 import com.escihu.apiescihuvirtual.Dto.Users.ChangePasswordRequest;
@@ -10,6 +10,7 @@ import com.escihu.apiescihuvirtual.persistence.Entity.User;
 import com.escihu.apiescihuvirtual.persistence.Repository.StudentRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.TeacherRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
+import com.escihu.apiescihuvirtual.service.EmailService;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +30,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * UserService is a service class that handles operations related to users.
- * It implements the UserDetailsService interface from Spring Security.
- * It provides methods for loading a user by username, finding a user by username, and saving a user.
- * It uses the UserRepository to perform these operations.
+ * Una service class que maneja las operaciones de los usuarios.
  */
 @Service
 public class UserService {
@@ -59,7 +57,12 @@ public class UserService {
         this.emailService = emailService;
     }
 
-
+    /**
+     * Lista los usuarios paginados.
+     *
+     * @param pageable el objeto pageable
+     * @return un objeto Page con los usuarios
+     */
     public Page<UserDtoResponse> listUsersPaginated(Pageable pageable) {
 
         Page<User> usersPage = userRepository.findAll(pageable);
@@ -74,22 +77,22 @@ public class UserService {
     }
 
     /**
-     * Finds a user by the specified username.
+     * Encuentra un usuario por su username.
      *
-     * @param username the username of the user to find
-     * @return an Optional containing the user if found, or an empty Optional if not found
+     * @param username el username del usuario a buscar
+     * @return un objeto Optional con el usuario si existe o un objeto vacio si no existe
      */
     public Optional<User> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     /**
-     * Saves a user with the specified details and role.
-     * The user's role is added to a set of roles, which is then assigned to the user.
-     * The user is then saved in the UserRepository.
+     * Guardar un usuario. El usuario se guarda con el rol especificado.
+     * El rol del usuario se agrega a un conjunto de roles, que luego se asigna al usuario.
+     * El usuario se guarda en el UserRepository.
      *
-     * @param user the user to save
-     * @param role the role to assign to the user
+     * @param user {@link User} el usuario a guardar
+     * @param role {@link Role} el rol del usuario
      */
     public void saveUser(User user, Role role) {
         Set<Role> roles = new HashSet<>();
@@ -102,10 +105,11 @@ public class UserService {
     }
 
     /**
+     * Cambia la contraseña de un usuario del usuario authenticado
      * Changes the role of a user with the specified username.
      *
-     * @param request       {@link ChangePasswordRequest } the data transfer
-     * @param connectedUser the user that is connected
+     * @param request       {@link ChangePasswordRequest } la solicitud de cambio de contraseña
+     * @param connectedUser el usuario autenticado
      */
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
         String username = connectedUser.getName();
@@ -122,9 +126,9 @@ public class UserService {
 
 
     /**
-     * Sends an email to the user to change the password.
+     * Envia un correo electronico al usuario que olvido su contraseña.
      *
-     * @param email a string with the user email
+     * @param email el correo electronico del usuario
      */
     public void forgotPassword(String email) {
 
@@ -141,7 +145,7 @@ public class UserService {
 
 
     /**
-     * Changes the password of the user.
+     * Cambia la contraseña de un usuario.
      *
      * @param email    a string with the user email
      * @param password a string the new password
@@ -157,12 +161,11 @@ public class UserService {
 
     }
 
-
-    private boolean emailExists(String email) {
-        logger.info(String.format("Checking if email %s exists", email));
-        return studentRepository.findByCorreoPersonal(email) != null || userRepository.findByEmail(email).isPresent();
-    }
-
+    /**
+     * Mapea un objeto User a un objeto  {@link UserDtoResponse}.
+     * @param user {@link User} el usuario a mapear
+     * @return regresa un objeto {@link UserDtoResponse}
+     */
     private UserDtoResponse mapToUserDtoResponse(User user) {
         Student student = user.getStudent();
         Teacher teacher = user.getTeacher();
@@ -182,6 +185,12 @@ public class UserService {
 
     }
 
+    /**
+     * Valida el cambio de contraseña comprabando si las contraseñas
+     * son iguales y si la contraseña actual es correcta.
+     * @param request {@link ChangePasswordRequest} la solicitud de cambio de contraseña
+     * @param user {@link User} el usuario que solicita el cambio de contraseña
+     */
     private void validatePasswordChange(ChangePasswordRequest request, User user) {
         logger.info(String.format("Validating password change for user with username %s", user.getUsername()));
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
@@ -193,6 +202,16 @@ public class UserService {
             logger.error(String.format("Passwords are not the same for user with username %s", user.getUsername()));
             throw new IllegalStateException("Password are not the same");
         }
+    }
+
+    /**
+     * Comprueba si un correo electronico ya existe en la base de datos.
+     * @param email un string con el correo electronico
+     * @return regresa true si el correo electronico ya existe, de lo contrario regresa false
+     */
+    private boolean emailExists(String email) {
+        logger.info(String.format("Checking if email %s exists", email));
+        return studentRepository.findByCorreoPersonal(email) != null || userRepository.findByEmail(email).isPresent();
     }
 
 }
