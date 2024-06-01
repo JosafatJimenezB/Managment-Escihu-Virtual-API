@@ -14,8 +14,8 @@ public class GradeDetailsServiceImpl implements GradeDetailsService {
     }
 
     @Override
-    public GradeDetail getScoreById(long id) {
-        return gradeDetailRepository.findById(id).orElse(null);
+    public GradeDetail getScoreById(long scoreId) {
+        return gradeDetailRepository.findById(scoreId).orElse(null);
     }
 
     @Override
@@ -29,8 +29,8 @@ public class GradeDetailsServiceImpl implements GradeDetailsService {
     }
 
     @Override
-    public boolean existById(Long id) {
-        return gradeDetailRepository.existsById(id);
+    public boolean existScore(Long scoreId) {
+        return !gradeDetailRepository.existsById(scoreId);
     }
 
 }

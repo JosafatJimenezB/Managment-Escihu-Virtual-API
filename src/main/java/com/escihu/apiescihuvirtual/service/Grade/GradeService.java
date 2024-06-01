@@ -9,21 +9,35 @@ import java.util.List;
 
 public interface GradeService {
 
-    public Grade addGrade(GradeDtoRequest gradeDtoRequest);
+    /**
+     * Agrega una calificación.
+     * @param gradeDtoRequest objeto con los datos de la calificación {@link GradeDtoRequest}
+     * @return Lista de calificaciones {@link Grade}
+     */
+    Grade addGrade(GradeDtoRequest gradeDtoRequest);
 
-    public Grade getGradeById(long id);
+    /**
+     * Obtiene una calificación por su id.
+     * @param gradeId el id de la calificación
+     * @return la calificación {@link Grade}
+     */
+    Grade getGradeById(long gradeId);
 
-    public List<Grade> getGradesBySubject(Subject subject);
 
-    public List<Grade> getGradesBySubjectId(long subjectId);
+    List<Grade> getGradesBySubject(Subject subject);
 
-    public Grade updateGrade(Long id, GradeDtoRequest gradeDtoRequest);
+    List<Grade> getGradesBySubjectId(long subjectId);
 
-    public void deleteGradeById(long id);
+    Grade updateGrade(Long id, GradeDtoRequest gradeDtoRequest);
+    /**
+     * Elimina una calificación por su id.
+     * @param id el id de la calificación
+     */
+    void deleteGradeById(long id);
 
-    public void deleteGrade(Grade grade);
+    void deleteGrade(Grade grade);
 
-    public List<GradeDetail> getGradeScorebook(long gradeId);
+    List<GradeDetail> getGradeScorebook(long gradeId);
 
-    public boolean existById(Long id);
+    boolean existById(Long id);
 }

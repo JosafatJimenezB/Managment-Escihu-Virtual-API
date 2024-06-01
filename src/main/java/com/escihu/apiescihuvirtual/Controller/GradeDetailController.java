@@ -23,7 +23,7 @@ public class GradeDetailController {
     public ResponseEntity<?> getScoreById(@PathVariable Long id) {
         try {
 
-            if (!gradeDetailsService.existById(id)) {
+            if (gradeDetailsService.existScore(id)) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Grade Details not found")
                         .object(null), HttpStatus.NOT_FOUND);
@@ -43,7 +43,7 @@ public class GradeDetailController {
     public ResponseEntity<?> updateGradeDetail(@RequestBody GradeDetail gradeDetail) {
         try {
 
-            if (!gradeDetailsService.existById(gradeDetail.getId())) {
+            if (gradeDetailsService.existScore(gradeDetail.getId())) {
                 return new ResponseEntity<>(Message.builder()
                         .message("Grade Details not found")
                         .object(null), HttpStatus.NOT_FOUND);
