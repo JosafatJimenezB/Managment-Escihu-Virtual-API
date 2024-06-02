@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,7 +29,7 @@ public class StorageService {
      */
     public StorageService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.rootLocation = Paths.get("../profile-images").toAbsolutePath().normalize();
+        this.rootLocation = Paths.get("src/main/resources/static/images/profiles-images").toAbsolutePath().normalize();
         try {
             Files.createDirectories(this.rootLocation);
         } catch (IOException e) {
@@ -54,9 +55,8 @@ public class StorageService {
         }
 
         Files.copy(file.getInputStream(), destinationFile);
-        user.setProfileImageUrl(fileName);
+        user.setProfileImageUrl(generateFileUrl(fileName)); // Set the URL in the user entity
         userRepository.save(user);
-        generateFileUrl(fileName);
     }
 
     /**
@@ -69,7 +69,7 @@ public class StorageService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return generateFileUrl(user.getProfileImageUrl());
+        return user.getProfileImageUrl();
 
     }
 
@@ -98,8 +98,7 @@ public class StorageService {
      * @return la URL del archivo
      */
     private String generateFileUrl(String filename) {
-        return rootLocation.resolve(filename).toUri().toString();
+        return "/static/images/profiles-images/" + filename;
     }
-
 
 }
