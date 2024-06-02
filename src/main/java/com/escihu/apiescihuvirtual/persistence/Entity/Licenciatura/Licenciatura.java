@@ -4,6 +4,7 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import lombok.Builder;
 
 import java.util.HashSet;
@@ -25,6 +26,8 @@ public class Licenciatura {
     private String name;
 
     @Column(unique = true)
+    //TODO: agregar validadiones
+    // Ejemplo code: 01
     private short code;
 
     @OneToMany(mappedBy = "licenciatura", cascade = CascadeType.PERSIST)

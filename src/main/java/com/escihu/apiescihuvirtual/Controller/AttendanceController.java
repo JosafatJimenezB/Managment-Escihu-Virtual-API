@@ -6,6 +6,8 @@ import com.escihu.apiescihuvirtual.persistence.Entity.Attendance.Attendance;
 import com.escihu.apiescihuvirtual.service.Attendance.AttendanceServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,7 @@ import java.util.List;
 public class AttendanceController {
 
     private final AttendanceServiceImpl attendanceService;
+    private final Logger logger = org.slf4j.LoggerFactory.getLogger(AttendanceController.class);
 
     public AttendanceController(AttendanceServiceImpl attendanceService) {
         this.attendanceService = attendanceService;
@@ -46,8 +49,9 @@ public class AttendanceController {
 
     @Operation(summary = "Registro de asistencia por medio de un usuario")
     @PostMapping("/attendance/register")
-    public ResponseEntity<?> registerAttendance(@RequestBody AttendaceDtoRequest attendanceDto) {
-        Attendance attendance = null;
+    public ResponseEntity<?> registerAttendance(@Valid @RequestBody AttendaceDtoRequest attendanceDto) {
+        logger.info("Attendance created {}", attendanceDto.getTypeAttendace());
+        Attendance attendance;
 
         try {
 
@@ -99,6 +103,7 @@ public class AttendanceController {
         try {
             Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
             Page<Attendance> attendancePage = attendanceService.attendaceByUserId(userId, modifiedPage);
+            logger.info("Attendance by user {} - {}", userId, attendancePage);
             return new ResponseEntity<>(attendancePage, HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()

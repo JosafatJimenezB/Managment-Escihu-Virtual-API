@@ -158,6 +158,10 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
+    }
+
+    public Optional<User> findUserById(Long userId) {
+        return userRepository.findById(userId);
 
     }
 

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface StudentService {
 
@@ -53,10 +54,9 @@ public interface StudentService {
     /**
      * Obtiene un estudiante por su id y username.
      * @param studentId el id del estudiante a buscar
-     * @param username el username del estudiante a buscar
      * @return el estudiante {@link Student}
      */
-    Student findByIdAndUsername(Long studentId, String username);
+    Optional<Student> findById(Long studentId);
 
     /**
      * Verifica si un estudiante existe.

@@ -1,6 +1,9 @@
 package com.escihu.apiescihuvirtual.Dto.Attendance;
 
 import com.escihu.apiescihuvirtual.persistence.Entity.Attendance.Enum.TypeAttendace;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
@@ -8,6 +11,8 @@ public class AttendaceDtoRequest {
 
     private Long userId;
 
+    @Enumerated(EnumType.STRING)
+    @NotNull
     private TypeAttendace typeAttendace;
 
     public Long getUserId() {

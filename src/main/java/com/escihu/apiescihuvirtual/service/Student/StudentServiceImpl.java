@@ -70,8 +70,9 @@ public class StudentServiceImpl implements StudentService {
         // Se guarda en la base de datos
         userRepository.save(user);
 
+
         // Se crea el estudiante con el usuario generado
-        Student student = mapToStudent(studentDtoRequest);
+        Student student = mapToStudent(studentDtoRequest, user, email);
 
         Optional<Licenciatura> licenciatura = licenciaturaRepository.findById(studentDtoRequest.getLicenciatura().getId());
 
@@ -143,9 +144,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student findByIdAndUsername(Long studentId, String username) {
-        return studentRepository.findByIdAndUserUsername(studentId, username);
+    public Optional<Student> findById(Long studentId) {
+        return Optional.empty();
     }
+
 
     @Override
     public boolean existsStudent(Long id) {
@@ -173,7 +175,7 @@ public class StudentServiceImpl implements StudentService {
         );
     }
 
-    private Student mapToStudent(StudentDtoRequest studentDtoRequest) {
+    private Student mapToStudent(StudentDtoRequest studentDtoRequest, User user,String email) {
         return Student.builder()
                 .matricula(generarMatricula(studentDtoRequest.getLicenciatura().getCode()))
                 .nombre(studentDtoRequest.getNombre())
@@ -188,6 +190,8 @@ public class StudentServiceImpl implements StudentService {
                 .ingresoMensual(studentDtoRequest.getIngresoMensual())
                 .direccion(studentDtoRequest.getDireccion())
                 .tipoSangre(studentDtoRequest.getTipoSangre())
+                .user(user)
+                .correoEscolar(email)
                 .institucionProcedenciaEstado(studentDtoRequest.getInstitucionProcedenciaEstado())
                 .telefono(studentDtoRequest.getTelefono())
                 .institucionProcedencia(studentDtoRequest.getInstitucionProcedencia())

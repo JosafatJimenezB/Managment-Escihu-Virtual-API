@@ -6,6 +6,8 @@ import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentUpdateDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.escihu.apiescihuvirtual.service.Student.StudentService;
+import com.escihu.apiescihuvirtual.service.user.UserService;
+import com.escihu.apiescihuvirtual.utils.UserUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,16 +15,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "Controlador de estudiantes")
 @RestController
@@ -31,9 +37,12 @@ import java.util.List;
 public class StudentController {
 
     private final StudentService studentService;
+    private final UserService userService;
+    private final Logger logger = org.slf4j.LoggerFactory.getLogger(StudentController.class);
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, UserService userService) {
         this.studentService = studentService;
+        this.userService = userService;
     }
     @Operation(summary = "Retorna una lista de estudiantes paginada",
             description = "Retorna una lista de estudiantes paginada, se puede especificar el número de página y el tamaño de la página.",
@@ -78,18 +87,41 @@ public class StudentController {
 
     @GetMapping("/student/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
+        logger.info("Student id {}", id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
+        logger.info("Current username {}", currentUsername);
 
 
-        Student student = studentService.findByIdAndUsername(id, currentUsername);
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        boolean isStudent = authorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_STUDENT"));
+        boolean isAdmin = authorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
 
-        if (student == null) {
+        Optional<Student> optionalStudent  = studentService.findById(id);
+
+        if (!optionalStudent .isPresent()) {
             return new ResponseEntity<>(Message.builder()
                     .message("Student not found")
                     .object(null)
                     .build(), HttpStatus.NOT_FOUND);
         }
+
+        Student student = optionalStudent.get();
+        String studentUsername = student.getNombre().toLowerCase() + "." + student.getApellidoPaterno().toLowerCase();
+        logger.info("Student username {}", studentUsername);
+
+        // Verificar si el usuario es un estudiante y si el estudiante no pertenece al usuario actual
+        if (isStudent && !studentUsername.equals(currentUsername)) {
+            return new ResponseEntity<>(Message.builder()
+                    .message("Access denied")
+                    .object(null)
+                    .build(), HttpStatus.FORBIDDEN);
+        }
+
+
+
 
         return new ResponseEntity<>(student, HttpStatus.OK);
     }

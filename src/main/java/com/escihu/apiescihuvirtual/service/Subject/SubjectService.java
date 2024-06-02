@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface SubjectService {
 
-    public Subject addSubject(Subject subject);
+    Subject addSubject(Subject subject);
 
-    public Subject updateSubject(Long id, Subject subject);
+    Subject updateSubject(Long id, Subject subject);
 
-    public List<Subject> getAllSubjectsByCourseId(long courseId);
+    List<Subject> getAllSubjectsByCourseId(long courseId);
 
-    public Subject getSubjectById(long id);
+    Subject getSubjectById(long id);
 
-    public void deleteSubjectById(long id);
+    void deleteSubjectById(long id);
 
-    public boolean existById(Long id);
+    boolean existById(Long id);
 }
