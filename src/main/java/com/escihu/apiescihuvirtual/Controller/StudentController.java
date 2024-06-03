@@ -6,8 +6,7 @@ import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentUpdateDtoRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import com.escihu.apiescihuvirtual.service.Student.StudentService;
-import com.escihu.apiescihuvirtual.service.user.UserService;
-import com.escihu.apiescihuvirtual.utils.UserUtils;
+import com.escihu.apiescihuvirtual.service.user.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,12 +36,12 @@ import java.util.Optional;
 public class StudentController {
 
     private final StudentService studentService;
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final Logger logger = org.slf4j.LoggerFactory.getLogger(StudentController.class);
 
-    public StudentController(StudentService studentService, UserService userService) {
+    public StudentController(StudentService studentService, UserServiceImpl userServiceImpl) {
         this.studentService = studentService;
-        this.userService = userService;
+        this.userServiceImpl = userServiceImpl;
     }
     @Operation(summary = "Retorna una lista de estudiantes paginada",
             description = "Retorna una lista de estudiantes paginada, se puede especificar el número de página y el tamaño de la página.",

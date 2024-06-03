@@ -3,7 +3,7 @@ package com.escihu.apiescihuvirtual.Controller;
 import com.escihu.apiescihuvirtual.Dto.Message;
 import com.escihu.apiescihuvirtual.persistence.Entity.Role;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
-import com.escihu.apiescihuvirtual.service.user.UserService;
+import com.escihu.apiescihuvirtual.service.user.UserServiceImpl;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,18 +18,18 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class AdminController {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
-    public AdminController(UserService userService) {
-        this.userService = userService;
+    public AdminController(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
     }
 
     @PutMapping("/{username}/role")
     public ResponseEntity<String> changeRole(@PathVariable String username, @RequestBody Role role) {
-        Optional<User> existUser = userService.findUserByUsername(username);
+        Optional<User> existUser = userServiceImpl.findUserByUsername(username);
         if (existUser.isPresent()) {
             User user = existUser.get();
-            userService.saveUser(user, role);
+            userServiceImpl.saveUser(user, role);
             return ResponseEntity.ok("Role changed");
         }
         return ResponseEntity.ok("Role changed");
@@ -41,7 +41,7 @@ public class AdminController {
             @RequestParam(defaultValue = "10") int pageSize) {
         try {
             Pageable modifiedPage = PageRequest.of(currentPage, pageSize);
-            return new ResponseEntity<>(userService.listUsersPaginated(modifiedPage), HttpStatus.OK);
+            return new ResponseEntity<>(userServiceImpl.listUsersPaginated(modifiedPage), HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(Message.builder()
                     .message(e.getMessage())
