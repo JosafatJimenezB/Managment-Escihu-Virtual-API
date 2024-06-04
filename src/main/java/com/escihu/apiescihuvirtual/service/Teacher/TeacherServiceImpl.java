@@ -44,8 +44,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher createTeacher(TeacherDtoRequest teacherDtoRequest) {
-        String username = teacherDtoRequest.getNombre().toLowerCase()
-                + teacherDtoRequest.getApellidoPaterno().toLowerCase();
+        String[] teacherName = teacherDtoRequest.getNombre().split(" ");
+        String username = teacherName[0].toLowerCase()
+                + "."  +teacherDtoRequest.getApellidoPaterno().toLowerCase();
 
         String email = UserUtils.generateEmail(
                 teacherDtoRequest.getNombre(),

@@ -101,7 +101,6 @@ public class StudentController {
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
 
         Optional<Student> optionalStudent  = studentService.findById(id);
-        System.out.println(optionalStudent);
 
         if (!optionalStudent .isPresent()) {
             return new ResponseEntity<>(Message.builder()
