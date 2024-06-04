@@ -44,6 +44,7 @@ public class StudentController {
         this.studentService = studentService;
         this.userService = userService;
     }
+
     @Operation(summary = "Retorna una lista de estudiantes paginada",
             description = "Retorna una lista de estudiantes paginada, se puede especificar el número de página y el tamaño de la página.",
             tags = {"Controlador de estudiantes"})
@@ -100,6 +101,7 @@ public class StudentController {
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
 
         Optional<Student> optionalStudent  = studentService.findById(id);
+        System.out.println(optionalStudent);
 
         if (!optionalStudent .isPresent()) {
             return new ResponseEntity<>(Message.builder()
@@ -119,9 +121,6 @@ public class StudentController {
                     .object(null)
                     .build(), HttpStatus.FORBIDDEN);
         }
-
-
-
 
         return new ResponseEntity<>(student, HttpStatus.OK);
     }
