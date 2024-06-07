@@ -43,6 +43,7 @@ public class StudentController {
         this.studentService = studentService;
         this.userServiceImpl = userServiceImpl;
     }
+
     @Operation(summary = "Retorna una lista de estudiantes paginada",
             description = "Retorna una lista de estudiantes paginada, se puede especificar el número de página y el tamaño de la página.",
             tags = {"Controlador de estudiantes"})
@@ -118,9 +119,6 @@ public class StudentController {
                     .object(null)
                     .build(), HttpStatus.FORBIDDEN);
         }
-
-
-
 
         return new ResponseEntity<>(student, HttpStatus.OK);
     }

@@ -48,8 +48,7 @@ public interface StudentService {
      * @param studentId el id del estudiante
      * @return el estudiante {@link Student}
      */
-    Student getStudentById(Long studentId
-    );
+    Student getStudentById(Long studentId);
 
     /**
      * Obtiene un estudiante por su id y username.

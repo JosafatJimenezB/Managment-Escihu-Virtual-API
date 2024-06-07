@@ -82,8 +82,9 @@ public class Teacher {
     @Column(name = "correo_escolar")
     private String correoEscolar;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "direccion_id")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "direccion_id", referencedColumnName = "id")
+    @JsonBackReference
     private Address direccion;
 
     public Teacher(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, User user, String RFC, String CURP, String cedulaProfesional, StatusTeacherEnum statusDocente, String gradoEstudios, String areaConocimientos, Date fechaNacimiento, String nacionalidad, Date fechaBaja, SexoEnum sexo, EstadoCivilEnum estadoCivil, String tipoSangre, String correoPersonal, String correoEscolar, Address direccion) {
