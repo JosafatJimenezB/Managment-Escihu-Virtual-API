@@ -190,6 +190,7 @@ public class TeacherServiceImpl implements TeacherService {
      * @return el profesor actualizado {@link Teacher}
      */
     private Teacher updateTeacherData(Teacher existingTeacher, TeacherDtoRequest teacherDtoRequest) {
+
         existingTeacher.setNombre(teacherDtoRequest.getNombre());
         existingTeacher.setApellidoPaterno(teacherDtoRequest.getApellidoPaterno());
         existingTeacher.setApellidoMaterno(teacherDtoRequest.getApellidoMaterno());
