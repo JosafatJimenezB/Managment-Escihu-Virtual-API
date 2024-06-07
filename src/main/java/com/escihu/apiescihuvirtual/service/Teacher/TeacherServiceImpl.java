@@ -3,20 +3,27 @@ package com.escihu.apiescihuvirtual.service.Teacher;
 import com.escihu.apiescihuvirtual.Dto.Teacher.PaginatedTeacherDtoResponse;
 import com.escihu.apiescihuvirtual.Dto.Teacher.TeacherDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Teacher.TeacherDtoResponse;
+import com.escihu.apiescihuvirtual.persistence.Entity.Address.Address;
+import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusTeacherEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Role;
 import com.escihu.apiescihuvirtual.persistence.Entity.Teacher.Teacher;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
+import com.escihu.apiescihuvirtual.persistence.Repository.AddressRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.RoleRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.TeacherRepository;
 import com.escihu.apiescihuvirtual.persistence.Repository.UserRepository;
 import com.escihu.apiescihuvirtual.service.EmailService;
 import com.escihu.apiescihuvirtual.utils.UserUtils;
 import jakarta.mail.MessagingException;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -24,59 +31,75 @@ import java.util.stream.Collectors;
 /**
  * TeacherServiceImpl es una clase que implementa los metodos de la interfaz TeacherService.
  */
+@Transactional
 @Service
 public class TeacherServiceImpl implements TeacherService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TeacherServiceImpl.class);
 
     private final TeacherRepository teacherRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final AddressRepository addressRepository;
 
-    public TeacherServiceImpl(TeacherRepository teacherRepository, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, EmailService emailService, AddressRepository addressRepository) {
         this.teacherRepository = teacherRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.addressRepository = addressRepository;
     }
 
 
     @Override
     public Teacher createTeacher(TeacherDtoRequest teacherDtoRequest) {
-        String[] teacherName = teacherDtoRequest.getNombre().split(" ");
-        String username = teacherName[0].toLowerCase()
-                + "."  +teacherDtoRequest.getApellidoPaterno().toLowerCase();
 
-        String email = UserUtils.generateEmail(
-                teacherDtoRequest.getNombre(),
-                teacherDtoRequest.getApellidoPaterno(),
-                userRepository);
+        String[] teacherName = teacherDtoRequest.getNombre().split(" ");
+        String username = teacherName[0].toLowerCase() + "."  +teacherDtoRequest.getApellidoPaterno().toLowerCase();
+
+        String email = UserUtils.generateEmail(teacherName[0].toLowerCase(), teacherDtoRequest.getApellidoPaterno().toLowerCase(), userRepository);
 
         String password = UserUtils.generateRandomPassword();
 
         Role TeacherRole = roleRepository.findByAuthority("TEACHER")
                 .orElseThrow(() -> new RuntimeException("Teacher Role not found"));
 
-        User user = new User(
-                username,
-                email,
-                passwordEncoder.encode(password),
-                Set.of(TeacherRole)
-        );
+        User user = new User(username, email, passwordEncoder.encode(password), Set.of(TeacherRole));
 
-        userRepository.save(user);
+        Address address = Address.builder()
+                .direccion(teacherDtoRequest.getDireccion().getDireccion())
+                .colonia(teacherDtoRequest.getDireccion().getColonia())
+                .cp(teacherDtoRequest.getDireccion().getCp())
+                .estado(teacherDtoRequest.getDireccion().getEstado())
+                .localidad(teacherDtoRequest.getDireccion().getLocalidad())
+                .municipio(teacherDtoRequest.getDireccion().getMunicipio())
+                .numeroExterior(teacherDtoRequest.getDireccion().getNumeroExterior())
+                .numeroInterior(teacherDtoRequest.getDireccion().getNumeroInterior())
+                .build();
+
+        Address to_dbAddress = addressRepository.save(address);
 
         Teacher teacher = mapToTeacher(teacherDtoRequest, user, email);
 
+        teacher.setDireccion(to_dbAddress);
+        logger.info("saving user: {}", user);
+        userRepository.save(user);
+
+        Teacher to_dbTeacher;
+
         try {
+            logger.info("saving teacher: {}", teacher);
+            to_dbTeacher = teacherRepository.save(teacher);
             emailService.sendUserCredencials(teacher.getCorreoPersonal(), username, password);
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to send email", e);
 
         }
 
-        return teacherRepository.save(teacher);
+        return to_dbTeacher;
     }
 
     @Override
