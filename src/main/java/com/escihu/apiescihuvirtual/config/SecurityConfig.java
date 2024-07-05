@@ -95,8 +95,11 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.PUT, "/api/v1/user/set-password/**").permitAll();
                     auth.requestMatchers("/api/v1/students/**", "/api/v1/student/").hasAnyRole(ADMIN_ROLE);
                     auth.requestMatchers(HttpMethod.PUT, "/api/v1/student/{id}").hasRole(ADMIN_ROLE);
+                    //TODO: Cambiar a hasRole(ADMIN_ROLE) y Crear el role de SCRETARY
+                    auth.requestMatchers(HttpMethod.POST, "/api/v1/report-inscriptions").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/api/v1/student/{id}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.GET, "/api/v1/attendance/{userId}/paginated").hasAnyRole(ADMIN_ROLE,STUDENT_ROLE);
+                    //TODO: Crear url para registrar asistencia
                     auth.requestMatchers(HttpMethod.GET, "/api/v1/user/profile-image-url/{userId}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.POST, "/api/v1/user/upload/{userId}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);
                     auth.requestMatchers(HttpMethod.GET, "/api/v1/user/{userId}").hasAnyRole(ADMIN_ROLE, STUDENT_ROLE);

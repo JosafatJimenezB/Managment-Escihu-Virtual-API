@@ -3,6 +3,7 @@ package com.escihu.apiescihuvirtual.service.Student;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentUpdateDtoRequest;
+import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
 import com.escihu.apiescihuvirtual.persistence.Entity.Role;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
@@ -89,7 +90,7 @@ public class StudentServiceImpl implements StudentService {
         try {
             emailService.sendUserCredencials(student.getCorreoPersonal(), username, password);
         } catch (MessagingException e) {
-            throw new RuntimeException("Failed to send email", e);
+            logger.error("Failed to send email to the student with username {}", username, e);
 
         }
 
@@ -157,6 +158,11 @@ public class StudentServiceImpl implements StudentService {
         return !studentRepository.existsById(id);
     }
 
+    @Override
+    public List<Student> findStudentsByStatusAlumno(StatusStudent alumnoStatus) {
+        return studentRepository.findAllByStatusAlumno(alumnoStatus);
+    }
+
     private static String generarMatricula(int licCode) {
         LocalDateTime now = LocalDateTime.now();
         int year = now.getYear() % 100; // Obtiene los dos últimos dígitos del año
@@ -181,6 +187,7 @@ public class StudentServiceImpl implements StudentService {
     private Student mapToStudent(StudentDtoRequest studentDtoRequest, User user,String email) {
         return Student.builder()
                 .matricula(generarMatricula(studentDtoRequest.getLicenciatura().getCode()))
+                .statusAlumno(studentDtoRequest.getStatusAlumno())
                 .nombre(studentDtoRequest.getNombre())
                 .apellidoPaterno(studentDtoRequest.getApellidoPaterno())
                 .apellidoMaterno(studentDtoRequest.getApellidoMaterno())
@@ -209,6 +216,7 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setApellidoPaterno(studentDtoRequest.getApellidoPaterno());
         existingStudent.setApellidoMaterno(studentDtoRequest.getApellidoMaterno());
         existingStudent.setCurp(studentDtoRequest.getCurp());
+        existingStudent.setStatusAlumno(studentDtoRequest.getStatusAlumno());
         existingStudent.setNacionalidad(studentDtoRequest.getNacionalidad());
         existingStudent.setSexo(studentDtoRequest.getSexo());
         existingStudent.setTipoSangre(studentDtoRequest.getTipoSangre());
