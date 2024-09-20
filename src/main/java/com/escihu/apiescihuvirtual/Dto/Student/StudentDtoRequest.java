@@ -3,12 +3,14 @@ package com.escihu.apiescihuvirtual.Dto.Student;
 import com.escihu.apiescihuvirtual.persistence.Entity.Address.Address;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.EstadoCivilEnum;
 import com.escihu.apiescihuvirtual.persistence.Entity.Enums.SexoEnum;
+import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.escihu.apiescihuvirtual.persistence.Entity.Licenciatura.Licenciatura;
 import lombok.Builder;
 
 @Builder
 public class StudentDtoRequest {
     private String nombre;
+    private StatusStudent statusAlumno;
     private String apellidoPaterno;
     private String apellidoMaterno;
     private Licenciatura licenciatura;
@@ -27,6 +29,13 @@ public class StudentDtoRequest {
     private String nss;
     private Address direccion;
 
+    public StatusStudent getStatusAlumno() {
+        return statusAlumno;
+    }
+
+    public void setStatusAlumno(StatusStudent statusAlumno) {
+        this.statusAlumno = statusAlumno;
+    }
 
     public String getNombre() {
         return nombre;

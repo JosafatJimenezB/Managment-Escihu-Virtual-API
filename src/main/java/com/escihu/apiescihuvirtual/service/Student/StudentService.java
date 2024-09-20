@@ -3,6 +3,7 @@ package com.escihu.apiescihuvirtual.service.Student;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoRequest;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentDtoResponse;
 import com.escihu.apiescihuvirtual.Dto.Student.StudentUpdateDtoRequest;
+import com.escihu.apiescihuvirtual.persistence.Entity.Enums.StatusStudent;
 import com.escihu.apiescihuvirtual.persistence.Entity.Student.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,4 +64,7 @@ public interface StudentService {
      * @return true si el estudiante existe, false si no existe
      */
     boolean existsStudent(Long studentId);
+
+    List<Student> findStudentsByStatusAlumno(StatusStudent alumnoStatus);
+
 }

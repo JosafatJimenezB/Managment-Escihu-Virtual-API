@@ -94,12 +94,78 @@ public class Student {
     @Column(name = "nss")
     private String nss;
 
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", matricula='" + matricula + '\'' +
+                ", statusAlumno=" + statusAlumno +
+                ", user=" + user +
+                ", nombre='" + nombre + '\'' +
+                ", apellidoPaterno='" + apellidoPaterno + '\'' +
+                ", apellidoMaterno='" + apellidoMaterno + '\'' +
+                ", licenciatura=" + licenciatura +
+                ", curp='" + curp + '\'' +
+                ", nacionalidad='" + nacionalidad + '\'' +
+                ", sexo=" + sexo +
+                ", tipoSangre='" + tipoSangre + '\'' +
+                ", estadoCivil=" + estadoCivil +
+                ", telefono='" + telefono + '\'' +
+                ", celular='" + celular + '\'' +
+                ", ingresoMensual='" + ingresoMensual + '\'' +
+                ", institucionProcedencia='" + institucionProcedencia + '\'' +
+                ", institucionProcedenciaEstado='" + institucionProcedenciaEstado + '\'' +
+                ", institucionProcedenciaMunicipio='" + institucionProcedenciaMunicipio + '\'' +
+                ", correoPersonal='" + correoPersonal + '\'' +
+                ", correoEscolar='" + correoEscolar + '\'' +
+                ", direccion=" + direccion +
+                ", nss='" + nss + '\'' +
+                ", courses=" + courses +
+                ", hasBirthCertificate=" + hasBirthCertificate +
+                ", hasCurp=" + hasCurp +
+                ", hasCertificate=" + hasCertificate +
+                ", hasCertificateStudiesImmediatelyPreceding=" + hasCertificateStudiesImmediatelyPreceding +
+                ", hasEquivalenceStudies=" + hasEquivalenceStudies +
+                ", hasRevalidationStudies=" + hasRevalidationStudies +
+                ", hasDegree=" + hasDegree +
+                ", hasCedula=" + hasCedula +
+                ", comments='" + comments + '\'' +
+                '}';
+    }
+
     @JsonIgnore
     @ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
     private List<Course> courses;
 
+    //Documentos de inscripcion
+    @Builder.Default
+    @Column(name = "has_birth_certificate")
+    private boolean hasBirthCertificate = false;
+    @Builder.Default
+    @Column(name = "has_curp")
+    private boolean hasCurp = true;
+    @Builder.Default
+    @Column(name = "has_certificate")
+    private boolean hasCertificate = false;
+    @Builder.Default
+    @Column(name = "has_certificate_studies_immediately_preceding")
+    private boolean hasCertificateStudiesImmediatelyPreceding = false;
+    @Builder.Default
+    @Column(name = "has_equivalence_studies")
+    private boolean hasEquivalenceStudies = false;
+    @Builder.Default
+    @Column(name = "has_revalidation_studies")
+    private boolean hasRevalidationStudies = false;
+    @Builder.Default
+    @Column(name = "has_degree")
+    private boolean hasDegree = false;
+    @Builder.Default
+    @Column(name = "has_cedula")
+    private boolean hasCedula = false;
+    private String comments;
 
-    public Student(Long id, String matricula, StatusStudent statusAlumno, User user, String nombre, String apellidoPaterno, String apellidoMaterno, Licenciatura licenciatura, String curp, String nacionalidad, SexoEnum sexo, String tipoSangre, EstadoCivilEnum estadoCivil, String telefono, String celular, String ingresoMensual, String institucionProcedencia, String institucionProcedenciaEstado, String institucionProcedenciaMunicipio, String correoPersonal, String correoEscolar, Address direccion, String nss, List<Course> courses) {
+
+    public Student(Long id, String matricula, StatusStudent statusAlumno, User user, String nombre, String apellidoPaterno, String apellidoMaterno, Licenciatura licenciatura, String curp, String nacionalidad, SexoEnum sexo, String tipoSangre, EstadoCivilEnum estadoCivil, String telefono, String celular, String ingresoMensual, String institucionProcedencia, String institucionProcedenciaEstado, String institucionProcedenciaMunicipio, String correoPersonal, String correoEscolar, Address direccion, String nss, List<Course> courses, boolean hasBirthCertificate, boolean hasCurp, boolean hasCertificate, boolean hasCertificateStudiesImmediatelyPreceding, boolean hasEquivalenceStudies, boolean hasRevalidationStudies, boolean hasDegree, boolean hasCedula, String comments) {
         this.id = id;
         this.matricula = matricula;
         this.statusAlumno = statusAlumno;
@@ -124,6 +190,87 @@ public class Student {
         this.direccion = direccion;
         this.nss = nss;
         this.courses = courses;
+        this.hasBirthCertificate = hasBirthCertificate;
+        this.hasCurp = hasCurp;
+        this.hasCertificate = hasCertificate;
+        this.hasCertificateStudiesImmediatelyPreceding = hasCertificateStudiesImmediatelyPreceding;
+        this.hasEquivalenceStudies = hasEquivalenceStudies;
+        this.hasRevalidationStudies = hasRevalidationStudies;
+        this.hasDegree = hasDegree;
+        this.hasCedula = hasCedula;
+        this.comments = comments;
+    }
+
+    public boolean isHasBirthCertificate() {
+        return hasBirthCertificate;
+    }
+
+    public void setHasBirthCertificate(boolean hasBirthCertificate) {
+        this.hasBirthCertificate = hasBirthCertificate;
+    }
+
+    public boolean isHasCurp() {
+        return hasCurp;
+    }
+
+    public void setHasCurp(boolean hasCurp) {
+        this.hasCurp = hasCurp;
+    }
+
+    public boolean isHasCertificate() {
+        return hasCertificate;
+    }
+
+    public void setHasCertificate(boolean hasCertificate) {
+        this.hasCertificate = hasCertificate;
+    }
+
+    public boolean isHasCertificateStudiesImmediatelyPreceding() {
+        return hasCertificateStudiesImmediatelyPreceding;
+    }
+
+    public void setHasCertificateStudiesImmediatelyPreceding(boolean hasCertificateStudiesImmediatelyPreceding) {
+        this.hasCertificateStudiesImmediatelyPreceding = hasCertificateStudiesImmediatelyPreceding;
+    }
+
+    public boolean isHasEquivalenceStudies() {
+        return hasEquivalenceStudies;
+    }
+
+    public void setHasEquivalenceStudies(boolean hasEquivalenceStudies) {
+        this.hasEquivalenceStudies = hasEquivalenceStudies;
+    }
+
+    public boolean isHasRevalidationStudies() {
+        return hasRevalidationStudies;
+    }
+
+    public void setHasRevalidationStudies(boolean hasRevalidationStudies) {
+        this.hasRevalidationStudies = hasRevalidationStudies;
+    }
+
+    public boolean isHasDegree() {
+        return hasDegree;
+    }
+
+    public void setHasDegree(boolean hasDegree) {
+        this.hasDegree = hasDegree;
+    }
+
+    public boolean isHasCedula() {
+        return hasCedula;
+    }
+
+    public void setHasCedula(boolean hasCedula) {
+        this.hasCedula = hasCedula;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public User getUser() {
@@ -320,5 +467,9 @@ public class Student {
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    public String getFullName() {
+        return nombre + " " + apellidoPaterno + " " + apellidoMaterno;
     }
 }

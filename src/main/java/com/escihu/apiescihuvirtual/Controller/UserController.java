@@ -4,7 +4,7 @@ import com.escihu.apiescihuvirtual.Dto.Message;
 import com.escihu.apiescihuvirtual.Dto.Users.ChangePasswordRequest;
 import com.escihu.apiescihuvirtual.persistence.Entity.User;
 import com.escihu.apiescihuvirtual.service.StorageService;
-import com.escihu.apiescihuvirtual.service.user.UserService;
+import com.escihu.apiescihuvirtual.service.user.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -37,12 +37,12 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final StorageService storageService;
     private final Logger logger = org.slf4j.LoggerFactory.getLogger(UserController.class);
 
-    public UserController(UserService userService, StorageService storageService) {
-        this.userService = userService;
+    public UserController(UserServiceImpl userServiceImpl, StorageService storageService) {
+        this.userServiceImpl = userServiceImpl;
         this.storageService = storageService;
     }
 
@@ -63,7 +63,7 @@ public class UserController {
             @RequestBody ChangePasswordRequest request,
             Principal connectedUser
     ) {
-        userService.changePassword(request, connectedUser);
+        userServiceImpl.changePassword(request, connectedUser);
         return ResponseEntity.ok("Password changed");
     }
 
@@ -82,7 +82,7 @@ public class UserController {
     public ResponseEntity<String> forgotPassword(
             @RequestParam String email
     ) {
-        userService.forgotPassword(email);
+        userServiceImpl.forgotPassword(email);
         return ResponseEntity.ok("Email sent");
     }
 
@@ -103,12 +103,14 @@ public class UserController {
             @RequestParam String email,
             @RequestHeader String password
     ) {
-        userService.setPassword(email, password);
+        userServiceImpl.setPassword(email, password);
         return ResponseEntity.ok("Password changed");
     }
 
     @PostMapping("/upload/{userId}")
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, @PathVariable Long userId) throws IOException {
+        logger.info("File name: {}", file.getOriginalFilename());
+        logger.info("userId: {}", userId);
         storageService.uploadImageToFileSystem(file, userId);
         return ResponseEntity.ok("File uploaded successfully:");
     }
@@ -144,7 +146,7 @@ public class UserController {
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
 
         // Buscar el usuario por ID
-        Optional<User> optionalUser = userService.findUserById(userId);
+        Optional<User> optionalUser = userServiceImpl.findUserById(userId);
 
         // Verificar si el usuario existe
         if (!optionalUser.isPresent()) {
